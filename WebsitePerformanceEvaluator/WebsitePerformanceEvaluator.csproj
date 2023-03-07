@@ -12,4 +12,8 @@
       <ProjectReference Include="..\WebsitePerformanceEvaluator.Crawler\WebsitePerformanceEvaluator.Crawler.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <PackageReference Include="Autofac" Version="6.5.0" />
+    </ItemGroup>
+
 </Project>
