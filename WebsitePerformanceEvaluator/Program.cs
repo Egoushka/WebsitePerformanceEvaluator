@@ -18,6 +18,7 @@ internal static class Program
         services.AddMemoryCache();
         services.AddOptions();
         services.Configure<MemoryCacheEntryOptions>(options => options.SetSlidingExpiration(TimeSpan.FromSeconds(3)));
+            
         services.AddTransient<IClientService, ClientService>();
         services.AddTransient<ISitemapService, SitemapService>();
         services.AddTransient<ILinkManager, LinkManager>();

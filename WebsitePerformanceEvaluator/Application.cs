@@ -69,5 +69,4 @@ public class Application
         
         ConsoleHelper.PrintTable(new List<string> {"Link", "Time(ms)"}, linksWithTimeResponse);
     }
-    
 }
