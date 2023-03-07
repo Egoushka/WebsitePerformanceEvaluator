@@ -23,6 +23,7 @@ internal static class Program
         services.AddTransient<ISitemapService, SitemapService>();
         services.AddTransient<ILinkManager, LinkManager>();
         services.AddTransient<Application>();
+        services.AddTransient<TaskRunner>();
         
         var builder = new ContainerBuilder();
          
