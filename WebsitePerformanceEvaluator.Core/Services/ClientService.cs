@@ -1,23 +1,28 @@
 using System.Net;
 using System.Text;
 using System.Xml;
+using WebsitePerformanceEvaluator.Core.Interfaces.Services;
 
-namespace WebsitePerformanceEvaluator.Querier.Services;
+namespace WebsitePerformanceEvaluator.Core.Services;
 
-public class ClientService
+public class ClientService : IClientService
 {
-    public async Task<XmlDocument> GetSitemap(string baseUrl)
+
+    public ClientService()
+    {
+    }
+    public async Task<XmlDocument> GetSitemapAsync(string baseUrl)
     {
         var sitemapURL = baseUrl + "/sitemap.xml";
+        //I had troubles with HttpClient, so I had to use WebClient
+        var wc = new WebClient
+        {
+            Encoding = Encoding.UTF8
+        };
+        var sitemapString = wc.DownloadString(sitemapURL);
 
-        var wc = new HttpClient();
-        
-
-        
-        var response = await wc.GetAsync(sitemapURL);
         var sitemapXmlDocument = new XmlDocument();
-
-        sitemapXmlDocument.LoadXml(await response.Content.ReadAsStringAsync());
+        sitemapXmlDocument.LoadXml(sitemapString);
 
         return sitemapXmlDocument;
     }

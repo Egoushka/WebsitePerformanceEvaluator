@@ -1,22 +1,20 @@
 using System.Xml;
 using WebsitePerformanceEvaluator.Core.Interfaces.Services;
-using WebsitePerformanceEvaluator.Querier.Services;
 
 namespace WebsitePerformanceEvaluator.Core.Services;
 
-public class SitemapService : ISItemapService
+public class SitemapService : ISitemapService
 {
-    public ClientService ClientService { get; set; }
+    public IClientService ClientService { get; set; }
 
-    public SitemapService()
+    public SitemapService(IClientService сlientService)
     {
-        ClientService = new ClientService();
+        ClientService = сlientService;
     }
     
-    public async Task<List<string>> GetAllUrlsFromSitemap(string baseUrl)
+    public async Task<List<string>> GetAllUrlsFromSitemapAsync(string baseUrl)
     {
-        var sitemapXml = await ClientService.GetSitemap(baseUrl);
-        
+        var sitemapXml = await ClientService.GetSitemapAsync(baseUrl);
         var xmlSitemapList = sitemapXml.GetElementsByTagName("url");
         var urls= new List<string>();
         foreach (XmlNode node in xmlSitemapList)
