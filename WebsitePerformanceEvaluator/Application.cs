@@ -14,42 +14,49 @@ public class Application
 
     public void Run()
     {
-        const string url = "https://www.w3schools.com/";
-        PrintLinksInCrawlingNotInSitemap(url);
-        PrintLinksInSitemapNotInCrawling(url);
+        var url = ConsoleHelper.GetInput("Enter url:");
+        
+        var linksByCrawling = LinkManager.GetLinksByCrawling(url).ToList();
+        var sitemapLinks = LinkManager.GetSitemapLinks(url).ToList();
+        
+        LinksCountInSitemap = sitemapLinks.Count;
+        LinksCountAfterCrawling = linksByCrawling.Count;
+        
+        PrintLinksInCrawlingNotInSitemap(linksByCrawling, sitemapLinks);
+        PrintLinksInSitemapNotInCrawling(linksByCrawling, sitemapLinks);
         PrintLinksWithTimeResponse(url);
         
         Console.WriteLine($"Links in sitemap: {LinksCountInSitemap}");
         Console.WriteLine($"Links after crawling: {LinksCountAfterCrawling}");
     }
 
-    private void PrintLinksInCrawlingNotInSitemap(string url)
+    private void PrintLinksInCrawlingNotInSitemap(List<string> crawlingLinks, List<string> sitemapLinks)
     {
-        var linksInCrawlingNotInSitemap = LinkManager.GetLinksThatExistInCrawlingButNotInSitemap(url).ToList();
-        Console.WriteLine("Links in crawling not in sitemap:");
+        var linksInCrawlingNotInSitemap = crawlingLinks.Except(sitemapLinks).ToList();
+        Console.WriteLine("Links found after crawling, but not in sitemap:");
         if (!linksInCrawlingNotInSitemap.Any())
         {
             Console.WriteLine("No links found");
         }
         else
         {
-            LinksCountInSitemap = linksInCrawlingNotInSitemap.Count();
+            Console.WriteLine("Links found after crawling, but not in sitemap:");
             ConsoleHelper.PrintTable(new List<string> {"Link"}, linksInCrawlingNotInSitemap);
         }
     }
 
-    private void PrintLinksInSitemapNotInCrawling(string url)
+    private void PrintLinksInSitemapNotInCrawling(List<string> crawlingLinks, List<string> sitemapLinks)
     {
-        var linksInSitemapNotInCrawling = LinkManager.GetLinksThatExistInSitemapButNotInCrawling(url).ToList();
-        Console.WriteLine("Links in sitemap not in crawling:");
+        var linksInSitemapNotInCrawling = sitemapLinks.Except(crawlingLinks).ToList();
+        Console.WriteLine("Links in sitemap, that wasn't found after crawling:");
+        
         if (!linksInSitemapNotInCrawling.Any())
         {
             Console.WriteLine("No links found");
         }
         else
         {
-            LinksCountAfterCrawling = linksInSitemapNotInCrawling.Count();
-            ConsoleHelper.PrintTable(new List<string> {"Links"}, linksInSitemapNotInCrawling);
+            ConsoleHelper.PrintTable(new List<string> {"Link"}, linksInSitemapNotInCrawling);
         }
     }
 
@@ -57,14 +64,8 @@ public class Application
     {
         var linksWithTimeResponse = LinkManager.GetLinksWithTimeResponse(url).ToList();
         Console.WriteLine("Links with time response:");
-        if (!linksWithTimeResponse.Any())
-        {
-            Console.WriteLine("No links found");
-        }
-        else
-        {
-            ConsoleHelper.PrintTable(new List<string> {"Link", "Time"}, linksWithTimeResponse);
-        }
+        
+        ConsoleHelper.PrintTable(new List<string> {"Link", "Time(ms)"}, linksWithTimeResponse);
     }
     
 }

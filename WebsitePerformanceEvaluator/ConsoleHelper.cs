@@ -9,6 +9,7 @@ public static class ConsoleHelper
         ConsoleTableBuilder
             .From(rows.ToList())
             .WithColumn(headers.ToList())
+            .WithFormat(ConsoleTableBuilderFormat.Alternative)
             .ExportAndWriteLine();
     }
 
@@ -17,6 +18,12 @@ public static class ConsoleHelper
         ConsoleTableBuilder
             .From(rows.ToList())
             .WithColumn(headers.ToList())
+            .WithFormat(ConsoleTableBuilderFormat.Alternative)
             .ExportAndWriteLine();
+    }
+    public static string GetInput(string message)
+    {
+        Console.WriteLine(message);
+        return Console.ReadLine();
     }
 }

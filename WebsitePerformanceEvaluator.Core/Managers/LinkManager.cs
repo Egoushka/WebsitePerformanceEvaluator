@@ -17,69 +17,51 @@ public class LinkManager : ILinkManager
         SitemapService = sitemapService;
         MemoryCache = memoryCache;
     }
-
-    public IEnumerable<string> GetLinksThatExistInSitemapButNotInCrawling(string url)
-    {
-        var casheKey = url + "sitemap";
-        if (MemoryCache.TryGetValue(casheKey, out IEnumerable<string>? result))
-        {
-            return result;
-        }
-        
-        var cacheEntryOptions = new MemoryCacheEntryOptions()
-            .SetSlidingExpiration(TimeSpan.FromSeconds(3));
-        
-        var crawlingResult = ClientService.CrawlToFindLinks(url);
-        var sitemapResult = SitemapService.GetAllUrlsFromSitemap(url);
-            
-        result = sitemapResult.Except(crawlingResult);
-
-        MemoryCache.Set(casheKey, result, cacheEntryOptions);
-
-        return result;
-    }
-    public IEnumerable<string> GetLinksThatExistInCrawlingButNotInSitemap(string url)
-    {
-        var casheKey = url + "crawling";
-
-        if (MemoryCache.TryGetValue(casheKey, out IEnumerable<string>? result))
-        {
-            return result;
-        }
-        
-        var cacheEntryOptions = new MemoryCacheEntryOptions()
-            .SetSlidingExpiration(TimeSpan.FromSeconds(3));
-        
-        var crawlingResult = ClientService.CrawlToFindLinks(url);
-        var sitemapResult = SitemapService.GetAllUrlsFromSitemap(url);
-            
-        result = crawlingResult.Except(sitemapResult);
-
-        MemoryCache.Set(casheKey, result, cacheEntryOptions);
-
-        return result;
-    }
     public IEnumerable<Tuple<string, int>> GetLinksWithTimeResponse(string url)
     {
-        var casheKey = url + "time";
-
-        if (MemoryCache.TryGetValue(casheKey, out IEnumerable<Tuple<string, int>>? result))
-        {
-            return result;
-        }
-        
-        var cacheEntryOptions = new MemoryCacheEntryOptions()
-            .SetSlidingExpiration(TimeSpan.FromSeconds(3));
-        
-        var crawlingResult = ClientService.CrawlToFindLinks(url);
-        var sitemapResult = SitemapService.GetAllUrlsFromSitemap(url);
+        var crawlingResult = GetLinksByCrawling(url);
+        var sitemapResult = GetSitemapLinks(url);
         
         var union = crawlingResult.Union(sitemapResult).Distinct();
         
-        result = union.Select(link => new Tuple<string, int>(link, ClientService.GetTimeResponse(link)));
+        var result = union.Select(link => new Tuple<string, int>(link, ClientService.GetTimeResponse(link)));
 
+        return result;
+    }
+    public IEnumerable<string> GetLinksByCrawling(string url)
+    {
+        var casheKey = url + "crawling";
+        if (MemoryCache.TryGetValue(casheKey, out IEnumerable<string>? result))
+        {
+            return result;
+        }
+        
+        var cacheEntryOptions = new MemoryCacheEntryOptions()
+            .SetSlidingExpiration(TimeSpan.FromSeconds(3));
+        
+        result = ClientService.CrawlToFindLinks(url);
+            
         MemoryCache.Set(casheKey, result, cacheEntryOptions);
 
         return result;
     }
+    public IEnumerable<string> GetSitemapLinks(string url)
+    {
+        var casheKey = url + "sitemap";
+
+        if (MemoryCache.TryGetValue(casheKey, out IEnumerable<string>? result))
+        {
+            return result;
+        }
+        
+        var cacheEntryOptions = new MemoryCacheEntryOptions()
+            .SetSlidingExpiration(TimeSpan.FromSeconds(3));
+        
+        result = SitemapService.GetAllUrlsFromSitemap(url);
+            
+        MemoryCache.Set(casheKey, result, cacheEntryOptions);
+
+        return result;
+    }
+   
 }
