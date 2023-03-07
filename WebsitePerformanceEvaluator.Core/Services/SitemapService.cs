@@ -12,14 +12,13 @@ public class SitemapService : ISitemapService
         ClientService = сlientService;
     }
     
-    public async Task<List<string>> GetAllUrlsFromSitemapAsync(string baseUrl)
+    public List<string> GetAllUrlsFromSitemap(string baseUrl)
     {
-        var sitemapXml = await ClientService.GetSitemapAsync(baseUrl);
-        
+        var sitemapXml = ClientService.GetSitemap(baseUrl);
         var xmlSitemapList = sitemapXml.GetElementsByTagName("url");
         
         var urls = GetRawUrlsFromSitemap(xmlSitemapList);
-        
+
         return urls;
     }
 

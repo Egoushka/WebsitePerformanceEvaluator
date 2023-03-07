@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using System.Net;
 using System.Text;
 using System.Xml;
@@ -12,23 +13,31 @@ public class ClientService : IClientService
     public ClientService()
     {
     }
-    public async Task<XmlDocument> GetSitemapAsync(string baseUrl)
+    public XmlDocument GetSitemap(string baseUrl)
     {
-        var sitemapURL = $"{baseUrl}/sitemap.xml";
+        var sitemapUrl = $"{baseUrl}/sitemap.xml";
         
         //I had troubles with HttpClient, so I had to use WebClient
         var wc = new WebClient
         {
             Encoding = Encoding.UTF8
         };
-        var sitemapString = wc.DownloadString(sitemapURL);
-
+        var sitemapString = "";
+        try
+        {
+            sitemapString = wc.DownloadString(sitemapUrl);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine("Error while getting sitemap, sitemap will be ignored: " + e.Message);
+            return new XmlDocument();
+        }
         var sitemapXmlDocument = new XmlDocument();
         sitemapXmlDocument.LoadXml(sitemapString);
 
         return sitemapXmlDocument;
     }
-    public List<string> CrawlToFindLinks(string url)
+    public IEnumerable<string> CrawlToFindLinks(string url)
     {
         var doc = GetDocument(url);
         
@@ -52,5 +61,28 @@ public class ClientService : IClientService
         var web = new HtmlWeb();
         var doc = web.Load(url);
         return doc;
+    }
+    public int GetTimeResponse(string url)
+    {
+        var request = (HttpWebRequest)WebRequest.Create(url);
+        var timer = new Stopwatch();
+
+        timer.Start();
+        HttpWebResponse response = null;
+        try
+        {
+             response = (HttpWebResponse)request.GetResponse();
+             response.Close();
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine($"Error while getting response time of {url}, response time will be ignored. Error: {e.Message}");
+        }
+
+        timer.Stop();
+
+        var timeTaken = timer.Elapsed;
+        
+        return timeTaken.Milliseconds;
     }
 }

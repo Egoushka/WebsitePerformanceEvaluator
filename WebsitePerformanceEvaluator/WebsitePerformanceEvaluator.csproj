@@ -13,6 +13,8 @@
 
     <ItemGroup>
       <PackageReference Include="Autofac" Version="6.5.0" />
+      <PackageReference Include="ConsoleTableExt" Version="3.2.0" />
+      <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="8.0.0-preview.1.23110.8" />
       <PackageReference Include="Microsoft.Extensions.Http" Version="8.0.0-preview.1.23110.8" />
     </ItemGroup>
 

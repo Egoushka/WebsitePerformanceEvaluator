@@ -1,5 +1,11 @@
 ﻿using Autofac;
+using Autofac.Extensions.DependencyInjection;
+using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
+using WebsitePerformanceEvaluator.Core.Interfaces.Managers;
 using WebsitePerformanceEvaluator.Core.Interfaces.Services;
+using WebsitePerformanceEvaluator.Core.Managers;
 using WebsitePerformanceEvaluator.Core.Services;
 
 namespace WebsitePerformanceEvaluator;
@@ -8,16 +14,21 @@ internal static class Program
 {
     private static IContainer CompositionRoot()
     {
-        var builder = new ContainerBuilder();
-        builder.Register(c => new HttpClient())
-            .As<HttpClient>();
-        builder.RegisterType<Application>();
-        builder.RegisterType<ClientService>().As<IClientService>();
-        builder.RegisterType<SitemapService>().As<ISitemapService>();
+        var services = new ServiceCollection();
         
+        services.AddMemoryCache();
+        services.AddOptions();
+        services.Configure<MemoryCacheEntryOptions>(options => options.SetSlidingExpiration(TimeSpan.FromSeconds(3)));
+        services.AddTransient<IClientService, ClientService>();
+        services.AddTransient<ISitemapService, SitemapService>();
+        services.AddTransient<ILinkManager, LinkManager>();
+        services.AddTransient<Application>();
+        
+        var builder = new ContainerBuilder();
+         
+        builder.Populate(services);
         return builder.Build();
     }
-
     public static void Main()
     {
         CompositionRoot().Resolve<Application>().Run();
