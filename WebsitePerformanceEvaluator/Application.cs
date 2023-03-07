@@ -40,9 +40,10 @@ public class Application
         }
         else
         {
-            Console.WriteLine("Links found after crawling, but not in sitemap:");
             ConsoleHelper.PrintTable(new List<string> {"Link"}, linksInCrawlingNotInSitemap);
         }
+
+        Console.WriteLine();
     }
 
     private void PrintLinksInSitemapNotInCrawling(List<string> crawlingLinks, List<string> sitemapLinks)
@@ -58,6 +59,8 @@ public class Application
         {
             ConsoleHelper.PrintTable(new List<string> {"Link"}, linksInSitemapNotInCrawling);
         }
+
+        Console.WriteLine();
     }
 
     private void PrintLinksWithTimeResponse(string url)
@@ -68,5 +71,6 @@ public class Application
         Console.WriteLine("Links with time response:");
         
         ConsoleHelper.PrintTable(new List<string> {"Link", "Time(ms)"}, linksWithTimeResponse);
+        Console.WriteLine();
     }
 }
