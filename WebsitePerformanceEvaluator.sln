@@ -2,8 +2,6 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebsitePerformanceEvaluator", "WebsitePerformanceEvaluator\WebsitePerformanceEvaluator.csproj", "{0981E4D7-85E2-468B-B864-202C86EDB946}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebsitePerformanceEvaluator.Client", "WebsitePerformanceEvaluator.Client\WebsitePerformanceEvaluator.Client.csproj", "{534DEB04-0739-43AF-B338-8FB19F59AAFF}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebsitePerformanceEvaluator.Core", "WebsitePerformanceEvaluator.Core\WebsitePerformanceEvaluator.Core.csproj", "{80A1C8E3-DC43-452B-9FF2-34DF8EF319E1}"
 EndProject
 Global
@@ -16,10 +14,6 @@ Global
 		{0981E4D7-85E2-468B-B864-202C86EDB946}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0981E4D7-85E2-468B-B864-202C86EDB946}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0981E4D7-85E2-468B-B864-202C86EDB946}.Release|Any CPU.Build.0 = Release|Any CPU
-		{534DEB04-0739-43AF-B338-8FB19F59AAFF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{534DEB04-0739-43AF-B338-8FB19F59AAFF}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{534DEB04-0739-43AF-B338-8FB19F59AAFF}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{534DEB04-0739-43AF-B338-8FB19F59AAFF}.Release|Any CPU.Build.0 = Release|Any CPU
 		{80A1C8E3-DC43-452B-9FF2-34DF8EF319E1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{80A1C8E3-DC43-452B-9FF2-34DF8EF319E1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{80A1C8E3-DC43-452B-9FF2-34DF8EF319E1}.Release|Any CPU.ActiveCfg = Release|Any CPU
