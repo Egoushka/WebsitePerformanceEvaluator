@@ -62,7 +62,9 @@ public class Application
 
     private void PrintLinksWithTimeResponse(string url)
     {
-        var linksWithTimeResponse = LinkManager.GetLinksWithTimeResponse(url).ToList();
+        var linksWithTimeResponse = LinkManager.GetLinksWithTimeResponse(url)
+            .OrderBy(item => item.Item2)
+            .ToList();
         Console.WriteLine("Links with time response:");
         
         ConsoleHelper.PrintTable(new List<string> {"Link", "Time(ms)"}, linksWithTimeResponse);
