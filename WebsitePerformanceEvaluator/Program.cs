@@ -18,7 +18,7 @@ internal static class Program
         return builder.Build();
     }
 
-    public static async Task Main()
+    public static void Main()
     {
         CompositionRoot().Resolve<Application>().Run();
     }

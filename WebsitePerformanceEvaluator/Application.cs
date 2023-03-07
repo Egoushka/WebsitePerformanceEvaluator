@@ -9,23 +9,14 @@ public class Application
     {
         SitemapService = sitemapService;
     }
+
     public async Task Run()
     {
-       
-        try
+        var result = await SitemapService.GetAllUrlsFromSitemapAsync("https://seoagilitytools.com");
+        
+        foreach (var item in result)
         {
-            var result = await SitemapService.GetAllUrlsFromSitemapAsync("https://seoagilitytools.com");
-            foreach (var item in result )
-            {
-                Console.WriteLine(item);
-            }
+            Console.WriteLine(item);
         }
-        catch (Exception e)
-        {
-            Console.WriteLine(e);
-            throw;
-        }
-
-       
     }
 }

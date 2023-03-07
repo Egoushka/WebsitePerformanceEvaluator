@@ -9,7 +9,6 @@
 
     <ItemGroup>
       <ProjectReference Include="..\WebsitePerformanceEvaluator.Core\WebsitePerformanceEvaluator.Core.csproj" />
-      <ProjectReference Include="..\WebsitePerformanceEvaluator.Crawler\WebsitePerformanceEvaluator.Crawler.csproj" />
     </ItemGroup>
 
     <ItemGroup>
