@@ -1,7 +1,6 @@
 using Microsoft.Extensions.Caching.Memory;
 using WebsitePerformanceEvaluator.Core.Interfaces.Managers;
 using WebsitePerformanceEvaluator.Core.Interfaces.Services;
-using WebsitePerformanceEvaluator.Core.Services;
 
 namespace WebsitePerformanceEvaluator.Core.Managers;
 
@@ -22,10 +21,14 @@ public class LinkManager : ILinkManager
     public IEnumerable<string> GetLinksThatExistInSitemapButNotInCrawling(string url)
     {
         var casheKey = url + "sitemap";
-        if (MemoryCache.TryGetValue(casheKey, out IEnumerable<string>? result)) return result;
+        if (MemoryCache.TryGetValue(casheKey, out IEnumerable<string>? result))
+        {
+            return result;
+        }
         
         var cacheEntryOptions = new MemoryCacheEntryOptions()
             .SetSlidingExpiration(TimeSpan.FromSeconds(3));
+        
         var crawlingResult = ClientService.CrawlToFindLinks(url);
         var sitemapResult = SitemapService.GetAllUrlsFromSitemap(url);
             
@@ -38,7 +41,11 @@ public class LinkManager : ILinkManager
     public IEnumerable<string> GetLinksThatExistInCrawlingButNotInSitemap(string url)
     {
         var casheKey = url + "crawling";
-        if (MemoryCache.TryGetValue(casheKey, out IEnumerable<string>? result)) return result;
+
+        if (MemoryCache.TryGetValue(casheKey, out IEnumerable<string>? result))
+        {
+            return result;
+        }
         
         var cacheEntryOptions = new MemoryCacheEntryOptions()
             .SetSlidingExpiration(TimeSpan.FromSeconds(3));
@@ -55,13 +62,18 @@ public class LinkManager : ILinkManager
     public IEnumerable<Tuple<string, int>> GetLinksWithTimeResponse(string url)
     {
         var casheKey = url + "time";
-        if (MemoryCache.TryGetValue(casheKey, out IEnumerable<Tuple<string, int>>? result)) return result;
+
+        if (MemoryCache.TryGetValue(casheKey, out IEnumerable<Tuple<string, int>>? result))
+        {
+            return result;
+        }
         
         var cacheEntryOptions = new MemoryCacheEntryOptions()
             .SetSlidingExpiration(TimeSpan.FromSeconds(3));
         
         var crawlingResult = ClientService.CrawlToFindLinks(url);
         var sitemapResult = SitemapService.GetAllUrlsFromSitemap(url);
+        
         var union = crawlingResult.Union(sitemapResult).Distinct();
         
         result = union.Select(link => new Tuple<string, int>(link, ClientService.GetTimeResponse(link)));

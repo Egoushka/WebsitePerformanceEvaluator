@@ -5,14 +5,14 @@ namespace WebsitePerformanceEvaluator.Core.Services;
 
 public class SitemapService : ISitemapService
 {
-    public IClientService ClientService { get; set; }
+    private IClientService ClientService { get; set; }
 
     public SitemapService(IClientService сlientService)
     {
         ClientService = сlientService;
     }
     
-    public List<string> GetAllUrlsFromSitemap(string baseUrl)
+    public IEnumerable<string> GetAllUrlsFromSitemap(string baseUrl)
     {
         var sitemapXml = ClientService.GetSitemap(baseUrl);
         var xmlSitemapList = sitemapXml.GetElementsByTagName("url");
@@ -22,7 +22,7 @@ public class SitemapService : ISitemapService
         return urls;
     }
 
-    private List<string> GetRawUrlsFromSitemap(XmlNodeList xmlSitemapList)
+    private IEnumerable<string> GetRawUrlsFromSitemap(XmlNodeList xmlSitemapList)
     {
         var result = new List<string>();
         

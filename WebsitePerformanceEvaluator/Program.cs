@@ -2,7 +2,6 @@
 using Autofac.Extensions.DependencyInjection;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Options;
 using WebsitePerformanceEvaluator.Core.Interfaces.Managers;
 using WebsitePerformanceEvaluator.Core.Interfaces.Services;
 using WebsitePerformanceEvaluator.Core.Managers;

@@ -1,7 +1,4 @@
-using ConsoleTableExt;
 using WebsitePerformanceEvaluator.Core.Interfaces.Managers;
-using WebsitePerformanceEvaluator.Core.Interfaces.Services;
-using WebsitePerformanceEvaluator.Core.Managers;
 
 namespace WebsitePerformanceEvaluator;
 
@@ -17,7 +14,7 @@ public class Application
 
     public void Run()
     {
-        var url = "https://www.w3schools.com/";
+        const string url = "https://www.w3schools.com/";
         PrintLinksInCrawlingNotInSitemap(url);
         PrintLinksInSitemapNotInCrawling(url);
         PrintLinksWithTimeResponse(url);
@@ -28,9 +25,9 @@ public class Application
 
     private void PrintLinksInCrawlingNotInSitemap(string url)
     {
-        var linksInCrawlingNotInSitemap = LinkManager.GetLinksThatExistInCrawlingButNotInSitemap(url);
+        var linksInCrawlingNotInSitemap = LinkManager.GetLinksThatExistInCrawlingButNotInSitemap(url).ToList();
         Console.WriteLine("Links in crawling not in sitemap:");
-        if (linksInCrawlingNotInSitemap == null)
+        if (!linksInCrawlingNotInSitemap.Any())
         {
             Console.WriteLine("No links found");
         }
@@ -43,9 +40,9 @@ public class Application
 
     private void PrintLinksInSitemapNotInCrawling(string url)
     {
-        var linksInSitemapNotInCrawling = LinkManager.GetLinksThatExistInSitemapButNotInCrawling(url);
+        var linksInSitemapNotInCrawling = LinkManager.GetLinksThatExistInSitemapButNotInCrawling(url).ToList();
         Console.WriteLine("Links in sitemap not in crawling:");
-        if (linksInSitemapNotInCrawling == null)
+        if (!linksInSitemapNotInCrawling.Any())
         {
             Console.WriteLine("No links found");
         }
@@ -58,15 +55,15 @@ public class Application
 
     private void PrintLinksWithTimeResponse(string url)
     {
-        var linksWithTimeResponse = LinkManager.GetLinksWithTimeResponse(url);
+        var linksWithTimeResponse = LinkManager.GetLinksWithTimeResponse(url).ToList();
         Console.WriteLine("Links with time response:");
-        if (linksWithTimeResponse == null)
+        if (!linksWithTimeResponse.Any())
         {
             Console.WriteLine("No links found");
         }
         else
         {
-            ConsoleHelper.PrintTable(new List<string> {"Link", "Time"}, linksWithTimeResponse.ToList());
+            ConsoleHelper.PrintTable(new List<string> {"Link", "Time"}, linksWithTimeResponse);
         }
     }
     

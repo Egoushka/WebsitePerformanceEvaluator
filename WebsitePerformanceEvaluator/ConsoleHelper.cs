@@ -2,7 +2,7 @@ using ConsoleTableExt;
 
 namespace WebsitePerformanceEvaluator;
 
-public class ConsoleHelper
+public static class ConsoleHelper
 {
     public static void PrintTable(IEnumerable<string> headers, IEnumerable<string> rows)
     {

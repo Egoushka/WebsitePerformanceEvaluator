@@ -9,10 +9,6 @@ namespace WebsitePerformanceEvaluator.Core.Services;
 
 public class ClientService : IClientService
 {
-
-    public ClientService()
-    {
-    }
     public XmlDocument GetSitemap(string baseUrl)
     {
         var sitemapUrl = $"{baseUrl}/sitemap.xml";
@@ -68,11 +64,10 @@ public class ClientService : IClientService
         var timer = new Stopwatch();
 
         timer.Start();
-        HttpWebResponse response = null;
         try
         {
-             response = (HttpWebResponse)request.GetResponse();
-             response.Close();
+            var response = (HttpWebResponse)request.GetResponse();
+            response.Close();
         }
         catch (Exception e)
         {
