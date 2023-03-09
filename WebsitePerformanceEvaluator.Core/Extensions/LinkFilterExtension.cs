@@ -34,6 +34,6 @@ public static class LinkFilterExtension
 
     private static IEnumerable<Uri> RemoveAnchorLinks(this IEnumerable<Uri> links)
     {
-        return links.Where(link => !link.AbsolutePath.Contains('#'));
+        return links.Where(link => string.IsNullOrEmpty(link.Fragment));
     }
 }
