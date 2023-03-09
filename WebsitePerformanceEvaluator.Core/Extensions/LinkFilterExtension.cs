@@ -10,9 +10,8 @@ public static class LinkFilterExtension
         return links
             .Distinct()
             .Select(link => new Uri(uri, link))
-            .RemoveAnchorLinks()
-            .RemoveNotAbsolute()
             .CheckLinksHosts(uri)
+            .RemoveAnchorLinks()
             .Select(link => link.AbsoluteUri)
             .CheckForSlashAndRemove();
     }
@@ -20,11 +19,6 @@ public static class LinkFilterExtension
     private static IEnumerable<string> CheckForSlashAndRemove(this IEnumerable<string> links)
     {
         return links.Select(link => link.EndsWith("/") ? link.Remove(link.Length - 1) : link);
-    }
-
-    private static IEnumerable<Uri> RemoveNotAbsolute(this IEnumerable<Uri> links)
-    {
-        return links.Where(link => link.IsAbsoluteUri);
     }
 
     private static IEnumerable<Uri> CheckLinksHosts(this IEnumerable<Uri> links, Uri uri)
