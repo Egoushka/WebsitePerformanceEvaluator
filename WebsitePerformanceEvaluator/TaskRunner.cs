@@ -1,4 +1,3 @@
-using WebsitePerformanceEvaluator.Core.Extensions;
 using WebsitePerformanceEvaluator.Core.Interfaces.Managers;
 
 namespace WebsitePerformanceEvaluator;

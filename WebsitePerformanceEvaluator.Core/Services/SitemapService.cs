@@ -33,7 +33,7 @@ public class SitemapService : ISitemapService
                 result.Add(node["loc"]!.InnerText);
             }
         }
-
+        
         return result;
     }
 }

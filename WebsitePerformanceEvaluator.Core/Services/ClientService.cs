@@ -3,7 +3,6 @@ using System.Net;
 using System.Text;
 using System.Xml;
 using HtmlAgilityPack;
-using WebsitePerformanceEvaluator.Core.Extensions;
 using WebsitePerformanceEvaluator.Core.Interfaces.Services;
 
 namespace WebsitePerformanceEvaluator.Core.Services;

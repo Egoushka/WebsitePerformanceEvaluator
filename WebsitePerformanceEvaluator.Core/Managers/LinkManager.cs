@@ -58,12 +58,10 @@ public class LinkManager : ILinkManager
         var cacheEntryOptions = new MemoryCacheEntryOptions()
             .SetSlidingExpiration(TimeSpan.FromSeconds(3));
         
-        
         result = SitemapService.GetAllUrlsFromSitemap(url).ApplyFilters(url);
             
         MemoryCache.Set(casheKey, result, cacheEntryOptions);
 
         return result;
     }
-   
 }

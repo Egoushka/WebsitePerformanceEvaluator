@@ -12,5 +12,4 @@ public class Application
     {
         TaskRunner.Start();
     }
-
 }
