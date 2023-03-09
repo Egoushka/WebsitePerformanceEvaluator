@@ -1,3 +1,4 @@
+using WebsitePerformanceEvaluator.Core.Extensions;
 using WebsitePerformanceEvaluator.Core.Interfaces.Managers;
 
 namespace WebsitePerformanceEvaluator;
@@ -13,9 +14,9 @@ public class TaskRunner
         LinkManager = linkManager;
     }
     public void Start()
-    {
+    {   
         var url = ConsoleHelper.GetInput("Enter url:");
-        
+        var url1 = "https://www.yourdigitalresource.com/";
         var linksByCrawling = LinkManager.GetLinksByCrawling(url).ToList();
         var sitemapLinks = LinkManager.GetSitemapLinks(url).ToList();
         

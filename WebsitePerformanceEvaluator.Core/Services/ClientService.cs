@@ -3,6 +3,7 @@ using System.Net;
 using System.Text;
 using System.Xml;
 using HtmlAgilityPack;
+using WebsitePerformanceEvaluator.Core.Extensions;
 using WebsitePerformanceEvaluator.Core.Interfaces.Services;
 
 namespace WebsitePerformanceEvaluator.Core.Services;
@@ -43,14 +44,9 @@ public class ClientService : IClientService
         {
             return new List<string>();
         }
-        var baseUri = new Uri(url);
-        
-        return linkNodes.Select(link => 
-                link.Attributes["href"].Value)
-            .Where(href => href.StartsWith('/'))
-            .Distinct()
-            .Select(href => new Uri(baseUri, href).AbsoluteUri)
-            .ToList();
+
+        return linkNodes.Select(link =>
+            link.Attributes["href"].Value);
     }
     private HtmlDocument GetDocument(string url)
     {

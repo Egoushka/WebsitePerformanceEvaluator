@@ -1,4 +1,5 @@
 using Microsoft.Extensions.Caching.Memory;
+using WebsitePerformanceEvaluator.Core.Extensions;
 using WebsitePerformanceEvaluator.Core.Interfaces.Managers;
 using WebsitePerformanceEvaluator.Core.Interfaces.Services;
 
@@ -39,7 +40,7 @@ public class LinkManager : ILinkManager
         var cacheEntryOptions = new MemoryCacheEntryOptions()
             .SetSlidingExpiration(TimeSpan.FromSeconds(3));
         
-        result = ClientService.CrawlToFindLinks(url);
+        result = ClientService.CrawlToFindLinks(url).ApplyFilters(url);
             
         MemoryCache.Set(casheKey, result, cacheEntryOptions);
 
@@ -57,7 +58,8 @@ public class LinkManager : ILinkManager
         var cacheEntryOptions = new MemoryCacheEntryOptions()
             .SetSlidingExpiration(TimeSpan.FromSeconds(3));
         
-        result = SitemapService.GetAllUrlsFromSitemap(url);
+        
+        result = SitemapService.GetAllUrlsFromSitemap(url).ApplyFilters(url);
             
         MemoryCache.Set(casheKey, result, cacheEntryOptions);
 
