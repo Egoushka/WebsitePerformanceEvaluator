@@ -11,7 +11,10 @@ public class ClientService : IClientService
 {
     public XmlDocument GetSitemap(string baseUrl)
     {
-        var sitemapUrl = $"{baseUrl}sitemap.xml";
+        var uri = new Uri(baseUrl);
+        baseUrl = uri.Scheme + "://" + uri.Host;
+        
+        var sitemapUrl = $"{baseUrl}/sitemap.xml";
         
         //I had troubles with HttpClient, so I had to use WebClient
         var wc = new WebClient
