@@ -15,7 +15,6 @@ public static class LinkFilterExtension
             .CheckForSlashAndRemove()
             .CheckLinksHosts(baseUrl)
             .RemoveNotHttpsOrHttpScheme();
-
     }
     private static IEnumerable<string> AddBaseUrl(this IEnumerable<string> links, string baseUrl)
     {
