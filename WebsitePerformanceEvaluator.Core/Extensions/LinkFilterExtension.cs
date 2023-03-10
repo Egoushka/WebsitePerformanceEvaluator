@@ -1,42 +1,59 @@
+using CommunityToolkit.HighPerformance.Buffers;
+
 namespace WebsitePerformanceEvaluator.Core.Extensions;
 
 public static class LinkFilterExtension
 {
     public static IEnumerable<string> ApplyFilters(this IEnumerable<string> links, string baseUrl)
     {
-        var uri = new Uri(baseUrl);
-
         return links
             .Distinct()
-            .Select(link => new Uri(uri, link))
-            .RemoveNotHttpsOrHttpScheme()
-            .CheckLinksHosts(uri)
+            .AddBaseUrl(baseUrl)
+            .CheckForSlashAndRemove()
             .RemoveAnchorLinks()
             .RemoveFilesLinks()
-            .Select(link => link.AbsoluteUri)
-            .CheckForSlashAndRemove();
+            .RemoveNotHttpsOrHttpScheme()
+            .CheckLinksHosts(baseUrl);
     }
 
-    public static IEnumerable<Uri> RemoveNotHttpsOrHttpScheme(this IEnumerable<Uri> links)
+    private static IEnumerable<string> AddBaseUrl(this IEnumerable<string> links, string baseUrl)
     {
-        return links.Where(link => link.Scheme == Uri.UriSchemeHttp || link.Scheme == Uri.UriSchemeHttps);
-    }
-    public static IEnumerable<Uri> RemoveFilesLinks(this IEnumerable<Uri> links)
-    {
-        return links.Where(link => !link.AbsolutePath.Contains("."));
+        return links.Select(link => link.StartsWith("/") ? baseUrl[..^1] + link : link);
     }
     private static IEnumerable<string> CheckForSlashAndRemove(this IEnumerable<string> links)
     {
         return links.Select(link => link.EndsWith("/") ? link.Remove(link.Length - 1) : link);
     }
-
-    private static IEnumerable<Uri> CheckLinksHosts(this IEnumerable<Uri> links, Uri uri)
+    private static IEnumerable<string> RemoveAnchorLinks(this IEnumerable<string> links)
     {
-        return links.Where(link => link.Host == uri.Host);
+        return links.Where(link => !link.Contains('#'));
     }
-
-    private static IEnumerable<Uri> RemoveAnchorLinks(this IEnumerable<Uri> links)
+    private static IEnumerable<string> RemoveFilesLinks(this IEnumerable<string> links)
     {
-        return links.Where(link => string.IsNullOrEmpty(link.Fragment));
+        return links.Where(link => !link.Contains('.') || link.LastIndexOf('.') < link.LastIndexOf('/'));
+    }
+    private static IEnumerable<string> RemoveNotHttpsOrHttpScheme(this IEnumerable<string> links)
+    {
+        return links.Where(link => link.StartsWith(Uri.UriSchemeHttp) || link.StartsWith(Uri.UriSchemeHttps));
+    }
+    private static IEnumerable<string> CheckLinksHosts(this IEnumerable<string> urls, string baseUrl)
+    {
+        return urls.Where(url => url.CompareHosts(baseUrl) != string.Empty);
+    }
+    private static string CompareHosts(this string url, string baseUrl)
+    {
+        var urlHost = url.GetHost();
+        var baseUrlHost = baseUrl.GetHost();
+        return urlHost == baseUrlHost ? url : string.Empty;
+    }
+    private static string GetHost(this string url)
+    {
+        var prefixOffset = url.AsSpan().IndexOf(stackalloc char[]{':', '/', '/'});
+        var startIndex = prefixOffset == -1 ? 0 : prefixOffset + 3;
+        var endIndex = url.AsSpan().IndexOf('/');
+        
+        var host = endIndex == -1 ? url.AsSpan(startIndex) : 
+            url.AsSpan(startIndex, endIndex);
+        return StringPool.Shared.GetOrAdd(host);
     }
 }
