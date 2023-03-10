@@ -36,13 +36,11 @@ public class LinkManager : ILinkManager
         {
             return result;
         }
-        
-        var cacheEntryOptions = new MemoryCacheEntryOptions()
-            .SetSlidingExpiration(TimeSpan.FromSeconds(3));
+
         
         result = ClientService.CrawlWebsiteToFindLinks(url).ApplyFilters(url);
             
-        MemoryCache.Set(casheKey, result, cacheEntryOptions);
+        MemoryCache.Set(casheKey, result);
 
         return result;
     }
@@ -55,12 +53,10 @@ public class LinkManager : ILinkManager
             return result;
         }
         
-        var cacheEntryOptions = new MemoryCacheEntryOptions()
-            .SetSlidingExpiration(TimeSpan.FromSeconds(3));
         
         result = SitemapService.GetAllUrlsFromSitemap(url).ApplyFilters(url);
             
-        MemoryCache.Set(casheKey, result, cacheEntryOptions);
+        MemoryCache.Set(casheKey, result);
 
         return result;
     }
