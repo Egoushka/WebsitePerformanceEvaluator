@@ -25,8 +25,8 @@ public class LinkManager : ILinkManager
         
         var union = crawlingResult.Union(sitemapResult).Distinct();
         
-        var result = union.Select(link => new Tuple<string, int>(link, ClientService.GetTimeResponse(link)));
-
+        var result = union.AsParallel().Select(link => new Tuple<string, int>(link, ClientService.GetTimeResponse(link))).ToList();
+        
         return result;
     }
     public IEnumerable<string> GetLinksByCrawling(string url)
@@ -40,7 +40,7 @@ public class LinkManager : ILinkManager
         var cacheEntryOptions = new MemoryCacheEntryOptions()
             .SetSlidingExpiration(TimeSpan.FromSeconds(3));
         
-        result = ClientService.CrawlToFindLinks(url).ApplyFilters(url);
+        result = ClientService.CrawlWebsiteToFindLinks(url).ApplyFilters(url);
             
         MemoryCache.Set(casheKey, result, cacheEntryOptions);
 
