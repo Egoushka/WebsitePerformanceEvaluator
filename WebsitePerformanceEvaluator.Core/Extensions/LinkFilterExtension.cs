@@ -8,12 +8,14 @@ public static class LinkFilterExtension
     {
         return links
             .Distinct()
-            .AddBaseUrl(baseUrl)
-            .CheckForSlashAndRemove()
             .RemoveAnchorLinks()
             .RemoveFilesLinks()
-            .RemoveNotHttpsOrHttpScheme()
-            .CheckLinksHosts(baseUrl);
+            .RemoveLinksWithAttributes()
+            .AddBaseUrl(baseUrl)
+            .CheckForSlashAndRemove()
+            .CheckLinksHosts(baseUrl)
+            .RemoveNotHttpsOrHttpScheme();
+
     }
     private static IEnumerable<string> AddBaseUrl(this IEnumerable<string> links, string baseUrl)
     {
