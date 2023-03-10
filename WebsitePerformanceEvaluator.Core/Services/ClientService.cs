@@ -11,6 +11,8 @@ namespace WebsitePerformanceEvaluator.Core.Services;
 
 public class ClientService : IClientService
 {
+    HttpClient httpClient = new ();
+    
     public XmlDocument GetSitemap(string baseUrl)
     {
         var uri = new Uri(baseUrl);
@@ -94,18 +96,14 @@ public class ClientService : IClientService
     }
     private HtmlDocument GetDocument(string url)
     {
-        try
-        {
-            var web = new HtmlWeb();
-            var doc = web.Load(url);
-            return doc;
-        }
-        catch (Exception e)
-        {
-            Console.WriteLine($"Error while getting document of {url}, document will be ignored. Error: {e.Message}");
-        }
-
-        return new HtmlDocument();
+        var doc = new HtmlDocument();
+        
+        using var response = httpClient.GetAsync(url).Result;
+        var html = response.Content.ReadAsStringAsync().Result;
+        
+        doc.LoadHtml(html);
+        
+        return doc;
     }
     public int GetTimeResponse(string url)
     {
