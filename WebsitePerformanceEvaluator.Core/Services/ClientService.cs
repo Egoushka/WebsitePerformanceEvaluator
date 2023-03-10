@@ -1,8 +1,10 @@
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Net;
 using System.Text;
 using System.Xml;
 using HtmlAgilityPack;
+using WebsitePerformanceEvaluator.Core.Extensions;
 using WebsitePerformanceEvaluator.Core.Interfaces.Services;
 
 namespace WebsitePerformanceEvaluator.Core.Services;
@@ -36,7 +38,39 @@ public class ClientService : IClientService
 
         return sitemapXmlDocument;
     }
-    public IEnumerable<string> CrawlToFindLinks(string url)
+
+    public IEnumerable<string> CrawlWebsiteToFindLinks(string url)
+    {
+        var links = new HashSet<string>();
+        var visitedLinks = new List<string>();
+        var linksToVisit = new List<string> {url};
+
+        while (linksToVisit.Count > 0)
+        {
+            var link = linksToVisit[0];
+            linksToVisit.RemoveAt(0);
+            visitedLinks.Add(link);
+            
+            var newLinks = CrawlPageToFindLinks(link).ApplyFilters(url).ToList();
+            
+            foreach (var item in newLinks)
+            {
+                links.Add(item);    
+            }
+            
+            foreach (var newLink in newLinks)
+            {
+                if (!visitedLinks.Contains(newLink) && !linksToVisit.Contains(newLink))
+                {
+                    linksToVisit.Add(newLink);
+                }
+            }
+        }
+
+        return links;
+    }
+
+    public IEnumerable<string> CrawlPageToFindLinks(string url)
     {
         var doc = GetDocument(url);
         
@@ -52,9 +86,18 @@ public class ClientService : IClientService
     }
     private HtmlDocument GetDocument(string url)
     {
-        var web = new HtmlWeb();
-        var doc = web.Load(url);
-        return doc;
+        try
+        {
+            var web = new HtmlWeb();
+            var doc = web.Load(url);
+            return doc;
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine($"Error while getting document of {url}, document will be ignored. Error: {e.Message}");
+        }
+
+        return new HtmlDocument();
     }
     public int GetTimeResponse(string url)
     {
