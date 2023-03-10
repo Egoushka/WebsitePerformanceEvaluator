@@ -36,7 +36,15 @@ public class ClientService : IClientService
         }
 
         var sitemapXmlDocument = new XmlDocument();
-        sitemapXmlDocument.LoadXml(sitemapString);
+        try
+        {
+            sitemapXmlDocument.LoadXml(sitemapString);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine("Error while parsing sitemap, sitemap will be ignored: " + e.Message);
+            return new XmlDocument();
+        }
 
         return sitemapXmlDocument;
     }
