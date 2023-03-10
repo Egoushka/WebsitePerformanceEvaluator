@@ -14,7 +14,6 @@ public class ClientService : IClientService
     {
         _logger = logger;
         _httpClient = httpClientFactory.CreateClient();
-        _logger = logger;
     }
 
     public async Task<IEnumerable<string>> CrawlWebsiteToFindLinks(string url)
