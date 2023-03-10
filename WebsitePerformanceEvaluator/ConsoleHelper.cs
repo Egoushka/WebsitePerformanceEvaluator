@@ -13,7 +13,7 @@ public static class ConsoleHelper
             .ExportAndWriteLine();
     }
 
-    public static void PrintTable(List<string> headers, List<Tuple<string, int>> rows)
+    public static void PrintTable(IEnumerable<string> headers, IEnumerable<Tuple<string, int>> rows)
     {
         ConsoleTableBuilder
             .From(rows.ToList())

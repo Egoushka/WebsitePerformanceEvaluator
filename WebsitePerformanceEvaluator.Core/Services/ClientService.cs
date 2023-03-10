@@ -27,10 +27,8 @@ public class ClientService : IClientService
                 var task = Task.Run(async () =>
                 {
                     var newLinks = (await CrawlPageToFindLinks(link)).ApplyFilters(url).ToList();
-                    foreach (var item in newLinks)
-                    {
-                        links.Add(item);
-                    }
+                    
+                    links.UnionWith(newLinks);
 
                     foreach (var newLink in newLinks
                                  .Where(newLink =>
@@ -43,13 +41,11 @@ public class ClientService : IClientService
                 });
                 tasks.Add(task);
             }
-
             await Task.WhenAll(tasks);
         }
 
         return links;
     }
-
     public async Task<IEnumerable<string>> CrawlPageToFindLinks(string url)
     {
         var doc = await GetDocument(url);
@@ -90,7 +86,6 @@ public class ClientService : IClientService
         {
             Console.WriteLine("Error while getting response: " + e.Message);
         }
-
         timer.Stop();
 
         var timeTaken = timer.Elapsed;
