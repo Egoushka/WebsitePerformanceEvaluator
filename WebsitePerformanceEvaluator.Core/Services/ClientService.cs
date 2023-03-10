@@ -86,17 +86,8 @@ public class ClientService : IClientService
         timer.Start();
         try
         {
-            var response = request.GetResponseAsync();
-            while(!response.IsCompleted)
-            {
-                Thread.Sleep(100);
-                if (timer.ElapsedMilliseconds > 10000)
-                {
-                    request.EndGetResponse(response);
-                    return -1;
-                }
-            }
-            response.Result.Close();
+            var response = (HttpWebResponse)request.GetResponse();
+            response.Close();
         }
         catch (Exception e)
         {
