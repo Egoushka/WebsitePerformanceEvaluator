@@ -1,3 +1,4 @@
+using WebsitePerformanceEvaluator.Core.Extensions;
 using WebsitePerformanceEvaluator.Core.Interfaces.Managers;
 
 namespace WebsitePerformanceEvaluator;
@@ -12,22 +13,29 @@ public class TaskRunner
     {
         LinkManager = linkManager;
     }
-    public void Start()
-    {   
-        var url = ConsoleHelper.GetInput("Enter url:");
-        var url1 = "https://www.yourdigitalresource.com/";
-        var linksByCrawling = LinkManager.GetLinksByCrawling(url).ToList();
-        var sitemapLinks = LinkManager.GetSitemapLinks(url).ToList();
+    public async Task Start()
+    {
+        var watch = System.Diagnostics.Stopwatch.StartNew();
+        
+        //var url = ConsoleHelper.GetInput("Enter url:");
+        var url = "https://ukad-group.com/";
+        watch.Start();
+        var linksByCrawling = (await LinkManager.GetLinksByCrawling(url)).ToList().OrderBy(item => item).ToList();
+        var sitemapLinks = LinkManager.GetSitemapLinks(url).ToList().OrderBy(item => item).ToList();
         
         LinksCountInSitemap = sitemapLinks.Count;
         LinksCountAfterCrawling = linksByCrawling.Count;
-        
+
         PrintLinksInCrawlingNotInSitemap(linksByCrawling, sitemapLinks);
         PrintLinksInSitemapNotInCrawling(linksByCrawling, sitemapLinks);
-        PrintLinksWithTimeResponse(url);
+        await PrintLinksWithTimeResponse(url);
+
         
         Console.WriteLine($"Links in sitemap: {LinksCountInSitemap}");
         Console.WriteLine($"Links after crawling: {LinksCountAfterCrawling}");
+        watch.Stop();
+
+        Console.WriteLine($"Time elapsed: {watch.ElapsedMilliseconds / 1000} s");
     }
 
     private void PrintLinksInCrawlingNotInSitemap(List<string> crawlingLinks, List<string> sitemapLinks)
@@ -63,9 +71,9 @@ public class TaskRunner
         Console.WriteLine();
     }
 
-    private void PrintLinksWithTimeResponse(string url)
+    private async Task PrintLinksWithTimeResponse(string url)
     {
-        var linksWithTimeResponse = LinkManager.GetLinksWithTimeResponse(url)
+        var linksWithTimeResponse =  (await LinkManager.GetLinksWithTimeResponse(url))
             .OrderBy(item => item.Item2)
             .ToList();
         Console.WriteLine("Links with time response:");
