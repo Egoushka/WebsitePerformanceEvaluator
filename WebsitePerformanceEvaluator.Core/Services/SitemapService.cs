@@ -1,5 +1,3 @@
-using System.Net;
-using System.Text;
 using System.Xml;
 using WebsitePerformanceEvaluator.Core.Interfaces.Services;
 
@@ -7,16 +5,12 @@ namespace WebsitePerformanceEvaluator.Core.Services;
 
 public class SitemapService : ISitemapService
 {
-    private IClientService ClientService { get; set; }
 
-    public SitemapService(IClientService сlientService)
-    {
-        ClientService = сlientService;
-    }
+    private readonly HttpClient _httpClient = new();
 
-    public IEnumerable<string> GetAllUrlsFromSitemap(string baseUrl)
+    public async Task<IEnumerable<string>> GetAllUrlsFromSitemap(string baseUrl)
     {
-        var sitemapXml = GetSitemap(baseUrl);
+        var sitemapXml = await GetSitemap(baseUrl);
         var xmlSitemapList = sitemapXml.GetElementsByTagName("url");
 
         var urls = GetRawUrlsFromSitemap(xmlSitemapList);
@@ -24,20 +18,20 @@ public class SitemapService : ISitemapService
         return urls;
     }
 
-    private XmlDocument GetSitemap(string baseUrl)
+    private async Task<XmlDocument> GetSitemap(string baseUrl)
     {
         var uri = new Uri(baseUrl);
         baseUrl = uri.Scheme + "://" + uri.Host;
 
         var sitemapUrl = $"{baseUrl}/sitemap.xml";
 
-        var sitemapXmlDocument = GetSitemapXmlDocument(sitemapUrl);
+        var sitemapXmlDocument = await GetSitemapXmlDocument(sitemapUrl);
         
         return sitemapXmlDocument.DocumentElement == null ? new XmlDocument() : sitemapXmlDocument;
     }
-    private XmlDocument GetSitemapXmlDocument(string sitemapUrl)
+    private async Task<XmlDocument> GetSitemapXmlDocument(string sitemapUrl)
     {
-        var sitemapString = DownloadSitemap(sitemapUrl);
+        var sitemapString = await DownloadSitemap(sitemapUrl);
         var sitemapXmlDocument = new XmlDocument();
         try
         {
@@ -52,16 +46,12 @@ public class SitemapService : ISitemapService
         Console.WriteLine("Sitemap was successfully parsed");
         return sitemapXmlDocument;
     }
-    private string DownloadSitemap(string sitemapUrl)
+    private async Task<string> DownloadSitemap(string sitemapUrl)
     {
-        var wc = new WebClient
-        {
-            Encoding = Encoding.UTF8
-        };
         string sitemapString;
         try
         {
-            sitemapString = wc.DownloadString(sitemapUrl);
+            sitemapString = await _httpClient.GetStringAsync(sitemapUrl);
         }
         catch (Exception e)
         {

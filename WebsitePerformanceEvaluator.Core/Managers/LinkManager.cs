@@ -22,22 +22,14 @@ public class LinkManager : ILinkManager
     public async Task<IEnumerable<Tuple<string, int>>> GetLinksWithTimeResponse(string url)
     {
         var crawlingResult = await GetLinksByCrawling(url);
-        var sitemapResult = GetSitemapLinks(url);
+        var sitemapResult = await GetSitemapLinks(url);
         var union = crawlingResult.Union(sitemapResult).Distinct();
 
         var result = new List<Tuple<string, int>>();
-        var tasks = new List<Task>();
 
-        foreach (var link in union)
-        {
-            tasks.Add(Task.Run(() =>
-            {
-                var time = ClientService.GetTimeResponse(link);
-                result.Add(new Tuple<string, int>(link, time));
-            }));
-        }
+        union.AsParallel().Select(link => new Tuple<string, int>(link, ClientService.GetTimeResponse(link)))
+            .ForAll(result.Add);
 
-        await Task.WhenAll(tasks);
 
         return result;
     }
@@ -47,25 +39,27 @@ public class LinkManager : ILinkManager
         var casheKey = url + "crawling";
         if (MemoryCache.TryGetValue(casheKey, out IEnumerable<string>? result))
         {
-            return result;
+            return result!;
         }
 
         result = (await ClientService.CrawlWebsiteToFindLinks(url)).ApplyFilters(url);
-        MemoryCache.Set(casheKey, result);
+        var linksByCrawling = result.ToList();
+        
+        MemoryCache.Set(casheKey, linksByCrawling);
 
-        return result;
+        return linksByCrawling;
     }
 
-    public IEnumerable<string> GetSitemapLinks(string url)
+    public async Task<IEnumerable<string>> GetSitemapLinks(string url)
     {
         var casheKey = url + "sitemap";
 
         if (MemoryCache.TryGetValue(casheKey, out IEnumerable<string>? result))
         {
-            return result;
+            return result!;
         }
 
-        result = SitemapService.GetAllUrlsFromSitemap(url).ApplyFilters(url);
+        result = (await SitemapService.GetAllUrlsFromSitemap(url)).ApplyFilters(url);
 
         var sitemapLinks = result.ToList();
         MemoryCache.Set(casheKey, sitemapLinks);

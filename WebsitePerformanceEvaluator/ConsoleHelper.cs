@@ -26,6 +26,6 @@ public static class ConsoleHelper
     public static string GetInput(string message)
     {
         Console.WriteLine(message);
-        return Console.ReadLine();
+        return Console.ReadLine()!;
     }
 }

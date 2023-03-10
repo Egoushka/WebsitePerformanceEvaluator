@@ -1,7 +1,4 @@
 using System.Diagnostics;
-using System.Net;
-using System.Text;
-using System.Xml;
 using HtmlAgilityPack;
 using WebsitePerformanceEvaluator.Core.Extensions;
 using WebsitePerformanceEvaluator.Core.Interfaces.Services;
@@ -10,7 +7,7 @@ namespace WebsitePerformanceEvaluator.Core.Services;
 
 public class ClientService : IClientService
 {
-    HttpClient httpClient = new();
+    private readonly HttpClient _httpClient = new();
     public async Task<IEnumerable<string>> CrawlWebsiteToFindLinks(string url)
     {
         var links = new HashSet<string> { url };
@@ -66,28 +63,26 @@ public class ClientService : IClientService
             link.Attributes["href"].Value);
     }
 
-    private async Task<HtmlDocument> GetDocument(string url)
+    private Task<HtmlDocument> GetDocument(string url)
     {
         var doc = new HtmlDocument();
 
-        using var response = httpClient.GetAsync(url).Result;
+        using var response = _httpClient.GetAsync(url).Result;
         var html = response.Content.ReadAsStringAsync().Result;
 
         doc.LoadHtml(html);
 
-        return doc;
+        return Task.FromResult(doc);
     }
 
     public int GetTimeResponse(string url)
     {
-        var request = (HttpWebRequest)WebRequest.Create(url);
         var timer = new Stopwatch();
 
         timer.Start();
         try
         {
-            var response = (HttpWebResponse)request.GetResponse();
-            response.Close();
+            _httpClient.GetAsync(url).Wait();
         }
         catch (Exception e)
         {
