@@ -1,5 +1,6 @@
 using System.Diagnostics;
 using HtmlAgilityPack;
+using Serilog;
 using WebsitePerformanceEvaluator.Core.Extensions;
 using WebsitePerformanceEvaluator.Core.Interfaces.Services;
 
@@ -8,9 +9,15 @@ namespace WebsitePerformanceEvaluator.Core.Services;
 public class ClientService : IClientService
 {
     private readonly HttpClient _httpClient = new();
+    private readonly ILogger _logger;
+    public ClientService(ILogger logger)
+    {
+        _logger = logger;
+    }
 
     public async Task<IEnumerable<string>> CrawlWebsiteToFindLinks(string url)
     {
+        _logger.Information("Start getting links by crawling");
         var links = new HashSet<string> { url };
         var visitedLinks = new List<string>();
         var linksToVisit = new List<string> { url };
@@ -84,7 +91,7 @@ public class ClientService : IClientService
         }
         catch (Exception e)
         {
-            Console.WriteLine("Error while getting response: " + e.Message);
+            _logger.Error(e, "Error while getting response");
         }
         timer.Stop();
 

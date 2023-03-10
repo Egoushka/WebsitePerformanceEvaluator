@@ -1,4 +1,5 @@
 using System.Xml;
+using Serilog;
 using WebsitePerformanceEvaluator.Core.Interfaces.Services;
 
 namespace WebsitePerformanceEvaluator.Core.Services;
@@ -6,9 +7,16 @@ namespace WebsitePerformanceEvaluator.Core.Services;
 public class SitemapService : ISitemapService
 {
     private readonly HttpClient _httpClient = new();
+    private readonly ILogger _logger;
+    
+    public SitemapService(ILogger logger)
+    {
+        _logger = logger;
+    }
 
     public async Task<IEnumerable<string>> GetAllUrlsFromSitemap(string baseUrl)
     {
+        _logger.Information("Start getting sitemap links");
         var sitemapXml = await GetSitemap(baseUrl);
         var xmlSitemapList = sitemapXml.GetElementsByTagName("url");
 
@@ -39,11 +47,11 @@ public class SitemapService : ISitemapService
         }
         catch (Exception e)
         {
-            Console.WriteLine("Error while parsing sitemap, sitemap will be ignored: " + e.Message);
+            _logger.Error(e, "Error while parsing sitemap, sitemap will be ignored");
             return new XmlDocument();
         }
 
-        Console.WriteLine("Sitemap was successfully parsed");
+        _logger.Information("Sitemap downloaded successfully");
         return sitemapXmlDocument;
     }
 
@@ -56,7 +64,7 @@ public class SitemapService : ISitemapService
         }
         catch (Exception e)
         {
-            Console.WriteLine("Error while getting sitemap, sitemap will be ignored: " + e.Message);
+            _logger.Error(e, "Error while downloading sitemap, sitemap will be ignored");
             return "";
         }
 
