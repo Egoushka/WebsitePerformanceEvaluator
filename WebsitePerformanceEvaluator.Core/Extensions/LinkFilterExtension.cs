@@ -31,7 +31,11 @@ public static class LinkFilterExtension
     }
     private static IEnumerable<string> RemoveFilesLinks(this IEnumerable<string> links)
     {
-        return links.Where(link => !link.Contains('.') || link.LastIndexOf('.') < link.LastIndexOf('/'));
+        return links.Where(link => link.LastIndexOf('.') < link.LastIndexOf('/'));
+    }
+    private static IEnumerable<string> RemoveLinksWithAttributes(this IEnumerable<string> links)
+    {
+        return links.Where(link => !link.Contains('?'));
     }
     private static IEnumerable<string> RemoveNotHttpsOrHttpScheme(this IEnumerable<string> links)
     {
