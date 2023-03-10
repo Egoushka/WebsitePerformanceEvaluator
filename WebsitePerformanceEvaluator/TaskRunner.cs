@@ -12,16 +12,17 @@ public class TaskRunner
     {
         LinkManager = linkManager;
     }
+
     public async Task Start()
     {
         var watch = System.Diagnostics.Stopwatch.StartNew();
-        
+
         //var url = ConsoleHelper.GetInput("Enter url:");
         var url = "https://ukad-group.com/";
         watch.Start();
         var linksByCrawling = (await LinkManager.GetLinksByCrawling(url)).ToList().OrderBy(item => item).ToList();
         var sitemapLinks = LinkManager.GetSitemapLinks(url).ToList().OrderBy(item => item).ToList();
-        
+
         LinksCountInSitemap = sitemapLinks.Count;
         LinksCountAfterCrawling = linksByCrawling.Count;
 
@@ -29,7 +30,7 @@ public class TaskRunner
         PrintLinksInSitemapNotInCrawling(linksByCrawling, sitemapLinks);
         await PrintLinksWithTimeResponse(url);
 
-        
+
         Console.WriteLine($"Links in sitemap: {LinksCountInSitemap}");
         Console.WriteLine($"Links after crawling: {LinksCountAfterCrawling}");
         watch.Stop();
@@ -47,7 +48,7 @@ public class TaskRunner
         }
         else
         {
-            ConsoleHelper.PrintTable(new List<string> {"Link"}, linksInCrawlingNotInSitemap);
+            ConsoleHelper.PrintTable(new List<string> { "Link" }, linksInCrawlingNotInSitemap);
         }
 
         Console.WriteLine();
@@ -57,14 +58,14 @@ public class TaskRunner
     {
         var linksInSitemapNotInCrawling = sitemapLinks.Except(crawlingLinks).ToList();
         Console.WriteLine("Links in sitemap, that wasn't found after crawling:");
-        
+
         if (!linksInSitemapNotInCrawling.Any())
         {
             Console.WriteLine("No links found");
         }
         else
         {
-            ConsoleHelper.PrintTable(new List<string> {"Link"}, linksInSitemapNotInCrawling);
+            ConsoleHelper.PrintTable(new List<string> { "Link" }, linksInSitemapNotInCrawling);
         }
 
         Console.WriteLine();
@@ -72,12 +73,12 @@ public class TaskRunner
 
     private async Task PrintLinksWithTimeResponse(string url)
     {
-        var linksWithTimeResponse =  (await LinkManager.GetLinksWithTimeResponse(url))
+        var linksWithTimeResponse = (await LinkManager.GetLinksWithTimeResponse(url))
             .OrderBy(item => item.Item2)
             .ToList();
         Console.WriteLine("Links with time response:");
-        
-        ConsoleHelper.PrintTable(new List<string> {"Link", "Time(ms)"}, linksWithTimeResponse);
+
+        ConsoleHelper.PrintTable(new List<string> { "Link", "Time(ms)" }, linksWithTimeResponse);
         Console.WriteLine();
     }
 }

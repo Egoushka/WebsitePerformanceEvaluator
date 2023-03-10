@@ -22,6 +22,7 @@ public static class ConsoleHelper
             .WithFormat(ConsoleTableBuilderFormat.Alternative)
             .ExportAndWriteLine();
     }
+
     public static string GetInput(string message)
     {
         Console.WriteLine(message);

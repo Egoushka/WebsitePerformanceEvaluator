@@ -18,17 +18,20 @@ public class LinkManager : ILinkManager
         SitemapService = sitemapService;
         MemoryCache = memoryCache;
     }
+
     public async Task<IEnumerable<Tuple<string, int>>> GetLinksWithTimeResponse(string url)
     {
         var crawlingResult = await GetLinksByCrawling(url);
         var sitemapResult = GetSitemapLinks(url);
-        
+
         var union = crawlingResult.Union(sitemapResult).Distinct();
-        
-        var result = union.AsParallel().Select(link => new Tuple<string, int>(link, ClientService.GetTimeResponse(link))).ToList();
-        
+
+        var result = union.AsParallel()
+            .Select(link => new Tuple<string, int>(link, ClientService.GetTimeResponse(link))).ToList();
+
         return result;
     }
+
     public async Task<IEnumerable<string>> GetLinksByCrawling(string url)
     {
         var casheKey = url + "crawling";
@@ -37,13 +40,14 @@ public class LinkManager : ILinkManager
             return result;
         }
 
-        
+
         result = (await ClientService.CrawlWebsiteToFindLinks(url)).ApplyFilters(url);
-            
+
         MemoryCache.Set(casheKey, result);
 
         return result;
     }
+
     public IEnumerable<string> GetSitemapLinks(string url)
     {
         var casheKey = url + "sitemap";
@@ -52,10 +56,10 @@ public class LinkManager : ILinkManager
         {
             return result;
         }
-        
-        
+
+
         result = SitemapService.GetAllUrlsFromSitemap(url).ApplyFilters(url);
-            
+
         MemoryCache.Set(casheKey, result);
 
         return result;

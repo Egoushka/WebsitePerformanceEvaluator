@@ -11,12 +11,12 @@ public class SitemapService : ISitemapService
     {
         ClientService = сlientService;
     }
-    
+
     public IEnumerable<string> GetAllUrlsFromSitemap(string baseUrl)
     {
         var sitemapXml = ClientService.GetSitemap(baseUrl);
         var xmlSitemapList = sitemapXml.GetElementsByTagName("url");
-        
+
         var urls = GetRawUrlsFromSitemap(xmlSitemapList);
 
         return urls;
@@ -25,7 +25,7 @@ public class SitemapService : ISitemapService
     private IEnumerable<string> GetRawUrlsFromSitemap(XmlNodeList xmlSitemapList)
     {
         var result = new List<string>();
-        
+
         foreach (XmlNode node in xmlSitemapList)
         {
             if (node["loc"] != null)
@@ -33,7 +33,7 @@ public class SitemapService : ISitemapService
                 result.Add(node["loc"]!.InnerText);
             }
         }
-        
+
         return result;
     }
 }
