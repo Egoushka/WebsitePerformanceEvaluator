@@ -6,11 +6,12 @@ namespace WebsitePerformanceEvaluator.Core.Services;
 
 public class SitemapService : ISitemapService
 {
-    private readonly HttpClient _httpClient = new();
+    private readonly HttpClient _httpClient;
     private readonly ILogger _logger;
     
-    public SitemapService(ILogger logger)
+    public SitemapService(ILogger logger, IHttpClientFactory httpClientFactory)
     {
+        _httpClient = httpClientFactory.CreateClient();
         _logger = logger;
     }
 

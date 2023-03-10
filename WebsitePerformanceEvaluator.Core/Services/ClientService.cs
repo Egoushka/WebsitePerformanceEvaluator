@@ -8,10 +8,12 @@ namespace WebsitePerformanceEvaluator.Core.Services;
 
 public class ClientService : IClientService
 {
-    private readonly HttpClient _httpClient = new();
+    private readonly HttpClient _httpClient;
     private readonly ILogger _logger;
-    public ClientService(ILogger logger)
+    public ClientService(ILogger logger, IHttpClientFactory httpClientFactory)
     {
+        _logger = logger;
+        _httpClient = httpClientFactory.CreateClient();
         _logger = logger;
     }
 
