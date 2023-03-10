@@ -41,7 +41,7 @@ public class ClientService : IClientService
 
     public IEnumerable<string> CrawlWebsiteToFindLinks(string url)
     {
-        var links = new HashSet<string>();
+        var links = new HashSet<string> {url};
         var visitedLinks = new List<string>();
         var linksToVisit = new List<string> {url};
 
