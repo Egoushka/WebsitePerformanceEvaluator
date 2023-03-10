@@ -8,6 +8,7 @@ namespace WebsitePerformanceEvaluator.Core.Services;
 public class ClientService : IClientService
 {
     private readonly HttpClient _httpClient = new();
+
     public async Task<IEnumerable<string>> CrawlWebsiteToFindLinks(string url)
     {
         var links = new HashSet<string> { url };
@@ -17,7 +18,7 @@ public class ClientService : IClientService
         while (linksToVisit.Count > 0)
         {
             var tasks = new List<Task>();
-            for (var i = 0; i < linksToVisit.Count &&  i < Environment.ProcessorCount * 20; i++)
+            for (var i = 0; i < linksToVisit.Count && i < Environment.ProcessorCount * 20; i++)
             {
                 var link = linksToVisit[i];
 
@@ -32,7 +33,7 @@ public class ClientService : IClientService
                     }
 
                     foreach (var newLink in newLinks
-                                 .Where(newLink => 
+                                 .Where(newLink =>
                                      !visitedLinks.Contains(newLink) && !linksToVisit.Contains(newLink)))
                     {
                         linksToVisit.Add(newLink);
@@ -42,9 +43,10 @@ public class ClientService : IClientService
                 });
                 tasks.Add(task);
             }
-            
+
             await Task.WhenAll(tasks);
         }
+
         return links;
     }
 

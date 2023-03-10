@@ -44,7 +44,7 @@ public class LinkManager : ILinkManager
 
         result = (await ClientService.CrawlWebsiteToFindLinks(url)).ApplyFilters(url);
         var linksByCrawling = result.ToList();
-        
+
         MemoryCache.Set(casheKey, linksByCrawling);
 
         return linksByCrawling;

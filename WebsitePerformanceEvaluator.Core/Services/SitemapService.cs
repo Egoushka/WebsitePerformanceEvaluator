@@ -5,7 +5,6 @@ namespace WebsitePerformanceEvaluator.Core.Services;
 
 public class SitemapService : ISitemapService
 {
-
     private readonly HttpClient _httpClient = new();
 
     public async Task<IEnumerable<string>> GetAllUrlsFromSitemap(string baseUrl)
@@ -26,9 +25,10 @@ public class SitemapService : ISitemapService
         var sitemapUrl = $"{baseUrl}/sitemap.xml";
 
         var sitemapXmlDocument = await GetSitemapXmlDocument(sitemapUrl);
-        
+
         return sitemapXmlDocument.DocumentElement == null ? new XmlDocument() : sitemapXmlDocument;
     }
+
     private async Task<XmlDocument> GetSitemapXmlDocument(string sitemapUrl)
     {
         var sitemapString = await DownloadSitemap(sitemapUrl);
@@ -46,6 +46,7 @@ public class SitemapService : ISitemapService
         Console.WriteLine("Sitemap was successfully parsed");
         return sitemapXmlDocument;
     }
+
     private async Task<string> DownloadSitemap(string sitemapUrl)
     {
         string sitemapString;
@@ -61,6 +62,7 @@ public class SitemapService : ISitemapService
 
         return sitemapString;
     }
+
     private IEnumerable<string> GetRawUrlsFromSitemap(XmlNodeList xmlSitemapList)
     {
         var result = new List<string>();
