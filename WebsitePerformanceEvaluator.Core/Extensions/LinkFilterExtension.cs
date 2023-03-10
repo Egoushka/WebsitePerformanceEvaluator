@@ -15,7 +15,6 @@ public static class LinkFilterExtension
             .RemoveNotHttpsOrHttpScheme()
             .CheckLinksHosts(baseUrl);
     }
-
     private static IEnumerable<string> AddBaseUrl(this IEnumerable<string> links, string baseUrl)
     {
         return links.Select(link => link.StartsWith("/") ? baseUrl[..^1] + link : link);
@@ -48,8 +47,9 @@ public static class LinkFilterExtension
     }
     private static string GetHost(this string url)
     {
+        const int schemeLength = 3;
         var prefixOffset = url.AsSpan().IndexOf(stackalloc char[]{':', '/', '/'});
-        var startIndex = prefixOffset == -1 ? 0 : prefixOffset + 3;
+        var startIndex = prefixOffset == -1 ? 0 : prefixOffset + schemeLength;
         var endIndex = url.AsSpan().IndexOf('/');
         
         var host = endIndex == -1 ? url.AsSpan(startIndex) : 
