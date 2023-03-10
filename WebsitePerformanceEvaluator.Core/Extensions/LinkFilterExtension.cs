@@ -50,7 +50,7 @@ public static class LinkFilterExtension
         const int schemeLength = 3;
         var prefixOffset = url.AsSpan().IndexOf(stackalloc char[]{':', '/', '/'});
         var startIndex = prefixOffset == -1 ? 0 : prefixOffset + schemeLength;
-        var endIndex = url.AsSpan().IndexOf('/');
+        var endIndex = url.AsSpan(startIndex).IndexOf('/');
         
         var host = endIndex == -1 ? url.AsSpan(startIndex) : 
             url.AsSpan(startIndex, endIndex);
