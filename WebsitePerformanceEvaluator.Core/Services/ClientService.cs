@@ -1,5 +1,4 @@
 using System.Diagnostics;
-using System.Diagnostics.CodeAnalysis;
 using System.Net;
 using System.Text;
 using System.Xml;
@@ -49,9 +48,6 @@ public class ClientService : IClientService
 
         while (linksToVisit.Count > 0)
         {
-           
-
-            //create task for each link and execute it in 
             var tasks = new List<Task>();
             for(var i = 0; i < linksToVisit.Count; i++)
             {
@@ -61,6 +57,10 @@ public class ClientService : IClientService
                 var task = Task.Run(() =>
                 {
                     var newLinks = CrawlPageToFindLinks(link).ApplyFilters(url).ToList();
+                    foreach (var item in newLinks)
+                    {
+                        links.Add(item);
+                    }
                     foreach (var newLink in newLinks)
                     {
                         if (!visitedLinks.Contains(newLink) && !linksToVisit.Contains(newLink))
