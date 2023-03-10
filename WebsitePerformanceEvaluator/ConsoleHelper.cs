@@ -18,7 +18,7 @@ public static class ConsoleHelper
         ConsoleTableBuilder
             .From(rows.ToList())
             .WithColumn(headers.ToList())
-            .WithFormatter(1, (value) => $"{value} ms")
+            .WithFormatter(1, value => $"{value} ms")
             .WithFormat(ConsoleTableBuilderFormat.Alternative)
             .ExportAndWriteLine();
     }
