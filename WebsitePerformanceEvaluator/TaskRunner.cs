@@ -17,8 +17,8 @@ public class TaskRunner
     {
         var watch = System.Diagnostics.Stopwatch.StartNew();
 
-        //var url = ConsoleHelper.GetInput("Enter url:");
-        var url = "https://ukad-group.com/";
+        var url = ConsoleHelper.GetInput("Enter url:");
+        //var url = "https://learn.microsoft.com/en-us/dotnet/csharp/tour-of-csharp/tutorials/";
         watch.Start();
         var linksByCrawling = (await LinkManager.GetLinksByCrawling(url)).ToList().OrderBy(item => item).ToList();
         var sitemapLinks = LinkManager.GetSitemapLinks(url).ToList().OrderBy(item => item).ToList();
