@@ -39,7 +39,7 @@ public class ClientService : IClientService
         return sitemapXmlDocument;
     }
 
-    public IEnumerable<string> CrawlWebsiteToFindLinks(string url)
+    public async Task<IEnumerable<string>> CrawlWebsiteToFindLinks(string url)
     {
         var links = new HashSet<string> {url};
         var visitedLinks = new List<string>();
@@ -47,24 +47,32 @@ public class ClientService : IClientService
 
         while (linksToVisit.Count > 0)
         {
-            var link = linksToVisit[0];
-            linksToVisit.RemoveAt(0);
-            visitedLinks.Add(link);
+           
 
-            var newLinks = CrawlPageToFindLinks(link).AsParallel().ApplyFilters(url).ToList();
-
-            foreach (var item in newLinks)
+            //create task for each link and execute it in 
+            var tasks = new List<Task>();
+            for(var i = 0; i < linksToVisit.Count; i++)
             {
-                links.Add(item);    
-            }
-            
-            foreach (var newLink in newLinks)
-            {
-                if (!visitedLinks.Contains(newLink) && !linksToVisit.Contains(newLink))
+                var link = linksToVisit[i];
+                linksToVisit.RemoveAt(i);
+                visitedLinks.Add(link);
+                var task = Task.Run(() =>
                 {
-                    linksToVisit.Add(newLink);
-                }
+                    var newLinks = CrawlPageToFindLinks(link).ApplyFilters(url).ToList();
+                    foreach (var newLink in newLinks)
+                    {
+                        if (!visitedLinks.Contains(newLink) && !linksToVisit.Contains(newLink))
+                        {
+                            linksToVisit.Add(newLink);
+                        }
+                    }
+
+                    return Task.CompletedTask;
+                });
+                tasks.Add(task);
             }
+
+            await Task.WhenAll(tasks);
         }
 
         return links;

@@ -8,8 +8,8 @@ public class Application
         TaskRunner = taskRunner;
     }
 
-    public void Run()
+    public async Task Run()
     {
-        TaskRunner.Start();
+        await TaskRunner.Start();
     }
 }

@@ -18,9 +18,9 @@ public class LinkManager : ILinkManager
         SitemapService = sitemapService;
         MemoryCache = memoryCache;
     }
-    public IEnumerable<Tuple<string, int>> GetLinksWithTimeResponse(string url)
+    public async Task<IEnumerable<Tuple<string, int>>> GetLinksWithTimeResponse(string url)
     {
-        var crawlingResult = GetLinksByCrawling(url);
+        var crawlingResult = await GetLinksByCrawling(url);
         var sitemapResult = GetSitemapLinks(url);
         
         var union = crawlingResult.Union(sitemapResult).Distinct();
@@ -29,7 +29,7 @@ public class LinkManager : ILinkManager
         
         return result;
     }
-    public IEnumerable<string> GetLinksByCrawling(string url)
+    public async Task<IEnumerable<string>> GetLinksByCrawling(string url)
     {
         var casheKey = url + "crawling";
         if (MemoryCache.TryGetValue(casheKey, out IEnumerable<string>? result))
@@ -38,7 +38,7 @@ public class LinkManager : ILinkManager
         }
 
         
-        result = ClientService.CrawlWebsiteToFindLinks(url).ApplyFilters(url);
+        result = (await ClientService.CrawlWebsiteToFindLinks(url)).ApplyFilters(url);
             
         MemoryCache.Set(casheKey, result);
 

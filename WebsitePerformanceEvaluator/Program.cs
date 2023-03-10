@@ -30,8 +30,8 @@ internal static class Program
         builder.Populate(services);
         return builder.Build();
     }
-    public static void Main()
+    public static async Task Main()
     {
-        CompositionRoot().Resolve<Application>().Run();
+        await CompositionRoot().Resolve<Application>().Run();
     }
 }
