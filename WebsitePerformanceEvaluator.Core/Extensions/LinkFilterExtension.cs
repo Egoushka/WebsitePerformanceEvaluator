@@ -12,6 +12,7 @@ public static class LinkFilterExtension
             .RemoveNotHttpsOrHttpScheme()
             .CheckLinksHosts(uri)
             .RemoveAnchorLinks()
+            .RemoveFilesLinks()
             .Select(link => link.AbsoluteUri)
             .CheckForSlashAndRemove();
     }
@@ -19,6 +20,10 @@ public static class LinkFilterExtension
     public static IEnumerable<Uri> RemoveNotHttpsOrHttpScheme(this IEnumerable<Uri> links)
     {
         return links.Where(link => link.Scheme == Uri.UriSchemeHttp || link.Scheme == Uri.UriSchemeHttps);
+    }
+    public static IEnumerable<Uri> RemoveFilesLinks(this IEnumerable<Uri> links)
+    {
+        return links.Where(link => !link.AbsolutePath.Contains("."));
     }
     private static IEnumerable<string> CheckForSlashAndRemove(this IEnumerable<string> links)
     {
