@@ -23,11 +23,21 @@ public class LinkManager : ILinkManager
     {
         var crawlingResult = await GetLinksByCrawling(url);
         var sitemapResult = GetSitemapLinks(url);
-
         var union = crawlingResult.Union(sitemapResult).Distinct();
 
-        var result = union.AsParallel()
-            .Select(link => new Tuple<string, int>(link, ClientService.GetTimeResponse(link))).ToList();
+        var result = new List<Tuple<string, int>>();
+        var tasks = new List<Task>();
+
+        foreach (var link in union)
+        {
+            tasks.Add(Task.Run(() =>
+            {
+                var time = ClientService.GetTimeResponse(link);
+                result.Add(new Tuple<string, int>(link, time));
+            }));
+        }
+
+        await Task.WhenAll(tasks);
 
         return result;
     }
@@ -40,9 +50,7 @@ public class LinkManager : ILinkManager
             return result;
         }
 
-
         result = (await ClientService.CrawlWebsiteToFindLinks(url)).ApplyFilters(url);
-
         MemoryCache.Set(casheKey, result);
 
         return result;
@@ -57,11 +65,11 @@ public class LinkManager : ILinkManager
             return result;
         }
 
-
         result = SitemapService.GetAllUrlsFromSitemap(url).ApplyFilters(url);
 
-        MemoryCache.Set(casheKey, result);
+        var sitemapLinks = result.ToList();
+        MemoryCache.Set(casheKey, sitemapLinks);
 
-        return result;
+        return sitemapLinks;
     }
 }

@@ -11,44 +11,6 @@ namespace WebsitePerformanceEvaluator.Core.Services;
 public class ClientService : IClientService
 {
     HttpClient httpClient = new();
-
-    public XmlDocument GetSitemap(string baseUrl)
-    {
-        var uri = new Uri(baseUrl);
-        baseUrl = uri.Scheme + "://" + uri.Host;
-
-        var sitemapUrl = $"{baseUrl}/sitemap.xml";
-
-        //I had troubles with HttpClient, so I had to use WebClient
-        var wc = new WebClient
-        {
-            Encoding = Encoding.UTF8
-        };
-        var sitemapString = "";
-        try
-        {
-            sitemapString = wc.DownloadString(sitemapUrl);
-        }
-        catch (Exception e)
-        {
-            Console.WriteLine("Error while getting sitemap, sitemap will be ignored: " + e.Message);
-            return new XmlDocument();
-        }
-
-        var sitemapXmlDocument = new XmlDocument();
-        try
-        {
-            sitemapXmlDocument.LoadXml(sitemapString);
-        }
-        catch (Exception e)
-        {
-            Console.WriteLine("Error while parsing sitemap, sitemap will be ignored: " + e.Message);
-            return new XmlDocument();
-        }
-
-        return sitemapXmlDocument;
-    }
-
     public async Task<IEnumerable<string>> CrawlWebsiteToFindLinks(string url)
     {
         var links = new HashSet<string> { url };
@@ -58,41 +20,40 @@ public class ClientService : IClientService
         while (linksToVisit.Count > 0)
         {
             var tasks = new List<Task>();
-            for (var i = 0; i < linksToVisit.Count; i++)
+            for (var i = 0; i < linksToVisit.Count &&  i < Environment.ProcessorCount * 20; i++)
             {
                 var link = linksToVisit[i];
+
                 linksToVisit.RemoveAt(i);
                 visitedLinks.Add(link);
-                var task = Task.Run(() =>
+                var task = Task.Run(async () =>
                 {
-                    var newLinks = CrawlPageToFindLinks(link).ApplyFilters(url).ToList();
+                    var newLinks = (await CrawlPageToFindLinks(link)).ApplyFilters(url).ToList();
                     foreach (var item in newLinks)
                     {
                         links.Add(item);
                     }
 
-                    foreach (var newLink in newLinks)
+                    foreach (var newLink in newLinks
+                                 .Where(newLink => 
+                                     !visitedLinks.Contains(newLink) && !linksToVisit.Contains(newLink)))
                     {
-                        if (!visitedLinks.Contains(newLink) && !linksToVisit.Contains(newLink))
-                        {
-                            linksToVisit.Add(newLink);
-                        }
+                        linksToVisit.Add(newLink);
                     }
 
                     return Task.CompletedTask;
                 });
                 tasks.Add(task);
             }
-
+            
             await Task.WhenAll(tasks);
         }
-
         return links;
     }
 
-    public IEnumerable<string> CrawlPageToFindLinks(string url)
+    public async Task<IEnumerable<string>> CrawlPageToFindLinks(string url)
     {
-        var doc = GetDocument(url);
+        var doc = await GetDocument(url);
 
         var linkNodes = doc.DocumentNode.SelectNodes("//a[@href]");
 
@@ -105,7 +66,7 @@ public class ClientService : IClientService
             link.Attributes["href"].Value);
     }
 
-    private HtmlDocument GetDocument(string url)
+    private async Task<HtmlDocument> GetDocument(string url)
     {
         var doc = new HtmlDocument();
 
@@ -125,13 +86,21 @@ public class ClientService : IClientService
         timer.Start();
         try
         {
-            var response = (HttpWebResponse)request.GetResponse();
-            response.Close();
+            var response = request.GetResponseAsync();
+            while(!response.IsCompleted)
+            {
+                Thread.Sleep(100);
+                if (timer.ElapsedMilliseconds > 10000)
+                {
+                    request.EndGetResponse(response);
+                    return -1;
+                }
+            }
+            response.Result.Close();
         }
         catch (Exception e)
         {
-            Console.WriteLine(
-                $"Error while getting response time of {url}, response time will be ignored. Error: {e.Message}");
+            Console.WriteLine("Error while getting response: " + e.Message);
         }
 
         timer.Stop();
