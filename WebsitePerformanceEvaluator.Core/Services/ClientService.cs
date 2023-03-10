@@ -50,9 +50,9 @@ public class ClientService : IClientService
             var link = linksToVisit[0];
             linksToVisit.RemoveAt(0);
             visitedLinks.Add(link);
-            
-            var newLinks = CrawlPageToFindLinks(link).ApplyFilters(url).ToList();
-            
+
+            var newLinks = CrawlPageToFindLinks(link).AsParallel().ApplyFilters(url).ToList();
+
             foreach (var item in newLinks)
             {
                 links.Add(item);    
