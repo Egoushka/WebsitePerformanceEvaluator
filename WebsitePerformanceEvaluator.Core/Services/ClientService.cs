@@ -10,6 +10,7 @@ public class ClientService : IClientService
 {
     private readonly HttpClient _httpClient;
     private readonly ILogger _logger;
+    static SemaphoreSlim _semaphoreSlim = new SemaphoreSlim(500);
     public ClientService(ILogger logger, IHttpClientFactory httpClientFactory)
     {
         _logger = logger;
@@ -18,33 +19,35 @@ public class ClientService : IClientService
 
     public async Task<IEnumerable<string>> CrawlWebsiteToFindLinks(string url)
     {
+        const int semaphoreCount = 8;
         _logger.Information("Start getting links by crawling");
+        var semaphoreSlim = new SemaphoreSlim(semaphoreCount);
         var links = new HashSet<string> { url };
         var visitedLinks = new List<string>();
         var linksToVisit = new List<string> { url };
-
         while (linksToVisit.Count > 0)
         {
             var tasks = new List<Task>();
-            for (var i = 0; i < linksToVisit.Count && i < Environment.ProcessorCount * 20; i++)
+            for (var i = 0; i < linksToVisit.Count; i++)
             {
                 var link = linksToVisit[i];
-
                 linksToVisit.RemoveAt(i);
                 visitedLinks.Add(link);
+                await semaphoreSlim.WaitAsync();
+
                 var task = Task.Run(async () =>
                 {
                     var newLinks = (await CrawlPageToFindLinks(link)).ApplyFilters(url).ToList();
-                    
                     links.UnionWith(newLinks);
-
                     foreach (var newLink in newLinks
                                  .Where(newLink =>
                                      !visitedLinks.Contains(newLink) && !linksToVisit.Contains(newLink)))
                     {
                         linksToVisit.Add(newLink);
                     }
-
+                    
+                    semaphoreSlim.Release();
+                    
                     return Task.CompletedTask;
                 });
                 tasks.Add(task);
