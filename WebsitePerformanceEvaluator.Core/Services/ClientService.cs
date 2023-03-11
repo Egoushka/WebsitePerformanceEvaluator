@@ -27,7 +27,7 @@ public class ClientService : IClientService
 
         while (linksToVisit.Count > 0)
         {
-            var tasks = GetCrawlingTasks(linksToVisit, links, visitedLinks, url);
+            var tasks = GetCrawlingTasks(links, linksToVisit, visitedLinks, url);
 
             await Task.WhenAll(tasks);
         }
@@ -35,7 +35,7 @@ public class ClientService : IClientService
         return links;
     }
 
-    private IEnumerable<Task> GetCrawlingTasks(List<string> linksToVisit, ISet<string> links,
+    private IEnumerable<Task> GetCrawlingTasks(ISet<string> links,List<string> linksToVisit, 
         ICollection<string> visitedLinks, string url)
     {
         const int semaphoreCount = 8;
