@@ -11,6 +11,7 @@ public class ClientService : IClientService
 {
     private readonly HttpClient _httpClient;
     private readonly ILogger _logger;
+
     public ClientService(ILogger logger, IHttpClientFactory httpClientFactory)
     {
         _logger = logger;
@@ -23,54 +24,58 @@ public class ClientService : IClientService
         var links = new HashSet<string> { url };
         var visitedLinks = new List<string>();
         var linksToVisit = new List<string> { url };
-        
+
         while (linksToVisit.Count > 0)
         {
             var tasks = GetCrawlingTasks(linksToVisit, links, visitedLinks, url);
-            
+
             await Task.WhenAll(tasks);
         }
 
         return links;
     }
-    private IEnumerable<Task> GetCrawlingTasks(List<string> linksToVisit, ISet<string> links, 
+
+    private IEnumerable<Task> GetCrawlingTasks(List<string> linksToVisit, ISet<string> links,
         ICollection<string> visitedLinks, string url)
     {
         const int semaphoreCount = 8;
-        
+
         var tasks = new List<Task>();
         var semaphoreSlim = new SemaphoreSlim(semaphoreCount);
-        
+
         for (var i = 0; i < linksToVisit.Count; i++)
         {
             var link = linksToVisit[i];
             linksToVisit.RemoveAt(i);
             visitedLinks.Add(link);
-            
+
             semaphoreSlim.Wait();
 
             var task = Task.Run(async () =>
             {
                 var newLinks = (await CrawlPageToFindLinks(link)).ApplyFilters(url).ToList();
                 var filteredNewLinks = FilterNewLinks(newLinks, visitedLinks, linksToVisit);
-                
+
                 links.UnionWith(newLinks);
                 linksToVisit.AddRange(filteredNewLinks);
-                
+
                 semaphoreSlim.Release();
-                
+
                 return Task.CompletedTask;
             });
             tasks.Add(task);
         }
+
         return tasks;
     }
-    private IEnumerable<string> FilterNewLinks(IEnumerable<string> newLinks, ICollection<string> visitedLinks, 
+
+    private IEnumerable<string> FilterNewLinks(IEnumerable<string> newLinks, ICollection<string> visitedLinks,
         ICollection<string> linksToVisit)
     {
         return newLinks.Where(newLink =>
             !visitedLinks.Contains(newLink) && !linksToVisit.Contains(newLink));
     }
+
     public async Task<IEnumerable<string>> CrawlPageToFindLinks(string url)
     {
         var doc = await GetDocument(url);
@@ -100,19 +105,23 @@ public class ClientService : IClientService
 
     public int GetTimeResponse(string url)
     {
-        var timeNow = DateTime.Now;
-        
+        var time = 0;
         try
         {
-            _httpClient.GetAsync(url).Wait();
+            var timeAtStart = DateTime.Now;
+            
+            var result = _httpClient.GetAsync(url).Result;
+            var responseTime = result.Headers.TryGetValues("X-Response-Time", out var values)
+                ? values.FirstOrDefault()
+                : null;
+            
+            time = responseTime == null ? (DateTime.Now - timeAtStart).Milliseconds : int.Parse(responseTime);
         }
         catch (Exception e)
         {
             _logger.Error(e, "Error while getting response time");
         }
-        
-        var timeTaken = DateTime.Now - timeNow;
 
-        return timeTaken.Milliseconds;
+        return time;
     }
 }
