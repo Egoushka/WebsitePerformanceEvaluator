@@ -44,9 +44,12 @@ public class ClientService : IClientService
         for (var i = 0; i < linksToVisit.Count; i++)
         {
             var link = linksToVisit[i];
-            linksToVisit.RemoveAt(i);
+            lock (linksToVisit)
+            {
+                link = linksToVisit[i];
+                linksToVisit.RemoveAt(i);
+            }
             visitedLinks.Add(link);
-
             semaphoreSlim.Wait();
 
             var task = Task.Run( () =>
@@ -54,8 +57,15 @@ public class ClientService : IClientService
                 var newLinks = ( CrawlPageToFindLinks(link)).ApplyFilters(url).ToList();
                 var filteredNewLinks = FilterNewLinks(newLinks, visitedLinks, linksToVisit);
 
-                links.UnionWith(newLinks);
-                linksToVisit.AddRange(filteredNewLinks);
+                lock (links)
+                {
+                    links.UnionWith(newLinks);
+                }
+
+                lock (linksToVisit)
+                {
+                    linksToVisit.AddRange(filteredNewLinks);
+                }
 
                 semaphoreSlim.Release();
 
