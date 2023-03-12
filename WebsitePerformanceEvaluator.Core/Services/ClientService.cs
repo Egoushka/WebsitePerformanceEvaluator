@@ -25,20 +25,34 @@ public class ClientService : IClientService
 
         while (linksToVisit.Count > 0)
         {
-            var tasks = GetCrawlingTasks(links, linksToVisit, visitedLinks, url);
+            var tasks = GetCrawlingTasks(linksToVisit, visitedLinks);
+            
 
-            await Task.WhenAll(tasks);
+            var results = await Task.WhenAll(tasks);
+            
+            var newLinks = results.SelectMany(result => result).ApplyFilters(url).ToList();
+            var filteredNewLinks = FilterNewLinks(newLinks, visitedLinks, linksToVisit);
+            
+            lock (links)
+            {
+                links.UnionWith(newLinks);
+            }
+            foreach (var item in filteredNewLinks.Where(item =>
+                         !linksToVisit.Contains(item) && !visitedLinks.Contains(item)))
+            {
+                linksToVisit.Add(item);
+            }
         }
 
         return links;
     }
 
-    private IEnumerable<Task> GetCrawlingTasks(ISet<string> links, SynchronizedCollection<string> linksToVisit,
-        SynchronizedCollection<string> visitedLinks, string url)
+    private IEnumerable<Task<IEnumerable<string>>> GetCrawlingTasks(IList<string> linksToVisit,
+        ICollection<string> visitedLinks)
     {
         const int semaphoreCount = 8;
 
-        var tasks = new List<Task>();
+        var tasks = new List<Task<IEnumerable<string>>>();
         var semaphoreSlim = new SemaphoreSlim(semaphoreCount);
 
         for (var i = 0; i < linksToVisit.Count; i++)
@@ -50,25 +64,13 @@ public class ClientService : IClientService
             visitedLinks.Add(link);
             semaphoreSlim.Wait();
 
-            var task = Task.Run(() =>
+            var task = Task<IEnumerable<string>>.Factory.StartNew(() =>
             {
-                var newLinks = CrawlPageToFindLinks(link).ApplyFilters(url).ToList();
-                var filteredNewLinks = FilterNewLinks(newLinks, visitedLinks, linksToVisit);
-
-                lock (links)
-                {
-                    links.UnionWith(newLinks);
-                }
-
-                foreach (var item in filteredNewLinks.Where(item =>
-                             !linksToVisit.Contains(item) && !visitedLinks.Contains(item)))
-                {
-                    linksToVisit.Add(item);
-                }
+                var newLinks = CrawlPageToFindLinks(link);
 
                 semaphoreSlim.Release();
 
-                return Task.FromResult(Task.CompletedTask);
+                return newLinks;
             });
             tasks.Add(task);
         }
