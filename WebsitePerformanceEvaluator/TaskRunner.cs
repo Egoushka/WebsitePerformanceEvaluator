@@ -21,10 +21,10 @@ public class TaskRunner
         
         watch.Start();
         var linksByCrawlingTask = Task.Run(() => LinkManager.GetLinksByCrawling(url));
-        var sitemapLinksTask = Task.Run(()=> LinkManager.GetSitemapLinks(url));
-        
-        var linksByCrawling = (await linksByCrawlingTask).OrderBy(x => x).ToList();
-        var sitemapLinks = (await sitemapLinksTask).OrderBy(x => x).ToList();
+        var sitemapLinksTask = Task.Run(() => LinkManager.GetSitemapLinks(url));
+
+        var linksByCrawling = (await linksByCrawlingTask).ToList();
+        var sitemapLinks = (await sitemapLinksTask).ToList();
 
         LinksCountInSitemap = sitemapLinks.Count;
         LinksCountAfterCrawling = linksByCrawling.Count;
