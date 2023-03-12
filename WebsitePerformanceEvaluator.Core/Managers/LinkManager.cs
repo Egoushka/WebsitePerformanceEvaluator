@@ -26,8 +26,13 @@ public class LinkManager : ILinkManager
     public async Task<IEnumerable<Tuple<string, int>>> GetLinksWithTimeResponse(string url)
     {
         _logger.Information("Start getting links with time response");
-        var crawlingResult = await GetLinksByCrawling(url);
-        var sitemapResult = await GetSitemapLinks(url);
+        var crawlingTask = Task.Run(() => GetLinksByCrawling(url));
+        var sitemapTask = Task.Run(() => GetSitemapLinks(url));
+
+
+        var crawlingResult = await crawlingTask;
+        var sitemapResult = await sitemapTask;
+
         var union = crawlingResult.Union(sitemapResult).Distinct();
 
         var result = new List<Tuple<string, int>>();
@@ -39,7 +44,7 @@ public class LinkManager : ILinkManager
         return result;
     }
 
-    
+
     public async Task<IEnumerable<string>> GetLinksByCrawling(string url)
     {
         var casheKey = url + "crawling";
