@@ -7,59 +7,48 @@ namespace WebsitePerformanceEvaluator.Core.Services;
 
 public class ClientService : IClientService
 {
-    private readonly HttpClient _httpClient;
     private readonly ILogger _logger;
-
+    private readonly IHttpClientFactory _httpClientFactory;
     public ClientService(ILogger logger, IHttpClientFactory httpClientFactory)
     {
         _logger = logger;
-        _httpClient = httpClientFactory.CreateClient();
+        _httpClientFactory = httpClientFactory;
     }
 
     public async Task<IEnumerable<string>> CrawlWebsiteToFindLinks(string url)
     {
         _logger.Information("Start getting links by crawling");
         var links = new HashSet<string> { url };
-        var visitedLinks = new SynchronizedCollection<string>();
-        var linksToVisit = new SynchronizedCollection<string> { url };
+        var visitedLinks = new HashSet<string>();
+        var linksToVisit = new HashSet<string> { url };
 
         while (linksToVisit.Count > 0)
         {
             var tasks = GetCrawlingTasks(linksToVisit, visitedLinks);
-            
-
             var results = await Task.WhenAll(tasks);
             
             var newLinks = results.SelectMany(result => result).ApplyFilters(url).ToList();
-            var filteredNewLinks = FilterNewLinks(newLinks, visitedLinks, linksToVisit);
             
-            lock (links)
-            {
-                links.UnionWith(newLinks);
-            }
-            foreach (var item in filteredNewLinks.Where(item =>
-                         !linksToVisit.Contains(item) && !visitedLinks.Contains(item)))
-            {
-                linksToVisit.Add(item);
-            }
+            links.UnionWith(newLinks);
+            linksToVisit.UnionWith(newLinks.Except(visitedLinks));
         }
 
         return links;
     }
 
-    private IEnumerable<Task<IEnumerable<string>>> GetCrawlingTasks(IList<string> linksToVisit,
+    private IEnumerable<Task<IEnumerable<string>>> GetCrawlingTasks(ICollection<string> linksToVisit,
         ICollection<string> visitedLinks)
     {
-        const int semaphoreCount = 8;
+        const int semaphoreCount = 10;
 
         var tasks = new List<Task<IEnumerable<string>>>();
         var semaphoreSlim = new SemaphoreSlim(semaphoreCount);
 
         for (var i = 0; i < linksToVisit.Count; i++)
         {
-            var link = linksToVisit[i];
+            var link = linksToVisit.ElementAt(i);
 
-            linksToVisit.RemoveAt(i);
+            linksToVisit.Remove(link);
 
             visitedLinks.Add(link);
             semaphoreSlim.Wait();
@@ -76,13 +65,6 @@ public class ClientService : IClientService
         }
 
         return tasks;
-    }
-
-    private IEnumerable<string> FilterNewLinks(IEnumerable<string> newLinks, ICollection<string> visitedLinks,
-        ICollection<string> linksToVisit)
-    {
-        return newLinks.Where(newLink =>
-            !visitedLinks.Contains(newLink) && !linksToVisit.Contains(newLink));
     }
 
     public IEnumerable<string> CrawlPageToFindLinks(string url)
@@ -103,8 +85,9 @@ public class ClientService : IClientService
     private HtmlDocument GetDocument(string url)
     {
         var doc = new HtmlDocument();
-
-        using var response = _httpClient.GetAsync(url).Result;
+        var httpClient = _httpClientFactory.CreateClient();
+        
+        using var response = httpClient.GetAsync(url).Result;
         var html = response.Content.ReadAsStringAsync().Result;
 
         doc.LoadHtml(html);
@@ -115,11 +98,12 @@ public class ClientService : IClientService
     public int GetTimeResponse(string url)
     {
         var time = 0;
+        var httpClient = _httpClientFactory.CreateClient();
         try
         {
             var timeAtStart = DateTime.Now;
 
-            var result = _httpClient.GetAsync(url).Result;
+            var result = httpClient.GetAsync(url).Result;
             var responseTime = result.Headers.TryGetValues("X-Response-Time", out var values)
                 ? values.FirstOrDefault()
                 : null;
