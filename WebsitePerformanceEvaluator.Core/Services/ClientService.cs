@@ -117,7 +117,7 @@ public class ClientService : IClientService
         }
         catch (Exception e)
         {
-            _logger.Error(e, "Error while getting response time");
+            _logger.Error("Error while getting response time");
         }
 
         return time;

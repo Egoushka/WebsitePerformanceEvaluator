@@ -48,7 +48,7 @@ public class SitemapService : ISitemapService
         }
         catch (Exception e)
         {
-            _logger.Error(e, "Error while parsing sitemap, sitemap will be ignored");
+            _logger.Error("Error while parsing sitemap, sitemap will be ignored");
             return new XmlDocument();
         }
 
@@ -65,7 +65,7 @@ public class SitemapService : ISitemapService
         }
         catch (Exception e)
         {
-            _logger.Error(e, "Error while downloading sitemap, sitemap will be ignored");
+            _logger.Error("Error while downloading sitemap, sitemap will be ignored");
             return "";
         }
 
