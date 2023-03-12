@@ -21,10 +21,12 @@ public class ClientService : IClientService
         var links = new HashSet<string> { url };
         var visitedLinks = new HashSet<string>();
         var linksToVisit = new HashSet<string> { url };
+        const int semaphoreCount = 10;
+        var semaphoreSlim = new SemaphoreSlim(semaphoreCount);
 
         while (linksToVisit.Count > 0)
         {
-            var tasks = GetCrawlingTasks(linksToVisit, visitedLinks);
+            var tasks = GetCrawlingTasks(linksToVisit, visitedLinks, semaphoreSlim);
             var results = await Task.WhenAll(tasks);
             
             var newLinks = results.SelectMany(result => result).ApplyFilters(url).ToList();
@@ -37,12 +39,9 @@ public class ClientService : IClientService
     }
 
     private IEnumerable<Task<IEnumerable<string>>> GetCrawlingTasks(ICollection<string> linksToVisit,
-        ICollection<string> visitedLinks)
+        ICollection<string> visitedLinks, SemaphoreSlim semaphoreSlim)
     {
-        const int semaphoreCount = 10;
-
         var tasks = new List<Task<IEnumerable<string>>>();
-        var semaphoreSlim = new SemaphoreSlim(semaphoreCount);
 
         for (var i = 0; i < linksToVisit.Count; i++)
         {
