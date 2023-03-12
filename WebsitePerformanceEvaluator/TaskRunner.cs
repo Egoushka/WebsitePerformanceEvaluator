@@ -18,10 +18,13 @@ public class TaskRunner
         var watch = System.Diagnostics.Stopwatch.StartNew();
 
         var url = ConsoleHelper.GetInput("Enter url:");
-        //var url = "https://learn.microsoft.com/en-us/dotnet/csharp/tour-of-csharp/tutorials/";
+        
         watch.Start();
-        var linksByCrawling = (await LinkManager.GetLinksByCrawling(url)).ToList().OrderBy(item => item).ToList();
-        var sitemapLinks = (await LinkManager.GetSitemapLinks(url)).ToList().OrderBy(item => item).ToList();
+        var linksByCrawlingTask = Task.Run(() => LinkManager.GetLinksByCrawling(url));
+        var sitemapLinksTask = Task.Run(()=> LinkManager.GetSitemapLinks(url));
+        
+        var linksByCrawling = (await linksByCrawlingTask).OrderBy(x => x).ToList();
+        var sitemapLinks = (await sitemapLinksTask).OrderBy(x => x).ToList();
 
         LinksCountInSitemap = sitemapLinks.Count;
         LinksCountAfterCrawling = linksByCrawling.Count;
