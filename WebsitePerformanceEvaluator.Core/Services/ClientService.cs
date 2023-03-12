@@ -51,9 +51,9 @@ public class ClientService : IClientService
 
             semaphoreSlim.Wait();
 
-            var task = Task.Run(async () =>
+            var task = Task.Run( () =>
             {
-                var newLinks = (await CrawlPageToFindLinks(link)).ApplyFilters(url).ToList();
+                var newLinks = ( CrawlPageToFindLinks(link)).ApplyFilters(url).ToList();
                 var filteredNewLinks = FilterNewLinks(newLinks, visitedLinks, linksToVisit);
 
                 links.UnionWith(newLinks);
@@ -61,7 +61,7 @@ public class ClientService : IClientService
 
                 semaphoreSlim.Release();
 
-                return Task.CompletedTask;
+                return Task.FromResult(Task.CompletedTask);
             });
             tasks.Add(task);
         }
@@ -76,9 +76,9 @@ public class ClientService : IClientService
             !visitedLinks.Contains(newLink) && !linksToVisit.Contains(newLink));
     }
 
-    public async Task<IEnumerable<string>> CrawlPageToFindLinks(string url)
+    public IEnumerable<string> CrawlPageToFindLinks(string url)
     {
-        var doc = await GetDocument(url);
+        var doc = GetDocument(url);
 
         var linkNodes = doc.DocumentNode.SelectNodes("//a[@href]");
 
@@ -91,7 +91,7 @@ public class ClientService : IClientService
             link.Attributes["href"].Value);
     }
 
-    private Task<HtmlDocument> GetDocument(string url)
+    private HtmlDocument GetDocument(string url)
     {
         var doc = new HtmlDocument();
 
@@ -100,7 +100,7 @@ public class ClientService : IClientService
 
         doc.LoadHtml(html);
 
-        return Task.FromResult(doc);
+        return doc;
     }
 
     public int GetTimeResponse(string url)
