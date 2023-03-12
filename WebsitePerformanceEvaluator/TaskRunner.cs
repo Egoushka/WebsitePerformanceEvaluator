@@ -21,7 +21,7 @@ public class TaskRunner
         //var url = "https://learn.microsoft.com/en-us/dotnet/csharp/tour-of-csharp/tutorials/";
         watch.Start();
         var linksByCrawling = (await LinkManager.GetLinksByCrawling(url)).ToList().OrderBy(item => item).ToList();
-        var sitemapLinks = LinkManager.GetSitemapLinks(url).ToList().OrderBy(item => item).ToList();
+        var sitemapLinks = (await LinkManager.GetSitemapLinks(url)).ToList().OrderBy(item => item).ToList();
 
         LinksCountInSitemap = sitemapLinks.Count;
         LinksCountAfterCrawling = linksByCrawling.Count;
