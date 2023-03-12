@@ -20,8 +20,8 @@ public class ClientService : IClientService
     {
         _logger.Information("Start getting links by crawling");
         var links = new HashSet<string> { url };
-        var visitedLinks = new List<string>();
-        var linksToVisit = new List<string> { url };
+        var visitedLinks = new SynchronizedCollection<string>();
+        var linksToVisit = new SynchronizedCollection<string> { url };
 
         while (linksToVisit.Count > 0)
         {
@@ -33,8 +33,8 @@ public class ClientService : IClientService
         return links;
     }
 
-    private IEnumerable<Task> GetCrawlingTasks(ISet<string> links,List<string> linksToVisit, 
-        ICollection<string> visitedLinks, string url)
+    private IEnumerable<Task> GetCrawlingTasks(ISet<string> links,SynchronizedCollection<string> linksToVisit, 
+        SynchronizedCollection<string> visitedLinks, string url)
     {
         const int semaphoreCount = 8;
 
@@ -44,17 +44,15 @@ public class ClientService : IClientService
         for (var i = 0; i < linksToVisit.Count; i++)
         {
             var link = linksToVisit[i];
-            lock (linksToVisit)
-            {
-                link = linksToVisit[i];
-                linksToVisit.RemoveAt(i);
-            }
+            
+            linksToVisit.RemoveAt(i);
+            
             visitedLinks.Add(link);
             semaphoreSlim.Wait();
 
             var task = Task.Run( () =>
             {
-                var newLinks = ( CrawlPageToFindLinks(link)).ApplyFilters(url).ToList();
+                var newLinks = CrawlPageToFindLinks(link).ApplyFilters(url).ToList();
                 var filteredNewLinks = FilterNewLinks(newLinks, visitedLinks, linksToVisit);
 
                 lock (links)
@@ -62,9 +60,10 @@ public class ClientService : IClientService
                     links.UnionWith(newLinks);
                 }
 
-                lock (linksToVisit)
+                foreach (var item in filteredNewLinks.Where(item =>
+                             !linksToVisit.Contains(item) && !visitedLinks.Contains(item)))
                 {
-                    linksToVisit.AddRange(filteredNewLinks);
+                    linksToVisit.Add(item);
                 }
 
                 semaphoreSlim.Release();
@@ -125,7 +124,7 @@ public class ClientService : IClientService
             
             time = responseTime == null ? (DateTime.Now - timeAtStart).Milliseconds : int.Parse(responseTime);
         }
-        catch (Exception e)
+        catch (Exception)
         {
             _logger.Error("Error while getting response time");
         }
