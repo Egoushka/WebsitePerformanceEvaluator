@@ -33,7 +33,7 @@ public class ClientService : IClientService
         return links;
     }
 
-    private IEnumerable<Task> GetCrawlingTasks(ISet<string> links,SynchronizedCollection<string> linksToVisit, 
+    private IEnumerable<Task> GetCrawlingTasks(ISet<string> links, SynchronizedCollection<string> linksToVisit,
         SynchronizedCollection<string> visitedLinks, string url)
     {
         const int semaphoreCount = 8;
@@ -44,13 +44,13 @@ public class ClientService : IClientService
         for (var i = 0; i < linksToVisit.Count; i++)
         {
             var link = linksToVisit[i];
-            
+
             linksToVisit.RemoveAt(i);
-            
+
             visitedLinks.Add(link);
             semaphoreSlim.Wait();
 
-            var task = Task.Run( () =>
+            var task = Task.Run(() =>
             {
                 var newLinks = CrawlPageToFindLinks(link).ApplyFilters(url).ToList();
                 var filteredNewLinks = FilterNewLinks(newLinks, visitedLinks, linksToVisit);
@@ -116,12 +116,12 @@ public class ClientService : IClientService
         try
         {
             var timeAtStart = DateTime.Now;
-            
+
             var result = _httpClient.GetAsync(url).Result;
             var responseTime = result.Headers.TryGetValues("X-Response-Time", out var values)
                 ? values.FirstOrDefault()
                 : null;
-            
+
             time = responseTime == null ? (DateTime.Now - timeAtStart).Milliseconds : int.Parse(responseTime);
         }
         catch (Exception)
