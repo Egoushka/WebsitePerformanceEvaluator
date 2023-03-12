@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Diagnostics;
 using HtmlAgilityPack;
 using Serilog;
 using WebsitePerformanceEvaluator.Core.Extensions;
