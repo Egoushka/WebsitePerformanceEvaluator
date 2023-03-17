@@ -33,7 +33,10 @@ public class ClientService : IClientService
             var newLinks = results.SelectMany(result => result).ApplyFilters(url).ToList();
 
             links.UnionWith(newLinks);
-            linksToVisit = new Queue<string>(newLinks.Except(visitedLinks));
+            foreach (var link in newLinks.Except(visitedLinks))
+            {
+                linksToVisit.Enqueue(link);
+            }
         }
 
         return links;
