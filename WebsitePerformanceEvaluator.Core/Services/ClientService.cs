@@ -9,6 +9,7 @@ public class ClientService : IClientService
 {
     private readonly ILogger _logger;
     private readonly IHttpClientFactory _httpClientFactory;
+
     public ClientService(ILogger logger, IHttpClientFactory httpClientFactory)
     {
         _logger = logger;
@@ -20,7 +21,7 @@ public class ClientService : IClientService
         _logger.Information("Start getting links by crawling");
         var links = new HashSet<string> { url };
         var visitedLinks = new HashSet<string>();
-        var linksToVisit = new HashSet<string> { url };
+        var linksToVisit = new Queue<string>(new[] { url });
         const int semaphoreCount = 10;
         var semaphoreSlim = new SemaphoreSlim(semaphoreCount);
 
@@ -28,26 +29,24 @@ public class ClientService : IClientService
         {
             var tasks = GetCrawlingTasks(linksToVisit, visitedLinks, semaphoreSlim);
             var results = await Task.WhenAll(tasks);
-            
+
             var newLinks = results.SelectMany(result => result).ApplyFilters(url).ToList();
-            
+
             links.UnionWith(newLinks);
-            linksToVisit.UnionWith(newLinks.Except(visitedLinks));
+            linksToVisit = new Queue<string>(newLinks.Except(visitedLinks));
         }
 
         return links;
     }
 
-    private IEnumerable<Task<IEnumerable<string>>> GetCrawlingTasks(ICollection<string> linksToVisit,
+    private IEnumerable<Task<IEnumerable<string>>> GetCrawlingTasks(Queue<string> linksToVisit,
         ICollection<string> visitedLinks, SemaphoreSlim semaphoreSlim)
     {
         var tasks = new List<Task<IEnumerable<string>>>();
 
         for (var i = 0; i < linksToVisit.Count; i++)
         {
-            var link = linksToVisit.ElementAt(i);
-
-            linksToVisit.Remove(link);
+            var link = linksToVisit.Dequeue();
 
             visitedLinks.Add(link);
             semaphoreSlim.Wait();
@@ -66,7 +65,7 @@ public class ClientService : IClientService
         return tasks;
     }
 
-    public IEnumerable<string> CrawlPageToFindLinks(string url)
+    private IEnumerable<string> CrawlPageToFindLinks(string url)
     {
         var doc = GetDocument(url);
 
@@ -85,7 +84,7 @@ public class ClientService : IClientService
     {
         var doc = new HtmlDocument();
         var httpClient = _httpClientFactory.CreateClient();
-        
+
         using var response = httpClient.GetAsync(url).Result;
         var html = response.Content.ReadAsStringAsync().Result;
 
@@ -106,7 +105,6 @@ public class ClientService : IClientService
             var responseTime = result.Headers.TryGetValues("X-Response-Time", out var values)
                 ? values.FirstOrDefault()
                 : null;
-
             time = responseTime == null ? (DateTime.Now - timeAtStart).Milliseconds : int.Parse(responseTime);
         }
         catch (Exception)
