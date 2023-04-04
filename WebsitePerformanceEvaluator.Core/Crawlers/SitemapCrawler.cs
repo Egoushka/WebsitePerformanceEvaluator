@@ -1,5 +1,6 @@
 using System.Xml;
 using Serilog;
+using WebsitePerformanceEvaluator.Core.Parsers;
 using WebsitePerformanceEvaluator.Core.Service;
 
 namespace WebsitePerformanceEvaluator.Core.Crawlers;
@@ -8,11 +9,13 @@ public class SitemapCrawler
 {
     private readonly ILogger _logger;
     private readonly HttpClientService _httpClientService;
+    private readonly XmlParser _xmlParser;
     
-    public SitemapCrawler(ILogger logger, HttpClientService httpClientService)
+    public SitemapCrawler(ILogger logger, HttpClientService httpClientService, XmlParser xmlParser)
     {
         _logger = logger;
         _httpClientService = httpClientService;
+        _xmlParser = xmlParser;
     }
 
     public async Task<IEnumerable<string>> GetAllUrlsFromSitemap(string baseUrl)
@@ -20,7 +23,7 @@ public class SitemapCrawler
         var sitemapXml = await GetSitemap(baseUrl);
         var xmlSitemapList = sitemapXml.GetElementsByTagName("url");
 
-        var urls = GetRawUrlsFromSitemap(xmlSitemapList);
+        var urls = _xmlParser.GetRawUrlsFromSitemap(xmlSitemapList);
 
         return urls;
     }
@@ -53,21 +56,5 @@ public class SitemapCrawler
 
         return sitemapXmlDocument;
     }
-
-   
-
-    private IEnumerable<string> GetRawUrlsFromSitemap(XmlNodeList xmlSitemapList)
-    {
-        var result = new List<string>();
-
-        foreach (XmlNode node in xmlSitemapList)
-        {
-            if (node["loc"] != null)
-            {
-                result.Add(node["loc"]!.InnerText);
-            }
-        }
-
-        return result;
-    }
+  
 }

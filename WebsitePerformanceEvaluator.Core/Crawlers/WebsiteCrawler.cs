@@ -1,17 +1,17 @@
 using HtmlAgilityPack;
 using Serilog;
 using WebsitePerformanceEvaluator.Core.Extensions;
+using WebsitePerformanceEvaluator.Core.Parsers;
 using WebsitePerformanceEvaluator.Core.Service;
 
 namespace WebsitePerformanceEvaluator.Core.Crawlers;
 
 public class WebsiteCrawler
 {
-    private readonly HttpClientService _httpClientService;
-
-    public WebsiteCrawler(HttpClientService httpClientService)
+    private HtmlParser HtmlParser { get; set; }
+    public WebsiteCrawler(HtmlParser htmlParser)
     {
-        _httpClientService = httpClientService;
+        HtmlParser = htmlParser;
     }
 
     public async Task<IEnumerable<string>> CrawlWebsiteToFindLinks(string url)
@@ -53,7 +53,7 @@ public class WebsiteCrawler
 
             var task = Task<IEnumerable<string>>.Factory.StartNew(() =>
             {
-                var newLinks = CrawlPageToFindLinks(link);
+                var newLinks = HtmlParser.ParsePageToFindLinks(link);
 
                 semaphoreSlim.Release();
 
@@ -65,19 +65,7 @@ public class WebsiteCrawler
         return tasks;
     }
 
-    private IEnumerable<string> CrawlPageToFindLinks(string url)
-    {
-        var doc = _httpClientService.GetDocument(url);
 
-        var linkNodes = doc.DocumentNode.SelectNodes("//a[@href]");
-
-        if (linkNodes == null)
-        {
-            return new List<string>();
-        }
-
-        return linkNodes.Select(link => link.Attributes["href"].Value);
-    }
 
  
 }

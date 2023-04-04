@@ -4,6 +4,7 @@ using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.DependencyInjection;
 using Serilog;
 using WebsitePerformanceEvaluator.Core.Crawlers;
+using WebsitePerformanceEvaluator.Core.Parsers;
 using WebsitePerformanceEvaluator.Core.Service;
 
 namespace WebsitePerformanceEvaluator;
@@ -22,6 +23,8 @@ internal static class Program
         services.AddTransient<WebsiteCrawler>();
         services.AddTransient<SitemapCrawler>();
         services.AddTransient<HttpClientService>();
+        services.AddTransient<HtmlParser>();
+        services.AddTransient<XmlParser>();
         services.AddTransient<Application>();
         services.AddTransient<TaskRunner>();
 
