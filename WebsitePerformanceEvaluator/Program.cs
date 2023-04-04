@@ -3,8 +3,7 @@ using Autofac.Extensions.DependencyInjection;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.DependencyInjection;
 using Serilog;
-using WebsitePerformanceEvaluator.Core.Managers;
-using WebsitePerformanceEvaluator.Core.Services;
+using WebsitePerformanceEvaluator.Core.Crawlers;
 
 namespace WebsitePerformanceEvaluator;
 
@@ -18,9 +17,9 @@ internal static class Program
         services.AddOptions();
         services.Configure<MemoryCacheEntryOptions>(options => options.SetSlidingExpiration(TimeSpan.FromMinutes(1)));
         services.AddHttpClient();
-        services.AddTransient<ClientService>();
-        services.AddTransient<SitemapService>();
-        services.AddTransient<LinkManager>();
+        services.AddTransient<Crawler>();
+        services.AddTransient<WebsiteCrawler>();
+        services.AddTransient<SitemapCrawler>();
         services.AddTransient<Application>();
         services.AddTransient<TaskRunner>();
 

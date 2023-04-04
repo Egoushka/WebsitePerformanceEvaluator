@@ -2,14 +2,14 @@ using HtmlAgilityPack;
 using Serilog;
 using WebsitePerformanceEvaluator.Core.Extensions;
 
-namespace WebsitePerformanceEvaluator.Core.Services;
+namespace WebsitePerformanceEvaluator.Core.Crawlers;
 
-public class ClientService
+public class WebsiteCrawler
 {
     private readonly ILogger _logger;
     private readonly IHttpClientFactory _httpClientFactory;
 
-    public ClientService(ILogger logger, IHttpClientFactory httpClientFactory)
+    public WebsiteCrawler(ILogger logger, IHttpClientFactory httpClientFactory)
     {
         _logger = logger;
         _httpClientFactory = httpClientFactory;

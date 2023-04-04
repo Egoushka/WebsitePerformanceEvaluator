@@ -1,17 +1,16 @@
-
-using WebsitePerformanceEvaluator.Core.Managers;
+using WebsitePerformanceEvaluator.Core.Crawlers;
 
 namespace WebsitePerformanceEvaluator;
 
 public class TaskRunner
 {
-    private LinkManager LinkManager { get; set; }
+    private Crawler Crawler { get; set; }
     private int LinksCountInSitemap { get; set; }
     private int LinksCountAfterCrawling { get; set; }
 
-    public TaskRunner(LinkManager linkManager)
+    public TaskRunner(Crawler crawler)
     {
-        LinkManager = linkManager;
+        Crawler = crawler;
     }
 
     public async Task Start()
@@ -22,8 +21,8 @@ public class TaskRunner
         var url = "https://ukad-group.com/";
         
         watch.Start();
-        var linksByCrawlingTask = Task.Run(() => LinkManager.GetLinksByCrawling(url));
-        var sitemapLinksTask = Task.Run(() => LinkManager.GetSitemapLinks(url));
+        var linksByCrawlingTask = Task.Run(() => Crawler.GetLinksByCrawling(url));
+        var sitemapLinksTask = Task.Run(() => Crawler.GetSitemapLinks(url));
 
         var linksByCrawling = (await linksByCrawlingTask).ToList();
         var sitemapLinks = (await sitemapLinksTask).ToList();
@@ -78,7 +77,7 @@ public class TaskRunner
 
     private async Task PrintLinksWithTimeResponse(string url)
     {
-        var linksWithTimeResponse = (await LinkManager.GetLinksWithTimeResponse(url))
+        var linksWithTimeResponse = (await Crawler.GetLinksWithTimeResponse(url))
             .OrderBy(item => item.Item2)
             .ToList();
         Console.WriteLine("Links with time response:");

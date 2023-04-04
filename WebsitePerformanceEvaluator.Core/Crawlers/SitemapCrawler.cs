@@ -1,14 +1,15 @@
 using System.Xml;
 using Serilog;
 
-namespace WebsitePerformanceEvaluator.Core.Services;
+namespace WebsitePerformanceEvaluator.Core.Crawlers;
 
-public class SitemapService
+public class SitemapCrawler
 {
+
     private readonly HttpClient _httpClient;
     private readonly ILogger _logger;
     
-    public SitemapService(ILogger logger, IHttpClientFactory httpClientFactory)
+    public SitemapCrawler(ILogger logger, IHttpClientFactory httpClientFactory)
     {
         _httpClient = httpClientFactory.CreateClient();
         _logger = logger;

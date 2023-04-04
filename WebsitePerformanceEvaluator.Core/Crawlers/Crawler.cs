@@ -1,23 +1,22 @@
 using Microsoft.Extensions.Caching.Memory;
 using Serilog;
 using WebsitePerformanceEvaluator.Core.Extensions;
-using WebsitePerformanceEvaluator.Core.Services;
 
-namespace WebsitePerformanceEvaluator.Core.Managers;
+namespace WebsitePerformanceEvaluator.Core.Crawlers;
 
-public class LinkManager
+public class Crawler
 {
-    private ClientService ClientService { get; set; }
-    private SitemapService SitemapService { get; set; }
+    private WebsiteCrawler WebsiteCrawler { get; set; }
+    private SitemapCrawler SitemapCrawler { get; set; }
     private IMemoryCache MemoryCache { get; set; }
     private readonly ILogger _logger;
 
 
-    public LinkManager(ClientService clientService, SitemapService sitemapService, IMemoryCache
+    public Crawler(WebsiteCrawler websiteCrawler, SitemapCrawler sitemapCrawler, IMemoryCache
         memoryCache, ILogger logger)
     {
-        ClientService = clientService;
-        SitemapService = sitemapService;
+        WebsiteCrawler = websiteCrawler;
+        SitemapCrawler = sitemapCrawler;
         MemoryCache = memoryCache;
         _logger = logger;
     }
@@ -38,7 +37,7 @@ public class LinkManager
 
         union
             .AsParallel()
-            .Select(link => new Tuple<string, int>(link, ClientService.GetTimeResponse(link)))
+            .Select(link => new Tuple<string, int>(link, WebsiteCrawler.GetTimeResponse(link)))
             .ForAll(result.Add);
 
 
@@ -54,7 +53,7 @@ public class LinkManager
             return result!;
         }
 
-        result = (await ClientService.CrawlWebsiteToFindLinks(url)).ApplyFilters(url);
+        result = (await WebsiteCrawler.CrawlWebsiteToFindLinks(url)).ApplyFilters(url);
         var linksByCrawling = result.ToList();
 
         MemoryCache.Set(casheKey, linksByCrawling);
@@ -71,7 +70,7 @@ public class LinkManager
             return result!;
         }
 
-        result = (await SitemapService.GetAllUrlsFromSitemap(url)).ApplyFilters(url);
+        result = (await SitemapCrawler.GetAllUrlsFromSitemap(url)).ApplyFilters(url);
 
         var sitemapLinks = result.ToList();
         MemoryCache.Set(casheKey, sitemapLinks);
