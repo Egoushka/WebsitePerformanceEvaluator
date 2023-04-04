@@ -8,7 +8,7 @@ public class HttpClientService
 {
     private readonly HttpClient _httpClient;
     private readonly ILogger _logger;
-    
+
     public HttpClientService(IHttpClientFactory httpClientFactory, ILogger logger)
     {
         _httpClient = httpClientFactory.CreateClient();
@@ -27,7 +27,7 @@ public class HttpClientService
         return doc;
     }
 
-    public  int GetTimeResponse(string url)
+    public int GetTimeResponse(string url)
     {
         var time = 0;
         try
@@ -47,6 +47,7 @@ public class HttpClientService
 
         return time;
     }
+
     public async Task<string> DownloadSitemap(string sitemapUrl)
     {
         string sitemapString;

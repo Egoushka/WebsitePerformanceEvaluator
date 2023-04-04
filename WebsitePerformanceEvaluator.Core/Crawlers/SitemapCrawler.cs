@@ -10,7 +10,7 @@ public class SitemapCrawler
     private readonly ILogger _logger;
     private readonly HttpClientService _httpClientService;
     private readonly XmlParser _xmlParser;
-    
+
     public SitemapCrawler(ILogger logger, HttpClientService httpClientService, XmlParser xmlParser)
     {
         _logger = logger;
@@ -56,5 +56,4 @@ public class SitemapCrawler
 
         return sitemapXmlDocument;
     }
-  
 }

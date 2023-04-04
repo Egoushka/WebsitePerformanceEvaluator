@@ -1,5 +1,4 @@
 using Microsoft.Extensions.Caching.Memory;
-using Serilog;
 using WebsitePerformanceEvaluator.Core.Extensions;
 using WebsitePerformanceEvaluator.Core.Service;
 
@@ -7,10 +6,10 @@ namespace WebsitePerformanceEvaluator.Core.Crawlers;
 
 public class Crawler
 {
-    private WebsiteCrawler WebsiteCrawler { get; set; }
-    private SitemapCrawler SitemapCrawler { get; set; }
-    private IMemoryCache MemoryCache { get; set; }
-    private HttpClientService HttpClientService { get; set; }
+    private WebsiteCrawler WebsiteCrawler { get; }
+    private SitemapCrawler SitemapCrawler { get; }
+    private IMemoryCache MemoryCache { get; }
+    private HttpClientService HttpClientService { get; }
 
 
     public Crawler(WebsiteCrawler websiteCrawler, SitemapCrawler sitemapCrawler, IMemoryCache

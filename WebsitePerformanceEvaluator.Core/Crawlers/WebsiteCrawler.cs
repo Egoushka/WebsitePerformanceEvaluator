@@ -1,14 +1,12 @@
-using HtmlAgilityPack;
-using Serilog;
 using WebsitePerformanceEvaluator.Core.Extensions;
 using WebsitePerformanceEvaluator.Core.Parsers;
-using WebsitePerformanceEvaluator.Core.Service;
 
 namespace WebsitePerformanceEvaluator.Core.Crawlers;
 
 public class WebsiteCrawler
 {
-    private HtmlParser HtmlParser { get; set; }
+    private HtmlParser HtmlParser { get; }
+
     public WebsiteCrawler(HtmlParser htmlParser)
     {
         HtmlParser = htmlParser;
@@ -59,8 +57,4 @@ public class WebsiteCrawler
 
         return tasks;
     }
-
-
-
- 
 }

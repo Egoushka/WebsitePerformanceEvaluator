@@ -4,7 +4,7 @@ namespace WebsitePerformanceEvaluator;
 
 public class TaskRunner
 {
-    private Crawler Crawler { get; set; }
+    private Crawler Crawler { get; }
     private int LinksCountInSitemap { get; set; }
     private int LinksCountAfterCrawling { get; set; }
 
