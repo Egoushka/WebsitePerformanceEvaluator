@@ -19,12 +19,10 @@ public class WebsiteCrawler
         var links = new HashSet<string> { url };
         var visitedLinks = new HashSet<string>();
         var linksToVisit = new Queue<string>(new[] { url });
-        const int semaphoreCount = 10;
-        var semaphoreSlim = new SemaphoreSlim(semaphoreCount);
 
         while (linksToVisit.Count > 0)
         {
-            var tasks = GetCrawlingTasks(linksToVisit, visitedLinks, semaphoreSlim);
+            var tasks = GetCrawlingTasks(linksToVisit, visitedLinks);
             var results = await Task.WhenAll(tasks);
 
             var newLinks = results.SelectMany(result => result).ApplyFilters(url).ToList();
@@ -40,7 +38,7 @@ public class WebsiteCrawler
     }
 
     private IEnumerable<Task<IEnumerable<string>>> GetCrawlingTasks(Queue<string> linksToVisit,
-        ICollection<string> visitedLinks, SemaphoreSlim semaphoreSlim)
+        ICollection<string> visitedLinks)
     {
         var tasks = new List<Task<IEnumerable<string>>>();
 
@@ -49,13 +47,10 @@ public class WebsiteCrawler
             var link = linksToVisit.Dequeue();
 
             visitedLinks.Add(link);
-            semaphoreSlim.Wait();
 
             var task = Task<IEnumerable<string>>.Factory.StartNew(() =>
             {
                 var newLinks = HtmlParser.ParsePageToFindLinks(link);
-
-                semaphoreSlim.Release();
 
                 return newLinks;
             });
