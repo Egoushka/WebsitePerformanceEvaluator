@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using HtmlAgilityPack;
 using Serilog;
 
@@ -26,18 +27,18 @@ public class HttpClientService
         return doc;
     }
 
-    public int GetTimeResponse(string url)
+    public  int GetTimeResponse(string url)
     {
         var time = 0;
         try
         {
-            var timeAtStart = DateTime.Now;
+            var stopWatch = new Stopwatch();
 
-            var result = _httpClient.GetAsync(url).Result;
-            var responseTime = result.Headers.TryGetValues("X-Response-Time", out var values)
-                ? values.FirstOrDefault()
-                : null;
-            time = responseTime == null ? (DateTime.Now - timeAtStart).Milliseconds : int.Parse(responseTime);
+            stopWatch.Start();
+            _httpClient.GetAsync(url).Wait();
+            stopWatch.Stop();
+
+            time = (int)stopWatch.ElapsedMilliseconds;
         }
         catch (Exception)
         {
