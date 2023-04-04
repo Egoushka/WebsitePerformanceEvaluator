@@ -9,21 +9,18 @@ public class Crawler
     private WebsiteCrawler WebsiteCrawler { get; set; }
     private SitemapCrawler SitemapCrawler { get; set; }
     private IMemoryCache MemoryCache { get; set; }
-    private readonly ILogger _logger;
 
 
     public Crawler(WebsiteCrawler websiteCrawler, SitemapCrawler sitemapCrawler, IMemoryCache
-        memoryCache, ILogger logger)
+        memoryCache)
     {
         WebsiteCrawler = websiteCrawler;
         SitemapCrawler = sitemapCrawler;
         MemoryCache = memoryCache;
-        _logger = logger;
     }
 
     public async Task<IEnumerable<Tuple<string, int>>> GetLinksWithTimeResponse(string url)
     {
-        _logger.Information("Start getting links with time response");
         var crawlingTask = Task.Run(() => GetLinksByCrawling(url));
         var sitemapTask = Task.Run(() => GetSitemapLinks(url));
 

@@ -17,7 +17,6 @@ public class SitemapCrawler
 
     public async Task<IEnumerable<string>> GetAllUrlsFromSitemap(string baseUrl)
     {
-        _logger.Information("Start getting sitemap links");
         var sitemapXml = await GetSitemap(baseUrl);
         var xmlSitemapList = sitemapXml.GetElementsByTagName("url");
 
@@ -52,7 +51,6 @@ public class SitemapCrawler
             return new XmlDocument();
         }
 
-        _logger.Information("Sitemap downloaded successfully");
         return sitemapXmlDocument;
     }
 

@@ -17,7 +17,6 @@ public class WebsiteCrawler
 
     public async Task<IEnumerable<string>> CrawlWebsiteToFindLinks(string url)
     {
-        _logger.Information("Start getting links by crawling");
         var links = new HashSet<string> { url };
         var visitedLinks = new HashSet<string>();
         var linksToVisit = new Queue<string>(new[] { url });
