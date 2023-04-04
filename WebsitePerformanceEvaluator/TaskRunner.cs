@@ -1,14 +1,15 @@
-using WebsitePerformanceEvaluator.Core.Interfaces.Managers;
+
+using WebsitePerformanceEvaluator.Core.Managers;
 
 namespace WebsitePerformanceEvaluator;
 
 public class TaskRunner
 {
-    private ILinkManager LinkManager { get; set; }
+    private LinkManager LinkManager { get; set; }
     private int LinksCountInSitemap { get; set; }
     private int LinksCountAfterCrawling { get; set; }
 
-    public TaskRunner(ILinkManager linkManager)
+    public TaskRunner(LinkManager linkManager)
     {
         LinkManager = linkManager;
     }
@@ -17,7 +18,8 @@ public class TaskRunner
     {
         var watch = System.Diagnostics.Stopwatch.StartNew();
 
-        var url = ConsoleHelper.GetInput("Enter url:");
+        //var url = ConsoleHelper.GetInput("Enter url:");
+        var url = "https://ukad-group.com/";
         
         watch.Start();
         var linksByCrawlingTask = Task.Run(() => LinkManager.GetLinksByCrawling(url));

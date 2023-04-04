@@ -1,10 +1,9 @@
 using System.Xml;
 using Serilog;
-using WebsitePerformanceEvaluator.Core.Interfaces.Services;
 
 namespace WebsitePerformanceEvaluator.Core.Services;
 
-public class SitemapService : ISitemapService
+public class SitemapService
 {
     private readonly HttpClient _httpClient;
     private readonly ILogger _logger;

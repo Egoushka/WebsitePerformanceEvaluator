@@ -1,11 +1,10 @@
 using HtmlAgilityPack;
 using Serilog;
 using WebsitePerformanceEvaluator.Core.Extensions;
-using WebsitePerformanceEvaluator.Core.Interfaces.Services;
 
 namespace WebsitePerformanceEvaluator.Core.Services;
 
-public class ClientService : IClientService
+public class ClientService
 {
     private readonly ILogger _logger;
     private readonly IHttpClientFactory _httpClientFactory;
@@ -79,8 +78,7 @@ public class ClientService : IClientService
             return new List<string>();
         }
 
-        return linkNodes.Select(link =>
-            link.Attributes["href"].Value);
+        return linkNodes.Select(link => link.Attributes["href"].Value);
     }
 
     private HtmlDocument GetDocument(string url)

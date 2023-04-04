@@ -1,20 +1,19 @@
 using Microsoft.Extensions.Caching.Memory;
 using Serilog;
 using WebsitePerformanceEvaluator.Core.Extensions;
-using WebsitePerformanceEvaluator.Core.Interfaces.Managers;
-using WebsitePerformanceEvaluator.Core.Interfaces.Services;
+using WebsitePerformanceEvaluator.Core.Services;
 
 namespace WebsitePerformanceEvaluator.Core.Managers;
 
-public class LinkManager : ILinkManager
+public class LinkManager
 {
-    private IClientService ClientService { get; set; }
-    private ISitemapService SitemapService { get; set; }
+    private ClientService ClientService { get; set; }
+    private SitemapService SitemapService { get; set; }
     private IMemoryCache MemoryCache { get; set; }
     private readonly ILogger _logger;
 
 
-    public LinkManager(IClientService clientService, ISitemapService sitemapService, IMemoryCache
+    public LinkManager(ClientService clientService, SitemapService sitemapService, IMemoryCache
         memoryCache, ILogger logger)
     {
         ClientService = clientService;
@@ -37,7 +36,9 @@ public class LinkManager : ILinkManager
 
         var result = new List<Tuple<string, int>>();
 
-        union.AsParallel().Select(link => new Tuple<string, int>(link, ClientService.GetTimeResponse(link)))
+        union
+            .AsParallel()
+            .Select(link => new Tuple<string, int>(link, ClientService.GetTimeResponse(link)))
             .ForAll(result.Add);
 
 
