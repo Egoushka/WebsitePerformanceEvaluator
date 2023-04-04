@@ -18,6 +18,7 @@ internal static class Program
         services.AddMemoryCache();
         services.AddOptions();
         services.Configure<MemoryCacheEntryOptions>(options => options.SetSlidingExpiration(TimeSpan.FromMinutes(1)));
+        
         services.AddHttpClient();
         services.AddTransient<Crawler>();
         services.AddTransient<WebsiteCrawler>();
@@ -29,11 +30,13 @@ internal static class Program
         services.AddTransient<TaskRunner>();
 
         var builder = new ContainerBuilder();
+        
         builder.Register<ILogger>((c, p) =>
             new LoggerConfiguration().WriteTo.Console().CreateLogger()
-        ).SingleInstance();
+            ).SingleInstance();
         
         builder.Populate(services);
+        
         return builder.Build();
     }
 

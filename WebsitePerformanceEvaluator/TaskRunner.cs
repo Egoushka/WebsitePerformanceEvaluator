@@ -37,8 +37,8 @@ public class TaskRunner
 
         Console.WriteLine($"Links in sitemap: {LinksCountInSitemap}");
         Console.WriteLine($"Links after crawling: {LinksCountAfterCrawling}");
+        
         watch.Stop();
-
         Console.WriteLine($"Time elapsed: {watch.ElapsedMilliseconds / 1000} s");
     }
 

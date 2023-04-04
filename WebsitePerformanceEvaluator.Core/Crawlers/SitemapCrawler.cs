@@ -37,7 +37,7 @@ public class SitemapCrawler
 
         var sitemapXmlDocument = await GetSitemapXmlDocument(sitemapUrl);
 
-        return sitemapXmlDocument.DocumentElement == null ? new XmlDocument() : sitemapXmlDocument;
+        return sitemapXmlDocument.DocumentElement != null ? sitemapXmlDocument : new XmlDocument();
     }
 
     private async Task<XmlDocument> GetSitemapXmlDocument(string sitemapUrl)
