@@ -1,18 +1,17 @@
 using HtmlAgilityPack;
 using Serilog;
 using WebsitePerformanceEvaluator.Core.Extensions;
+using WebsitePerformanceEvaluator.Core.Service;
 
 namespace WebsitePerformanceEvaluator.Core.Crawlers;
 
 public class WebsiteCrawler
 {
-    private readonly ILogger _logger;
-    private readonly IHttpClientFactory _httpClientFactory;
+    private readonly HttpClientService _httpClientService;
 
-    public WebsiteCrawler(ILogger logger, IHttpClientFactory httpClientFactory)
+    public WebsiteCrawler(HttpClientService httpClientService)
     {
-        _logger = logger;
-        _httpClientFactory = httpClientFactory;
+        _httpClientService = httpClientService;
     }
 
     public async Task<IEnumerable<string>> CrawlWebsiteToFindLinks(string url)
@@ -68,7 +67,7 @@ public class WebsiteCrawler
 
     private IEnumerable<string> CrawlPageToFindLinks(string url)
     {
-        var doc = GetDocument(url);
+        var doc = _httpClientService.GetDocument(url);
 
         var linkNodes = doc.DocumentNode.SelectNodes("//a[@href]");
 
@@ -80,38 +79,5 @@ public class WebsiteCrawler
         return linkNodes.Select(link => link.Attributes["href"].Value);
     }
 
-    private HtmlDocument GetDocument(string url)
-    {
-        var doc = new HtmlDocument();
-        var httpClient = _httpClientFactory.CreateClient();
-
-        using var response = httpClient.GetAsync(url).Result;
-        var html = response.Content.ReadAsStringAsync().Result;
-
-        doc.LoadHtml(html);
-
-        return doc;
-    }
-
-    public int GetTimeResponse(string url)
-    {
-        var time = 0;
-        var httpClient = _httpClientFactory.CreateClient();
-        try
-        {
-            var timeAtStart = DateTime.Now;
-
-            var result = httpClient.GetAsync(url).Result;
-            var responseTime = result.Headers.TryGetValues("X-Response-Time", out var values)
-                ? values.FirstOrDefault()
-                : null;
-            time = responseTime == null ? (DateTime.Now - timeAtStart).Milliseconds : int.Parse(responseTime);
-        }
-        catch (Exception)
-        {
-            _logger.Error("Error while getting response time");
-        }
-
-        return time;
-    }
+ 
 }

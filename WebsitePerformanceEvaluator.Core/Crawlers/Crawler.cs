@@ -1,6 +1,7 @@
 using Microsoft.Extensions.Caching.Memory;
 using Serilog;
 using WebsitePerformanceEvaluator.Core.Extensions;
+using WebsitePerformanceEvaluator.Core.Service;
 
 namespace WebsitePerformanceEvaluator.Core.Crawlers;
 
@@ -9,14 +10,16 @@ public class Crawler
     private WebsiteCrawler WebsiteCrawler { get; set; }
     private SitemapCrawler SitemapCrawler { get; set; }
     private IMemoryCache MemoryCache { get; set; }
+    private HttpClientService HttpClientService { get; set; }
 
 
     public Crawler(WebsiteCrawler websiteCrawler, SitemapCrawler sitemapCrawler, IMemoryCache
-        memoryCache)
+        memoryCache, HttpClientService httpClientService)
     {
         WebsiteCrawler = websiteCrawler;
         SitemapCrawler = sitemapCrawler;
         MemoryCache = memoryCache;
+        HttpClientService = httpClientService;
     }
 
     public async Task<IEnumerable<Tuple<string, int>>> GetLinksWithTimeResponse(string url)
@@ -34,7 +37,7 @@ public class Crawler
 
         union
             .AsParallel()
-            .Select(link => new Tuple<string, int>(link, WebsiteCrawler.GetTimeResponse(link)))
+            .Select(link => new Tuple<string, int>(link, HttpClientService.GetTimeResponse(link)))
             .ForAll(result.Add);
 
 

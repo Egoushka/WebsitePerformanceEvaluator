@@ -1,18 +1,18 @@
 using System.Xml;
 using Serilog;
+using WebsitePerformanceEvaluator.Core.Service;
 
 namespace WebsitePerformanceEvaluator.Core.Crawlers;
 
 public class SitemapCrawler
 {
-
-    private readonly HttpClient _httpClient;
     private readonly ILogger _logger;
+    private readonly HttpClientService _httpClientService;
     
-    public SitemapCrawler(ILogger logger, IHttpClientFactory httpClientFactory)
+    public SitemapCrawler(ILogger logger, HttpClientService httpClientService)
     {
-        _httpClient = httpClientFactory.CreateClient();
         _logger = logger;
+        _httpClientService = httpClientService;
     }
 
     public async Task<IEnumerable<string>> GetAllUrlsFromSitemap(string baseUrl)
@@ -39,7 +39,7 @@ public class SitemapCrawler
 
     private async Task<XmlDocument> GetSitemapXmlDocument(string sitemapUrl)
     {
-        var sitemapString = await DownloadSitemap(sitemapUrl);
+        var sitemapString = await _httpClientService.DownloadSitemap(sitemapUrl);
         var sitemapXmlDocument = new XmlDocument();
         try
         {
@@ -54,21 +54,7 @@ public class SitemapCrawler
         return sitemapXmlDocument;
     }
 
-    private async Task<string> DownloadSitemap(string sitemapUrl)
-    {
-        string sitemapString;
-        try
-        {
-            sitemapString = await _httpClient.GetStringAsync(sitemapUrl);
-        }
-        catch (Exception e)
-        {
-            _logger.Error("Error while downloading sitemap, sitemap will be ignored");
-            return "";
-        }
-
-        return sitemapString;
-    }
+   
 
     private IEnumerable<string> GetRawUrlsFromSitemap(XmlNodeList xmlSitemapList)
     {
