@@ -55,7 +55,7 @@ public class Crawler
         }
 
         result = await WebsiteCrawler.CrawlWebsiteToFindLinks(url);
-        result = LinkFilter.ApplyFilters(result, url);
+        result = LinkFilter.FilterLinks(result, url);
         
         var linksByCrawling = result.ToList();
 
@@ -74,7 +74,7 @@ public class Crawler
         }
 
         result = await SitemapCrawler.GetAllUrlsFromSitemap(url);
-        result = LinkFilter.ApplyFilters(result, url);
+        result = LinkFilter.FilterLinks(result, url);
 
         var sitemapLinks = result.ToList();
         MemoryCache.Set(casheKey, sitemapLinks);

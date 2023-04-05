@@ -4,7 +4,7 @@ namespace WebsitePerformanceEvaluator.Core.Filters;
 
 public class LinkFilter
 {
-    public IEnumerable<string> ApplyFilters(IEnumerable<string> links, string baseUrl)
+    public IEnumerable<string> FilterLinks(IEnumerable<string> links, string baseUrl)
     {
         links = links.Distinct();
 
