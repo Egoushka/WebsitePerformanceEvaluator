@@ -4,21 +4,49 @@ namespace WebsitePerformanceEvaluator.Core.Filters;
 
 public class LinkFilter
 {
-    public IEnumerable<string> ApplyFilters(IEnumerable<string> links, string baseUrl)
+    private readonly Func<string, bool>[] _predicates;
+
+    public LinkFilter()
+    {
+        _predicates = new[]
+        {
+            DoesNotContainAnchor,
+            IsNotFileLink,
+            DoesNotContainAttributes,
+        };
+    }
+
+    public IEnumerable<string> FilterLinks(IEnumerable<string> links, string baseUrl)
     {
         links = links.Distinct();
 
-        links = RemoveAnchorLinks(links);
-        links = RemoveFilesLinks(links);
-        links = RemoveLinksWithAttributes(links);
+        links = _predicates.Aggregate(links, (current, predicate) => current.Where(predicate));
+
         links = AddBaseUrl(links, baseUrl);
         links = CheckForSlashAndRemove(links);
         links = CheckLinksHosts(links, baseUrl);
-        links = RemoveNotHttpsOrHttpScheme(links);
 
         return links;
     }
+    private bool DoesNotContainAnchor(string link)
+    {
+        return !link.Contains('#');
+    }
 
+    private bool IsNotFileLink(string link)
+    {
+        return link.LastIndexOf('.') < link.LastIndexOf('/');
+    }
+
+    private bool DoesNotContainAttributes(string link)
+    {
+        return !link.Contains('?');
+    }
+
+    private bool IsHttpOrHttpsLink(string link)
+    {
+        return link.StartsWith(Uri.UriSchemeHttp) || link.StartsWith(Uri.UriSchemeHttps);
+    }
     private IEnumerable<string> AddBaseUrl(IEnumerable<string> links, string baseUrl)
     {
         return links.Select(link => link.StartsWith("/") ? baseUrl[..^1] + link : link);
@@ -27,26 +55,6 @@ public class LinkFilter
     private IEnumerable<string> CheckForSlashAndRemove(IEnumerable<string> links)
     {
         return links.Select(link => link.EndsWith("/") ? link.Remove(link.Length - 1) : link);
-    }
-
-    private IEnumerable<string> RemoveAnchorLinks(IEnumerable<string> links)
-    {
-        return links.Where(link => !link.Contains('#'));
-    }
-
-    private IEnumerable<string> RemoveFilesLinks(IEnumerable<string> links)
-    {
-        return links.Where(link => link.LastIndexOf('.') < link.LastIndexOf('/'));
-    }
-
-    private IEnumerable<string> RemoveLinksWithAttributes(IEnumerable<string> links)
-    {
-        return links.Where(link => !link.Contains('?'));
-    }
-
-    private IEnumerable<string> RemoveNotHttpsOrHttpScheme(IEnumerable<string> links)
-    {
-        return links.Where(link => link.StartsWith(Uri.UriSchemeHttp) || link.StartsWith(Uri.UriSchemeHttps));
     }
 
     private IEnumerable<string> CheckLinksHosts(IEnumerable<string> urls, string baseUrl)

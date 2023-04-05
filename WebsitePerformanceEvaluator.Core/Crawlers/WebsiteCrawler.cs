@@ -63,7 +63,7 @@ public class WebsiteCrawler
         var results = await Task.WhenAll(tasks);
 
         var newLinks = results.SelectMany(result => result);
-        var filteredLinks = LinkFilter.ApplyFilters(newLinks, url);
+        var filteredLinks = LinkFilter.FilterLinks(newLinks, url);
         
         return filteredLinks;
     }
