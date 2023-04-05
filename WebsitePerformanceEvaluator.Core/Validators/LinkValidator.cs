@@ -4,28 +4,10 @@ public class LinkValidator
 {
     public bool IsValidLink(string link)
     {
-        return DoesNotContainAnchor(link)
-               && IsNotFileLink(link)
-               && DoesNotContainAttributes(link);
-    }
-
-    private bool DoesNotContainAnchor(string link)
-    {
-        return !link.Contains('#');
-    }
-
-    private bool IsNotFileLink(string link)
-    {
-        return link.LastIndexOf('.') < link.LastIndexOf('/');
-    }
-
-    private bool DoesNotContainAttributes(string link)
-    {
-        return !link.Contains('?');
-    }
-
-    private bool IsHttpOrHttpsLink(string link)
-    {
-        return link.StartsWith(Uri.UriSchemeHttp) || link.StartsWith(Uri.UriSchemeHttps);
+        var doesNotContainAnchor = !link.Contains('#');
+        var isNotFileLink = link.LastIndexOf('.') < link.LastIndexOf('/');
+        var doesNotContainAttributes = !link.Contains('?');
+        
+        return doesNotContainAnchor && isNotFileLink && doesNotContainAttributes;
     }
 }
