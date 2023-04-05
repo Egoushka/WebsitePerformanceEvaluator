@@ -6,20 +6,20 @@ namespace WebsitePerformanceEvaluator.Core.Service;
 
 public class HttpClientService
 {
-    private readonly HttpClient _httpClient;
-    private readonly ILogger _logger;
+    private HttpClient Client { get; }
+    private ILogger Logger { get; }
 
     public HttpClientService(IHttpClientFactory httpClientFactory, ILogger logger)
     {
-        _httpClient = httpClientFactory.CreateClient();
-        _logger = logger;
+        Client = httpClientFactory.CreateClient();
+        Logger = logger;
     }
 
     public HtmlDocument GetDocument(string url)
     {
         var doc = new HtmlDocument();
 
-        using var response = _httpClient.GetAsync(url).Result;
+        using var response = Client.GetAsync(url).Result;
         var html = response.Content.ReadAsStringAsync().Result;
 
         doc.LoadHtml(html);
@@ -35,14 +35,14 @@ public class HttpClientService
             var stopWatch = new Stopwatch();
 
             stopWatch.Start();
-            _httpClient.GetAsync(url).Wait();
+            Client.GetAsync(url).Wait();
             stopWatch.Stop();
 
             time = (int)stopWatch.ElapsedMilliseconds;
         }
         catch (Exception)
         {
-            _logger.Error("Error while getting response time");
+            Logger.Error("Error while getting response time");
         }
 
         return time;
@@ -53,11 +53,11 @@ public class HttpClientService
         string sitemapString;
         try
         {
-            sitemapString = await _httpClient.GetStringAsync(sitemapUrl);
+            sitemapString = await Client.GetStringAsync(sitemapUrl);
         }
         catch (Exception e)
         {
-            _logger.Error("Error while downloading sitemap, sitemap will be ignored");
+            Logger.Error("Error while downloading sitemap, sitemap will be ignored");
             return "";
         }
 

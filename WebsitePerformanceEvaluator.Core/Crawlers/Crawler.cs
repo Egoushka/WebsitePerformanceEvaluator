@@ -61,7 +61,6 @@ public class Crawler
             .Select(link => new Tuple<string, int>(link.Item1, HttpClientService.GetTimeResponse(link.Item1)))
             .ForAll(result.Add);
 
-
         return result;
     }
 

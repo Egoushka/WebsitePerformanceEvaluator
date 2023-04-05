@@ -8,17 +8,17 @@ namespace WebsitePerformanceEvaluator.Core.Crawlers;
 
 public class SitemapCrawler
 {
-    private readonly ILogger _logger;
-    private readonly HttpClientService _httpClientService;
-    private readonly XmlParser _xmlParser;
-    private readonly LinkFilter _linkFilter;
+    private ILogger Logger { get; }
+    private HttpClientService ClientService { get; }
+    private XmlParser Parser { get; }
+    private LinkFilter Filter { get; }
 
     public SitemapCrawler(ILogger logger, HttpClientService httpClientService, XmlParser xmlParser, LinkFilter linkFilter)
     {
-        _logger = logger;
-        _httpClientService = httpClientService;
-        _xmlParser = xmlParser;
-        _linkFilter = linkFilter;
+        Logger = logger;
+        ClientService = httpClientService;
+        Parser = xmlParser;
+        Filter = linkFilter;
     }
 
     public async Task<IEnumerable<string>> GetAllUrlsFromSitemap(string baseUrl)
@@ -26,8 +26,8 @@ public class SitemapCrawler
         var sitemapXml = await GetSitemap(baseUrl);
         var xmlSitemapList = sitemapXml.GetElementsByTagName("url");
 
-        var urls = _xmlParser.GetRawUrlsFromSitemap(xmlSitemapList);
-        var filteredLinks = _linkFilter.FilterLinks(urls, baseUrl);
+        var urls = Parser.GetRawUrlsFromSitemap(xmlSitemapList);
+        var filteredLinks = Filter.FilterLinks(urls, baseUrl);
 
         return filteredLinks;
     }
@@ -46,7 +46,7 @@ public class SitemapCrawler
 
     private async Task<XmlDocument> GetSitemapXmlDocument(string sitemapUrl)
     {
-        var sitemapString = await _httpClientService.DownloadSitemap(sitemapUrl);
+        var sitemapString = await ClientService.DownloadSitemap(sitemapUrl);
         var sitemapXmlDocument = new XmlDocument();
         try
         {
@@ -54,7 +54,7 @@ public class SitemapCrawler
         }
         catch (Exception e)
         {
-            _logger.Error("Error while parsing sitemap, sitemap will be ignored");
+            Logger.Error("Error while parsing sitemap, sitemap will be ignored");
             return new XmlDocument();
         }
 
