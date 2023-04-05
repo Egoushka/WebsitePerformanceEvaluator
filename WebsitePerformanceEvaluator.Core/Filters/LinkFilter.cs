@@ -19,9 +19,9 @@ public class LinkFilter
         links = RemoveInvalidLinks(links);
         
         links = AddBaseUrl(links, baseUrl);
-        links = CheckForSlashAndRemove(links);
-        links = CheckLinksHosts(links, baseUrl);
-        links = RemoveNotHttpsOrHttpScheme(links);
+        
+        links = RemoveLastSlashFromLinks(links);
+        links = RemoveExternalLinks(links, baseUrl);
 
         return links;
     }
@@ -34,32 +34,12 @@ public class LinkFilter
         return links.Select(link => link.StartsWith("/") ? baseUrl[..^1] + link : link);
     }
 
-    private IEnumerable<string> CheckForSlashAndRemove(IEnumerable<string> links)
+    private IEnumerable<string> RemoveLastSlashFromLinks(IEnumerable<string> links)
     {
         return links.Select(link => link.EndsWith("/") ? link.Remove(link.Length - 1) : link);
     }
 
-    private IEnumerable<string> RemoveAnchorLinks(IEnumerable<string> links)
-    {
-        return links.Where(link => !link.Contains('#'));
-    }
-
-    private IEnumerable<string> RemoveFilesLinks(IEnumerable<string> links)
-    {
-        return links.Where(link => link.LastIndexOf('.') < link.LastIndexOf('/'));
-    }
-
-    private IEnumerable<string> RemoveLinksWithAttributes(IEnumerable<string> links)
-    {
-        return links.Where(link => !link.Contains('?'));
-    }
-
-    private IEnumerable<string> RemoveNotHttpsOrHttpScheme(IEnumerable<string> links)
-    {
-        return links.Where(link => link.StartsWith(Uri.UriSchemeHttp) || link.StartsWith(Uri.UriSchemeHttps));
-    }
-
-    private IEnumerable<string> CheckLinksHosts(IEnumerable<string> urls, string baseUrl)
+    private IEnumerable<string> RemoveExternalLinks(IEnumerable<string> urls, string baseUrl)
     {
         return urls.Where(url => CompareHosts(url, baseUrl) != string.Empty);
     }
