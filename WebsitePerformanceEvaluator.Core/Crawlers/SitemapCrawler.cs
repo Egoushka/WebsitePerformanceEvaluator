@@ -13,7 +13,8 @@ public class SitemapCrawler
     private XmlParser Parser { get; }
     private LinkFilter Filter { get; }
 
-    public SitemapCrawler(ILogger logger, HttpClientService httpClientService, XmlParser xmlParser, LinkFilter linkFilter)
+    public SitemapCrawler(ILogger logger, HttpClientService httpClientService, XmlParser xmlParser,
+        LinkFilter linkFilter)
     {
         Logger = logger;
         ClientService = httpClientService;

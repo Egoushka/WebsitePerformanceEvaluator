@@ -27,9 +27,9 @@ public class Crawler
 
         var crawlingResult = await crawlingTask;
         var sitemapResult = await sitemapTask;
-        
+
         var union = crawlingResult.Union(sitemapResult).Distinct();
-        
+
         return union;
     }
 
@@ -57,8 +57,9 @@ public class Crawler
     private async Task<List<Tuple<string, CrawlingLinkType>>> GetLinksByCrawling(string url)
     {
         var rawLinks = await WebsiteCrawler.CrawlWebsiteToFindLinks(url);
-        
-        var result = rawLinks.Select(link=> new Tuple<string, CrawlingLinkType>(link, CrawlingLinkType.Website)).ToList();
+
+        var result = rawLinks.Select(link => new Tuple<string, CrawlingLinkType>(link, CrawlingLinkType.Website))
+            .ToList();
 
         return result;
     }
@@ -67,7 +68,8 @@ public class Crawler
     {
         var rawLinks = await SitemapCrawler.GetAllUrlsFromSitemap(url);
 
-        var result = rawLinks.Select(link => new Tuple<string, CrawlingLinkType>(link, CrawlingLinkType.Sitemap)).ToList();
+        var result = rawLinks.Select(link => new Tuple<string, CrawlingLinkType>(link, CrawlingLinkType.Sitemap))
+            .ToList();
 
         return result;
     }

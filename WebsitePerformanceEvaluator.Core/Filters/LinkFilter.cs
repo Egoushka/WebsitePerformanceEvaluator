@@ -16,18 +16,20 @@ public class LinkFilter
     {
         links = links.Distinct();
         links = RemoveInvalidLinks(links);
-        
+
         links = AddBaseUrl(links, baseUrl);
-        
+
         links = RemoveLastSlashFromLinks(links);
         links = RemoveExternalLinks(links, baseUrl);
 
         return links;
     }
+
     private IEnumerable<string> RemoveInvalidLinks(IEnumerable<string> links)
     {
         return links.Where(link => Validator.IsValidLink(link));
     }
+
     private IEnumerable<string> AddBaseUrl(IEnumerable<string> links, string baseUrl)
     {
         return links.Select(link => link.StartsWith("/") ? baseUrl[..^1] + link : link);

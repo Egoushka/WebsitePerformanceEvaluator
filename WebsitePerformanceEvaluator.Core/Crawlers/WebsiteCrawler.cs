@@ -23,7 +23,7 @@ public class WebsiteCrawler
         while (linksToVisit.Count > 0)
         {
             var tasks = GetCrawlingTasks(linksToVisit, visitedLinks);
-            
+
             var filteredLinks = await GetFilteredLinksFromTasks(tasks, url);
 
             links.UnionWith(filteredLinks);
@@ -58,13 +58,15 @@ public class WebsiteCrawler
 
         return tasks;
     }
-    private async Task<IEnumerable<string>> GetFilteredLinksFromTasks(IEnumerable<Task<IEnumerable<string>>> tasks, string url)
+
+    private async Task<IEnumerable<string>> GetFilteredLinksFromTasks(IEnumerable<Task<IEnumerable<string>>> tasks,
+        string url)
     {
         var results = await Task.WhenAll(tasks);
 
         var newLinks = results.SelectMany(result => result);
         var filteredLinks = LinkFilter.FilterLinks(newLinks, url);
-        
+
         return filteredLinks;
     }
 }

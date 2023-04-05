@@ -22,34 +22,37 @@ public class TaskRunner
 
         //var url = ConsoleHelper.GetInput("Enter url:");
         var url = "https://ukad-group.com/";
-        
+
         watch.Start();
-        
+
         await GetLinksFromWebsiteAnsSitemap(url);
 
         PrintLinksInCrawlingNotInSitemap();
         PrintLinksInSitemapNotInCrawling();
-        
+
         await PrintLinksWithTimeResponse(url);
 
 
         Console.WriteLine($"Links in sitemap: {LinksCountInSitemap}");
         Console.WriteLine($"Links after crawling: {LinksCountAfterCrawling}");
-        
+
         watch.Stop();
         Console.WriteLine($"Time elapsed: {watch.ElapsedMilliseconds / 1000} s");
     }
+
     private async Task GetLinksFromWebsiteAnsSitemap(string url)
     {
         var links = await Crawler.GetLinksByCrawlingAndSitemap(url);
-        
+
         WebsiteCrawlingLinks = GetLinksByType(links, CrawlingLinkType.Website).ToList();
         SitemapLinks = GetLinksByType(links, CrawlingLinkType.Sitemap).ToList();
-        
+
         LinksCountInSitemap = WebsiteCrawlingLinks.Count;
         LinksCountAfterCrawling = SitemapLinks.Count;
     }
-    private IEnumerable<string> GetLinksByType(IEnumerable<Tuple<string, CrawlingLinkType>> links, CrawlingLinkType type)
+
+    private IEnumerable<string> GetLinksByType(IEnumerable<Tuple<string, CrawlingLinkType>> links,
+        CrawlingLinkType type)
     {
         return links.Where(x => x.Item2 == type).Select(x => x.Item1);
     }

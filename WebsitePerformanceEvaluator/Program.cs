@@ -18,7 +18,7 @@ internal static class Program
 
         services.AddOptions();
         services.AddHttpClient();
-        
+
         services.AddTransient<Crawler>();
         services.AddTransient<WebsiteCrawler>();
         services.AddTransient<SitemapCrawler>();
@@ -32,9 +32,9 @@ internal static class Program
         services.AddTransient<ILogger, ConsoleLogger>();
 
         var builder = new ContainerBuilder();
-        
+
         builder.Populate(services);
-        
+
         return builder.Build();
     }
 
