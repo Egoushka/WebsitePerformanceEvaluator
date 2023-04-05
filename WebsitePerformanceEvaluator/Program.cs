@@ -32,12 +32,9 @@ internal static class Program
         services.AddTransient<LinkValidator>();
         services.AddTransient<Application>();
         services.AddTransient<TaskRunner>();
+        services.AddTransient<ILogger, ConsoleLogger>();
 
         var builder = new ContainerBuilder();
-        
-        builder.Register<ILogger>((c, p) =>
-            new LoggerConfiguration().WriteTo.Console().CreateLogger()
-            ).SingleInstance();
         
         builder.Populate(services);
         
