@@ -1,4 +1,5 @@
 using WebsitePerformanceEvaluator.Core.Filters;
+using WebsitePerformanceEvaluator.Core.Helpers;
 using WebsitePerformanceEvaluator.Core.Parsers;
 
 namespace WebsitePerformanceEvaluator.Core.Crawlers;
@@ -65,7 +66,9 @@ public class WebsiteCrawler
         var results = await Task.WhenAll(tasks);
 
         var newLinks = results.SelectMany(result => result);
-        var filteredLinks = LinkFilter.FilterLinks(newLinks, url);
+        var filteredLinks = LinkFilter.FilterLinks(newLinks, url)
+            .AddBaseUrl(url)
+            .RemoveLastSlashFromLinks();
 
         return filteredLinks;
     }

@@ -15,13 +15,10 @@ public class LinkFilter
     public IEnumerable<string> FilterLinks(IEnumerable<string> links, string baseUrl)
     {
         links = links.Distinct();
+        
         links = RemoveInvalidLinks(links);
-
-        links = AddBaseUrl(links, baseUrl);
-
-        links = RemoveLastSlashFromLinks(links);
         links = RemoveExternalLinks(links, baseUrl);
-
+        
         return links;
     }
 
@@ -30,21 +27,10 @@ public class LinkFilter
         return links.Where(link => Validator.IsValidLink(link));
     }
 
-    private IEnumerable<string> AddBaseUrl(IEnumerable<string> links, string baseUrl)
+    private IEnumerable<string> RemoveExternalLinks(IEnumerable<string> links, string baseUrl)
     {
-        return links.Select(link => link.StartsWith("/") ? baseUrl[..^1] + link : link);
+        return links.Where(link => CompareHosts(link, baseUrl) != string.Empty);
     }
-
-    private IEnumerable<string> RemoveLastSlashFromLinks(IEnumerable<string> links)
-    {
-        return links.Select(link => link.EndsWith("/") ? link.Remove(link.Length - 1) : link);
-    }
-
-    private IEnumerable<string> RemoveExternalLinks(IEnumerable<string> urls, string baseUrl)
-    {
-        return urls.Where(url => CompareHosts(url, baseUrl) != string.Empty);
-    }
-
     private string CompareHosts(string url, string baseUrl)
     {
         var urlHost = GetHost(url);
