@@ -7,6 +7,7 @@ using WebsitePerformanceEvaluator.Core.Crawlers;
 using WebsitePerformanceEvaluator.Core.Filters;
 using WebsitePerformanceEvaluator.Core.Parsers;
 using WebsitePerformanceEvaluator.Core.Service;
+using WebsitePerformanceEvaluator.Core.Validators;
 
 namespace WebsitePerformanceEvaluator;
 
@@ -28,6 +29,7 @@ internal static class Program
         services.AddTransient<HtmlParser>();
         services.AddTransient<XmlParser>();
         services.AddTransient<LinkFilter>();
+        services.AddTransient<LinkValidator>();
         services.AddTransient<Application>();
         services.AddTransient<TaskRunner>();
 
