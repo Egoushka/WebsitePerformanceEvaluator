@@ -1,5 +1,5 @@
 using Microsoft.Extensions.Caching.Memory;
-using WebsitePerformanceEvaluator.Core.Extensions;
+using WebsitePerformanceEvaluator.Core.Filters;
 using WebsitePerformanceEvaluator.Core.Service;
 
 namespace WebsitePerformanceEvaluator.Core.Crawlers;
@@ -10,15 +10,17 @@ public class Crawler
     private SitemapCrawler SitemapCrawler { get; }
     private IMemoryCache MemoryCache { get; }
     private HttpClientService HttpClientService { get; }
+    private LinkFilter LinkFilter { get; }
 
 
     public Crawler(WebsiteCrawler websiteCrawler, SitemapCrawler sitemapCrawler, IMemoryCache
-        memoryCache, HttpClientService httpClientService)
+        memoryCache, HttpClientService httpClientService, LinkFilter linkFilter)
     {
         WebsiteCrawler = websiteCrawler;
         SitemapCrawler = sitemapCrawler;
         MemoryCache = memoryCache;
         HttpClientService = httpClientService;
+        LinkFilter = linkFilter;
     }
 
     public async Task<IEnumerable<Tuple<string, int>>> GetLinksWithTimeResponse(string url)
@@ -52,7 +54,9 @@ public class Crawler
             return result!;
         }
 
-        result = (await WebsiteCrawler.CrawlWebsiteToFindLinks(url)).ApplyFilters(url);
+        result = await WebsiteCrawler.CrawlWebsiteToFindLinks(url);
+        result = LinkFilter.ApplyFilters(result, url);
+        
         var linksByCrawling = result.ToList();
 
         MemoryCache.Set(casheKey, linksByCrawling);
@@ -69,7 +73,8 @@ public class Crawler
             return result!;
         }
 
-        result = (await SitemapCrawler.GetAllUrlsFromSitemap(url)).ApplyFilters(url);
+        result = await SitemapCrawler.GetAllUrlsFromSitemap(url);
+        result = LinkFilter.ApplyFilters(result, url);
 
         var sitemapLinks = result.ToList();
         MemoryCache.Set(casheKey, sitemapLinks);

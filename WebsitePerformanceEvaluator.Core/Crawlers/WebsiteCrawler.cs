@@ -1,4 +1,4 @@
-using WebsitePerformanceEvaluator.Core.Extensions;
+using WebsitePerformanceEvaluator.Core.Filters;
 using WebsitePerformanceEvaluator.Core.Parsers;
 
 namespace WebsitePerformanceEvaluator.Core.Crawlers;
@@ -6,10 +6,12 @@ namespace WebsitePerformanceEvaluator.Core.Crawlers;
 public class WebsiteCrawler
 {
     private HtmlParser HtmlParser { get; }
+    private LinkFilter LinkFilter { get; }
 
-    public WebsiteCrawler(HtmlParser htmlParser)
+    public WebsiteCrawler(HtmlParser htmlParser, LinkFilter linkFilter)
     {
         HtmlParser = htmlParser;
+        LinkFilter = linkFilter;
     }
 
     public async Task<IEnumerable<string>> CrawlWebsiteToFindLinks(string url)
@@ -21,12 +23,11 @@ public class WebsiteCrawler
         while (linksToVisit.Count > 0)
         {
             var tasks = GetCrawlingTasks(linksToVisit, visitedLinks);
-            var results = await Task.WhenAll(tasks);
+            
+            var filteredLinks = await GetFilteredLinksFromTasks(tasks, url);
 
-            var newLinks = results.SelectMany(result => result).ApplyFilters(url).ToList();
-
-            links.UnionWith(newLinks);
-            foreach (var link in newLinks.Except(visitedLinks))
+            links.UnionWith(filteredLinks);
+            foreach (var link in filteredLinks.Except(visitedLinks))
             {
                 linksToVisit.Enqueue(link);
             }
@@ -56,5 +57,14 @@ public class WebsiteCrawler
         }
 
         return tasks;
+    }
+    private async Task<IEnumerable<string>> GetFilteredLinksFromTasks(IEnumerable<Task<IEnumerable<string>>> tasks, string url)
+    {
+        var results = await Task.WhenAll(tasks);
+
+        var newLinks = results.SelectMany(result => result);
+        var filteredLinks = LinkFilter.ApplyFilters(newLinks, url);
+        
+        return filteredLinks;
     }
 }
