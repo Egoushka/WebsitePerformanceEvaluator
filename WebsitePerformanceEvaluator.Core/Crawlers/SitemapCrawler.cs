@@ -1,5 +1,6 @@
 using System.Xml;
 using Serilog;
+using WebsitePerformanceEvaluator.Core.Filters;
 using WebsitePerformanceEvaluator.Core.Parsers;
 using WebsitePerformanceEvaluator.Core.Service;
 
@@ -10,12 +11,14 @@ public class SitemapCrawler
     private readonly ILogger _logger;
     private readonly HttpClientService _httpClientService;
     private readonly XmlParser _xmlParser;
+    private readonly LinkFilter _linkFilter;
 
-    public SitemapCrawler(ILogger logger, HttpClientService httpClientService, XmlParser xmlParser)
+    public SitemapCrawler(ILogger logger, HttpClientService httpClientService, XmlParser xmlParser, LinkFilter linkFilter)
     {
         _logger = logger;
         _httpClientService = httpClientService;
         _xmlParser = xmlParser;
+        _linkFilter = linkFilter;
     }
 
     public async Task<IEnumerable<string>> GetAllUrlsFromSitemap(string baseUrl)
@@ -24,8 +27,9 @@ public class SitemapCrawler
         var xmlSitemapList = sitemapXml.GetElementsByTagName("url");
 
         var urls = _xmlParser.GetRawUrlsFromSitemap(xmlSitemapList);
+        var filteredLinks = _linkFilter.FilterLinks(urls, baseUrl);
 
-        return urls;
+        return filteredLinks;
     }
 
     private async Task<XmlDocument> GetSitemap(string baseUrl)
