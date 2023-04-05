@@ -67,8 +67,8 @@ public class WebsiteCrawler
 
         var newLinks = results.SelectMany(result => result);
         var filteredLinks = _linkFilter.FilterLinks(newLinks, url)
-            .AddBaseUrl(url)
-            .RemoveLastSlashFromLinks();
+            .RemoveLastSlashFromLinks()
+            .AddBaseUrl(url);
 
         return filteredLinks;
     }

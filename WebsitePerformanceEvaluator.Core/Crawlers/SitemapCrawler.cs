@@ -1,7 +1,7 @@
 using System.Xml;
-using Serilog;
 using WebsitePerformanceEvaluator.Core.Filters;
 using WebsitePerformanceEvaluator.Core.Helpers;
+using WebsitePerformanceEvaluator.Core.Interfaces;
 using WebsitePerformanceEvaluator.Core.Parsers;
 using WebsitePerformanceEvaluator.Core.Service;
 
@@ -29,8 +29,8 @@ public class SitemapCrawler
 
         var urls = _parser.GetLinks(xmlSitemapList);
         var filteredLinks = _filter.FilterLinks(urls, baseUrl)
-            .AddBaseUrl(baseUrl)
-            .RemoveLastSlashFromLinks();
+            .RemoveLastSlashFromLinks()
+            .AddBaseUrl(baseUrl);
 
         return filteredLinks;
     }

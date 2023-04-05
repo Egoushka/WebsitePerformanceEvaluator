@@ -1,6 +1,6 @@
 using System.Diagnostics;
 using HtmlAgilityPack;
-using Serilog;
+using WebsitePerformanceEvaluator.Core.Interfaces;
 
 namespace WebsitePerformanceEvaluator.Core.Service;
 

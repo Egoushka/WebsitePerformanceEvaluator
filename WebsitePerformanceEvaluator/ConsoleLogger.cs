@@ -1,57 +1,31 @@
-using Serilog;
-using Serilog.Events;
+using WebsitePerformanceEvaluator.Core.Interfaces;
 
 namespace WebsitePerformanceEvaluator;
 
 public class ConsoleLogger : ILogger
 {
-    private readonly ILogger _logger;
-
-    public ConsoleLogger()
+    public void Debug(string message)
     {
-        _logger = new LoggerConfiguration()
-            .MinimumLevel.Debug()
-            .WriteTo.Console()
-            .CreateLogger();
+        Console.WriteLine($"[DEBUG] {message}");
     }
 
-    public void Debug(string messageTemplate, params object[] propertyValues)
+    public void Information(string message)
     {
-        _logger.Debug(messageTemplate, propertyValues);
+        Console.WriteLine($"[INFO] {message}");
     }
 
-    public void Error(Exception ex, string messageTemplate, params object[] propertyValues)
+    public void Warning(string message)
     {
-        _logger.Error(ex, messageTemplate, propertyValues);
+        Console.WriteLine($"[WARNING] {message}");
     }
 
-    public void Fatal(Exception ex, string messageTemplate, params object[] propertyValues)
+    public void Error(string message)
     {
-        _logger.Fatal(ex, messageTemplate, propertyValues);
+        Console.WriteLine($"[ERROR] {message}");
     }
 
-    public void Information(string messageTemplate, params object[] propertyValues)
+    public void Fatal(string message)
     {
-        _logger.Information(messageTemplate, propertyValues);
-    }
-
-    public void Verbose(string messageTemplate, params object[] propertyValues)
-    {
-        _logger.Verbose(messageTemplate, propertyValues);
-    }
-
-    public void Warning(string messageTemplate, params object[] propertyValues)
-    {
-        _logger.Warning(messageTemplate, propertyValues);
-    }
-
-    public void Write(LogEvent logEvent)
-    {
-        _logger.Write(logEvent);
-    }
-
-    public bool IsEnabled(LogEventLevel level)
-    {
-        return _logger.IsEnabled(level);
+        Console.WriteLine($"[FATAL] {message}");
     }
 }

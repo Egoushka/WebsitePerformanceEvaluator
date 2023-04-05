@@ -1,9 +1,9 @@
 ﻿using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection;
-using Serilog;
 using WebsitePerformanceEvaluator.Core.Crawlers;
 using WebsitePerformanceEvaluator.Core.Filters;
+using WebsitePerformanceEvaluator.Core.Interfaces;
 using WebsitePerformanceEvaluator.Core.Parsers;
 using WebsitePerformanceEvaluator.Core.Service;
 using WebsitePerformanceEvaluator.Core.Validators;
