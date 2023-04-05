@@ -52,7 +52,7 @@ public class SitemapCrawler
         {
             sitemapXmlDocument.LoadXml(sitemapString);
         }
-        catch (Exception e)
+        catch (Exception)
         {
             Logger.Error("Error while parsing sitemap, sitemap will be ignored");
             return new XmlDocument();

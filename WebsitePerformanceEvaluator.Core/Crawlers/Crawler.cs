@@ -1,6 +1,5 @@
 using Microsoft.Extensions.Caching.Memory;
 using WebsitePerformanceEvaluator.Core.Data.Enums;
-using WebsitePerformanceEvaluator.Core.Filters;
 using WebsitePerformanceEvaluator.Core.Service;
 
 namespace WebsitePerformanceEvaluator.Core.Crawlers;
@@ -11,17 +10,14 @@ public class Crawler
     private SitemapCrawler SitemapCrawler { get; }
     private IMemoryCache MemoryCache { get; }
     private HttpClientService HttpClientService { get; }
-    private LinkFilter LinkFilter { get; }
-
 
     public Crawler(WebsiteCrawler websiteCrawler, SitemapCrawler sitemapCrawler, IMemoryCache
-        memoryCache, HttpClientService httpClientService, LinkFilter linkFilter)
+        memoryCache, HttpClientService httpClientService)
     {
         WebsiteCrawler = websiteCrawler;
         SitemapCrawler = sitemapCrawler;
         MemoryCache = memoryCache;
         HttpClientService = httpClientService;
-        LinkFilter = linkFilter;
     }
 
     public async Task<IEnumerable<Tuple<string, CrawlingLinkType>>> GetLinksByCrawlingAndSitemap(string url)

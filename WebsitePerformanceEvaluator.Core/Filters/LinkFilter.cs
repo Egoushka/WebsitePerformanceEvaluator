@@ -15,7 +15,6 @@ public class LinkFilter
     public IEnumerable<string> FilterLinks(IEnumerable<string> links, string baseUrl)
     {
         links = links.Distinct();
-
         links = RemoveInvalidLinks(links);
         
         links = AddBaseUrl(links, baseUrl);

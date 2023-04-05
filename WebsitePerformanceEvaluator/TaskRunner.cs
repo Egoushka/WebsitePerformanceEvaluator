@@ -8,8 +8,8 @@ public class TaskRunner
     private Crawler Crawler { get; }
     private int LinksCountInSitemap { get; set; }
     private int LinksCountAfterCrawling { get; set; }
-    private List<string> WebsiteCrawlingLinks { get; set; }
-    private List<string> SitemapLinks { get; set; }
+    private List<string>? WebsiteCrawlingLinks { get; set; }
+    private List<string>? SitemapLinks { get; set; }
 
     public TaskRunner(Crawler crawler)
     {

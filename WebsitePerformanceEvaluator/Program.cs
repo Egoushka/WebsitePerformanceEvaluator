@@ -22,6 +22,7 @@ internal static class Program
         services.Configure<MemoryCacheEntryOptions>(options => options.SetSlidingExpiration(TimeSpan.FromMinutes(1)));
         
         services.AddHttpClient();
+        
         services.AddTransient<Crawler>();
         services.AddTransient<WebsiteCrawler>();
         services.AddTransient<SitemapCrawler>();

@@ -55,7 +55,7 @@ public class HttpClientService
         {
             sitemapString = await Client.GetStringAsync(fileUrl);
         }
-        catch (Exception e)
+        catch (Exception)
         {
             Logger.Error("Error while downloading file");
             return "";
