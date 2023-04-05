@@ -5,13 +5,6 @@ namespace WebsitePerformanceEvaluator.Core.Parsers;
 
 public class XmlParser
 {
-    private readonly HttpClientService _httpClientService;
-
-    public XmlParser(HttpClientService httpClientService)
-    {
-        _httpClientService = httpClientService;
-    }
-
     public IEnumerable<string> GetRawUrlsFromSitemap(XmlNodeList xmlSitemapList)
     {
         var result = new List<string>();
