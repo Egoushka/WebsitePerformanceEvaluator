@@ -1,16 +1,23 @@
 using CommunityToolkit.HighPerformance.Buffers;
+using WebsitePerformanceEvaluator.Core.Validators;
 
 namespace WebsitePerformanceEvaluator.Core.Filters;
 
 public class LinkFilter
 {
+    private readonly LinkValidator _validator;
+
+    public LinkFilter()
+    {
+        _validator = new LinkValidator();
+    }
+
     public IEnumerable<string> FilterLinks(IEnumerable<string> links, string baseUrl)
     {
         links = links.Distinct();
 
-        links = RemoveAnchorLinks(links);
-        links = RemoveFilesLinks(links);
-        links = RemoveLinksWithAttributes(links);
+        links = RemoveInvalidLinks(links);
+        
         links = AddBaseUrl(links, baseUrl);
         links = CheckForSlashAndRemove(links);
         links = CheckLinksHosts(links, baseUrl);
@@ -18,7 +25,10 @@ public class LinkFilter
 
         return links;
     }
-
+    private IEnumerable<string> RemoveInvalidLinks(IEnumerable<string> links)
+    {
+        return links.Where(link => _validator.IsValidLink(link));
+    }
     private IEnumerable<string> AddBaseUrl(IEnumerable<string> links, string baseUrl)
     {
         return links.Select(link => link.StartsWith("/") ? baseUrl[..^1] + link : link);
