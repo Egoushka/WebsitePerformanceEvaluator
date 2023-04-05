@@ -1,5 +1,3 @@
-using System.Collections;
-
 namespace WebsitePerformanceEvaluator.Core.Helpers;
 
 public static class LinkHelper

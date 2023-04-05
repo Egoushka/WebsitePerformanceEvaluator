@@ -1,20 +1,18 @@
-using Microsoft.Extensions.Caching.Memory;
-using WebsitePerformanceEvaluator.Core.Data.Enums;
+using WebsitePerformanceEvaluator.Core.Models.Enums;
 using WebsitePerformanceEvaluator.Core.Service;
 
 namespace WebsitePerformanceEvaluator.Core.Crawlers;
 
 public class Crawler
 {
-    private WebsiteCrawler WebsiteCrawler { get; }
-    private SitemapCrawler SitemapCrawler { get; }
-    private HttpClientService HttpClientService { get; }
-
+    private readonly WebsiteCrawler _websiteCrawler;
+    private readonly SitemapCrawler _sitemapCrawler;
+    private readonly HttpClientService _httpClientService;
     public Crawler(WebsiteCrawler websiteCrawler, SitemapCrawler sitemapCrawler,  HttpClientService httpClientService)
     {
-        WebsiteCrawler = websiteCrawler;
-        SitemapCrawler = sitemapCrawler;
-        HttpClientService = httpClientService;
+        _websiteCrawler = websiteCrawler;
+        _sitemapCrawler = sitemapCrawler;
+        _httpClientService = httpClientService;
     }
     public async Task<IEnumerable<Tuple<string, int>>> GetLinksWithTimeResponse(string url)
     {
@@ -23,7 +21,7 @@ public class Crawler
         var result = links
             .AsParallel()
             .Select(async link =>
-                new Tuple<string, int>(link.Item1, await HttpClientService.GetTimeResponse(link.Item1)));
+                new Tuple<string, int>(link.Item1, await _httpClientService.GetTimeResponse(link.Item1)));
         
         return await Task.WhenAll(result);
     }
@@ -41,7 +39,7 @@ public class Crawler
     }
     private async Task<List<Tuple<string, CrawlingLinkType>>> GetLinksByCrawling(string url)
     {
-        var rawLinks = await WebsiteCrawler.FindLinks(url);
+        var rawLinks = await _websiteCrawler.FindLinks(url);
 
         var result = rawLinks.Select(link => new Tuple<string, CrawlingLinkType>(link, CrawlingLinkType.Website))
             .ToList();
@@ -51,7 +49,7 @@ public class Crawler
 
     private async Task<List<Tuple<string, CrawlingLinkType>>> GetSitemapLinks(string url)
     {
-        var rawLinks = await SitemapCrawler.GetAllUrlsFromSitemap(url);
+        var rawLinks = await _sitemapCrawler.GetAllUrlsFromSitemap(url);
 
         var result = rawLinks.Select(link => new Tuple<string, CrawlingLinkType>(link, CrawlingLinkType.Sitemap))
             .ToList();

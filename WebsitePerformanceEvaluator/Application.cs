@@ -2,15 +2,15 @@ namespace WebsitePerformanceEvaluator;
 
 public class Application
 {
-    private TaskRunner TaskRunner { get; }
+    private readonly TaskRunner _taskRunner;
 
     public Application(TaskRunner taskRunner)
     {
-        TaskRunner = taskRunner;
+        _taskRunner = taskRunner;
     }
 
     public async Task Run()
     {
-        await TaskRunner.Start();
+        await _taskRunner.Start();
     }
 }

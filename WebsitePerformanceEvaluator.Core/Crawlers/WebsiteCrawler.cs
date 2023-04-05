@@ -6,13 +6,13 @@ namespace WebsitePerformanceEvaluator.Core.Crawlers;
 
 public class WebsiteCrawler
 {
-    private HtmlParser HtmlParser { get; }
-    private LinkFilter LinkFilter { get; }
+    private readonly HtmlParser _htmlParser;
+    private readonly LinkFilter _linkFilter;
 
     public WebsiteCrawler(HtmlParser htmlParser, LinkFilter linkFilter)
     {
-        HtmlParser = htmlParser;
-        LinkFilter = linkFilter;
+        _htmlParser = htmlParser;
+        _linkFilter = linkFilter;
     }
 
     public async Task<IEnumerable<string>> FindLinks(string url)
@@ -50,7 +50,7 @@ public class WebsiteCrawler
 
             var task = Task<IEnumerable<string>>.Factory.StartNew(() =>
             {
-                var newLinks = HtmlParser.GetLinks(link).Result;
+                var newLinks = _htmlParser.GetLinks(link).Result;
 
                 return newLinks;
             });
@@ -66,7 +66,7 @@ public class WebsiteCrawler
         var results = await Task.WhenAll(tasks);
 
         var newLinks = results.SelectMany(result => result);
-        var filteredLinks = LinkFilter.FilterLinks(newLinks, url)
+        var filteredLinks = _linkFilter.FilterLinks(newLinks, url)
             .AddBaseUrl(url)
             .RemoveLastSlashFromLinks();
 

@@ -6,20 +6,20 @@ namespace WebsitePerformanceEvaluator.Core.Service;
 
 public class HttpClientService
 {
-    private HttpClient Client { get; }
-    private ILogger Logger { get; }
+    private readonly HttpClient _client;
+    private readonly ILogger _logger;
 
     public HttpClientService(IHttpClientFactory httpClientFactory, ILogger logger)
     {
-        Client = httpClientFactory.CreateClient();
-        Logger = logger;
+        _client = httpClientFactory.CreateClient();
+        _logger = logger;
     }
 
     public async Task<HtmlDocument> GetDocument(string url)
     {
         var doc = new HtmlDocument();
 
-        using var response = await Client.GetAsync(url);
+        using var response = await _client.GetAsync(url);
         var html = await response.Content.ReadAsStringAsync();
 
         doc.LoadHtml(html);
@@ -35,14 +35,14 @@ public class HttpClientService
             var stopWatch = new Stopwatch();
 
             stopWatch.Start();
-            await Client.GetAsync(url);
+            await _client.GetAsync(url);
             stopWatch.Stop();
 
             time = (int)stopWatch.ElapsedMilliseconds;
         }
         catch (Exception)
         {
-            Logger.Error("Error while getting response time");
+            _logger.Error("Error while getting response time");
         }
 
         return time;
@@ -52,11 +52,11 @@ public class HttpClientService
     {
         try
         {
-            return await Client.GetStringAsync(fileUrl);
+            return await _client.GetStringAsync(fileUrl);
         }
         catch (Exception)
         {
-            Logger.Error("Error while downloading file");
+            _logger.Error("Error while downloading file");
             return string.Empty;
         }
     }

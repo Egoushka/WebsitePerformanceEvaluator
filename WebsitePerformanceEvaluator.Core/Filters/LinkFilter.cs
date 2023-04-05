@@ -5,11 +5,10 @@ namespace WebsitePerformanceEvaluator.Core.Filters;
 
 public class LinkFilter
 {
-    private LinkValidator Validator { get; }
-
+    private readonly LinkValidator _validator;
     public LinkFilter()
     {
-        Validator = new LinkValidator();
+        _validator = new LinkValidator();
     }
 
     public IEnumerable<string> FilterLinks(IEnumerable<string> links, string baseUrl)
@@ -24,7 +23,7 @@ public class LinkFilter
 
     private IEnumerable<string> RemoveInvalidLinks(IEnumerable<string> links)
     {
-        return links.Where(link => Validator.IsValidLink(link));
+        return links.Where(link => _validator.IsValidLink(link));
     }
 
     private IEnumerable<string> RemoveExternalLinks(IEnumerable<string> links, string baseUrl)

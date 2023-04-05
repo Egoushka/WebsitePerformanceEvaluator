@@ -1,20 +1,15 @@
 using WebsitePerformanceEvaluator.Core.Crawlers;
-using WebsitePerformanceEvaluator.Core.Data.Enums;
+using WebsitePerformanceEvaluator.Core.Models.Enums;
 
 namespace WebsitePerformanceEvaluator;
 
 public class TaskRunner
 {
-    private Crawler Crawler { get; }
-    private int LinksCountInSitemap { get; set; }
-    private int LinksCountAfterCrawling { get; set; }
-    private List<string>? WebsiteCrawlingLinks { get; set; }
-    private List<string>? SitemapLinks { get; set; }
-
-    public TaskRunner(Crawler crawler)
-    {
-        Crawler = crawler;
-    }
+    private readonly Crawler _crawler;
+    public int LinksCountInSitemap { get; set; }
+    public int LinksCountAfterCrawling { get; set; }
+    public List<string>? WebsiteCrawlingLinks { get; set; }
+    public List<string>? SitemapLinks { get; set; }
 
     public async Task Start()
     {
@@ -42,7 +37,7 @@ public class TaskRunner
 
     private async Task GetLinksFromWebsiteAnsSitemap(string url)
     {
-        var links = await Crawler.GetLinksByCrawlingAndSitemap(url);
+        var links = await _crawler.GetLinksByCrawlingAndSitemap(url);
 
         WebsiteCrawlingLinks = GetLinksByType(links, CrawlingLinkType.Website).ToList();
         SitemapLinks = GetLinksByType(links, CrawlingLinkType.Sitemap).ToList();
@@ -92,7 +87,7 @@ public class TaskRunner
 
     private async Task PrintLinksWithTimeResponse(string url)
     {
-        var linksWithTimeResponse = (await Crawler.GetLinksWithTimeResponse(url))
+        var linksWithTimeResponse = (await _crawler.GetLinksWithTimeResponse(url))
             .OrderBy(item => item.Item2)
             .ToList();
         Console.WriteLine("Links with time response:");

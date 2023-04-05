@@ -4,16 +4,15 @@ namespace WebsitePerformanceEvaluator.Core.Parsers;
 
 public class HtmlParser
 {
-    private HttpClientService ClientService { get; }
-
+    private readonly HttpClientService _clientService;
     public HtmlParser(HttpClientService httpClientService)
     {
-        ClientService = httpClientService;
+        _clientService = httpClientService;
     }
 
     public async Task<IEnumerable<string>> GetLinks(string url)
     {
-        var doc = await ClientService.GetDocument(url);
+        var doc = await _clientService.GetDocument(url);
 
         var linkNodes = doc.DocumentNode.SelectNodes("//a[@href]");
 

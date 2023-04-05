@@ -9,18 +9,17 @@ namespace WebsitePerformanceEvaluator.Core.Crawlers;
 
 public class SitemapCrawler
 {
-    private ILogger Logger { get; }
-    private HttpClientService ClientService { get; }
-    private XmlParser Parser { get; }
-    private LinkFilter Filter { get; }
-
+    private readonly ILogger _logger;
+    private readonly HttpClientService _clientService;
+    private readonly XmlParser _parser;
+    private readonly LinkFilter _filter;
     public SitemapCrawler(ILogger logger, HttpClientService httpClientService, XmlParser xmlParser,
         LinkFilter linkFilter)
     {
-        Logger = logger;
-        ClientService = httpClientService;
-        Parser = xmlParser;
-        Filter = linkFilter;
+        _logger = logger;
+        _clientService = httpClientService;
+        _parser = xmlParser;
+        _filter = linkFilter;
     }
 
     public async Task<IEnumerable<string>> GetAllUrlsFromSitemap(string baseUrl)
@@ -28,8 +27,8 @@ public class SitemapCrawler
         var sitemapXml = await GetSitemap(baseUrl);
         var xmlSitemapList = sitemapXml.GetElementsByTagName("url");
 
-        var urls = Parser.GetLinks(xmlSitemapList);
-        var filteredLinks = Filter.FilterLinks(urls, baseUrl)
+        var urls = _parser.GetLinks(xmlSitemapList);
+        var filteredLinks = _filter.FilterLinks(urls, baseUrl)
             .AddBaseUrl(baseUrl)
             .RemoveLastSlashFromLinks();
 
@@ -50,7 +49,7 @@ public class SitemapCrawler
 
     private async Task<XmlDocument> GetSitemapXmlDocument(string sitemapUrl)
     {
-        var sitemapString = await ClientService.DownloadFile(sitemapUrl);
+        var sitemapString = await _clientService.DownloadFile(sitemapUrl);
         var sitemapXmlDocument = new XmlDocument();
         try
         {
@@ -58,7 +57,7 @@ public class SitemapCrawler
         }
         catch (Exception)
         {
-            Logger.Error("Error while parsing sitemap, sitemap will be ignored");
+            _logger.Error("Error while parsing sitemap, sitemap will be ignored");
             return new XmlDocument();
         }
 
