@@ -6,6 +6,12 @@ namespace WebsitePerformanceEvaluator;
 public class TaskRunner
 {
     private readonly Crawler _crawler;
+
+    public TaskRunner(Crawler crawler)
+    {
+        _crawler = crawler;
+    }
+
     public int LinksCountInSitemap { get; set; }
     public int LinksCountAfterCrawling { get; set; }
     public List<string>? WebsiteCrawlingLinks { get; set; }
