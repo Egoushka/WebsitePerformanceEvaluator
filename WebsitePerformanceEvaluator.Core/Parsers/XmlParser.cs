@@ -1,5 +1,4 @@
 using System.Xml;
-using WebsitePerformanceEvaluator.Core.Service;
 
 namespace WebsitePerformanceEvaluator.Core.Parsers;
 
