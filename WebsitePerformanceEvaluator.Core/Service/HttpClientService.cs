@@ -15,19 +15,19 @@ public class HttpClientService
         Logger = logger;
     }
 
-    public HtmlDocument GetDocument(string url)
+    public async Task<HtmlDocument> GetDocument(string url)
     {
         var doc = new HtmlDocument();
 
-        using var response = Client.GetAsync(url).Result;
-        var html = response.Content.ReadAsStringAsync().Result;
+        using var response = await Client.GetAsync(url);
+        var html = await response.Content.ReadAsStringAsync();
 
         doc.LoadHtml(html);
 
         return doc;
     }
 
-    public int GetTimeResponse(string url)
+    public async Task<int> GetTimeResponse(string url)
     {
         var time = 0;
         try
@@ -35,7 +35,7 @@ public class HttpClientService
             var stopWatch = new Stopwatch();
 
             stopWatch.Start();
-            Client.GetAsync(url).Wait();
+            await Client.GetAsync(url);
             stopWatch.Stop();
 
             time = (int)stopWatch.ElapsedMilliseconds;
@@ -50,17 +50,14 @@ public class HttpClientService
 
     public async Task<string> DownloadFile(string fileUrl)
     {
-        string sitemapString;
         try
         {
-            sitemapString = await Client.GetStringAsync(fileUrl);
+            return await Client.GetStringAsync(fileUrl);
         }
         catch (Exception)
         {
             Logger.Error("Error while downloading file");
-            return "";
+            return string.Empty;
         }
-
-        return sitemapString;
     }
 }

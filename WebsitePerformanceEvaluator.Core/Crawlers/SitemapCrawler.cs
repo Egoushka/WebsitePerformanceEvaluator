@@ -27,7 +27,7 @@ public class SitemapCrawler
         var sitemapXml = await GetSitemap(baseUrl);
         var xmlSitemapList = sitemapXml.GetElementsByTagName("url");
 
-        var urls = Parser.GetRawUrlsFromSitemap(xmlSitemapList);
+        var urls = Parser.GetLinks(xmlSitemapList);
         var filteredLinks = Filter.FilterLinks(urls, baseUrl);
 
         return filteredLinks;

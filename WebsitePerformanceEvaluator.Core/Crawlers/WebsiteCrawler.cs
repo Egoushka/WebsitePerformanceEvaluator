@@ -14,7 +14,7 @@ public class WebsiteCrawler
         LinkFilter = linkFilter;
     }
 
-    public async Task<IEnumerable<string>> CrawlWebsiteToFindLinks(string url)
+    public async Task<IEnumerable<string>> FindLinks(string url)
     {
         var links = new HashSet<string> { url };
         var visitedLinks = new HashSet<string>();
@@ -22,9 +22,9 @@ public class WebsiteCrawler
 
         while (linksToVisit.Count > 0)
         {
-            var tasks = GetCrawlingTasks(linksToVisit, visitedLinks);
+            var tasks = GetTasks(linksToVisit, visitedLinks);
 
-            var filteredLinks = await GetFilteredLinksFromTasks(tasks, url);
+            var filteredLinks = await GetLinksFromTasks(tasks, url);
 
             links.UnionWith(filteredLinks);
             foreach (var link in filteredLinks.Except(visitedLinks))
@@ -36,7 +36,7 @@ public class WebsiteCrawler
         return links;
     }
 
-    private IEnumerable<Task<IEnumerable<string>>> GetCrawlingTasks(Queue<string> linksToVisit,
+    private IEnumerable<Task<IEnumerable<string>>> GetTasks(Queue<string> linksToVisit,
         ICollection<string> visitedLinks)
     {
         var tasks = new List<Task<IEnumerable<string>>>();
@@ -49,7 +49,7 @@ public class WebsiteCrawler
 
             var task = Task<IEnumerable<string>>.Factory.StartNew(() =>
             {
-                var newLinks = HtmlParser.ParsePageToFindLinks(link);
+                var newLinks = HtmlParser.GetLinks(link).Result;
 
                 return newLinks;
             });
@@ -59,7 +59,7 @@ public class WebsiteCrawler
         return tasks;
     }
 
-    private async Task<IEnumerable<string>> GetFilteredLinksFromTasks(IEnumerable<Task<IEnumerable<string>>> tasks,
+    private async Task<IEnumerable<string>> GetLinksFromTasks(IEnumerable<Task<IEnumerable<string>>> tasks,
         string url)
     {
         var results = await Task.WhenAll(tasks);

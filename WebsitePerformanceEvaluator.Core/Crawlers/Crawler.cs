@@ -22,9 +22,10 @@ public class Crawler
 
         var result = links
             .AsParallel()
-            .Select(link => new Tuple<string, int>(link.Item1, HttpClientService.GetTimeResponse(link.Item1)));
-
-        return result;
+            .Select(async link =>
+                new Tuple<string, int>(link.Item1, await HttpClientService.GetTimeResponse(link.Item1)));
+        
+        return await Task.WhenAll(result);
     }
     public async Task<IEnumerable<Tuple<string, CrawlingLinkType>>> GetLinksByCrawlingAndSitemap(string url)
     {
@@ -40,7 +41,7 @@ public class Crawler
     }
     private async Task<List<Tuple<string, CrawlingLinkType>>> GetLinksByCrawling(string url)
     {
-        var rawLinks = await WebsiteCrawler.CrawlWebsiteToFindLinks(url);
+        var rawLinks = await WebsiteCrawler.FindLinks(url);
 
         var result = rawLinks.Select(link => new Tuple<string, CrawlingLinkType>(link, CrawlingLinkType.Website))
             .ToList();

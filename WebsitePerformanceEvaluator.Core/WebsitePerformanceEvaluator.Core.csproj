@@ -13,6 +13,7 @@
       <PackageReference Include="Microsoft.Extensions.Caching.Abstractions" Version="8.0.0-preview.1.23110.8" />
       <PackageReference Include="Microsoft.Extensions.Http" Version="8.0.0-preview.1.23110.8" />
       <PackageReference Include="Serilog" Version="3.0.0-dev-01921" />
+      <PackageReference Include="System.Linq.Async" Version="6.0.1" />
       <PackageReference Include="System.ServiceModel.Primitives" Version="6.0.0-preview1.23060.3" />
     </ItemGroup>
 

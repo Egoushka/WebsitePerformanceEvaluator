@@ -4,11 +4,11 @@ namespace WebsitePerformanceEvaluator.Core.Parsers;
 
 public class XmlParser
 {
-    public IEnumerable<string> GetRawUrlsFromSitemap(XmlNodeList xmlSitemapList)
+    public IEnumerable<string> GetLinks(XmlNodeList xmlList)
     {
         var result = new List<string>();
 
-        foreach (XmlNode node in xmlSitemapList)
+        foreach (XmlNode node in xmlList)
         {
             if (node["loc"] != null)
             {

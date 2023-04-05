@@ -11,9 +11,9 @@ public class HtmlParser
         ClientService = httpClientService;
     }
 
-    public IEnumerable<string> ParsePageToFindLinks(string url)
+    public async Task<IEnumerable<string>> GetLinks(string url)
     {
-        var doc = ClientService.GetDocument(url);
+        var doc = await ClientService.GetDocument(url);
 
         var linkNodes = doc.DocumentNode.SelectNodes("//a[@href]");
 
