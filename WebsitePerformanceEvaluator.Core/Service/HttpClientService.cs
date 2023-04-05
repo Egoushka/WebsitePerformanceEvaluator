@@ -48,16 +48,16 @@ public class HttpClientService
         return time;
     }
 
-    public async Task<string> DownloadSitemap(string sitemapUrl)
+    public async Task<string> DownloadFile(string fileUrl)
     {
         string sitemapString;
         try
         {
-            sitemapString = await Client.GetStringAsync(sitemapUrl);
+            sitemapString = await Client.GetStringAsync(fileUrl);
         }
         catch (Exception e)
         {
-            Logger.Error("Error while downloading sitemap, sitemap will be ignored");
+            Logger.Error("Error while downloading file");
             return "";
         }
 

@@ -46,7 +46,7 @@ public class SitemapCrawler
 
     private async Task<XmlDocument> GetSitemapXmlDocument(string sitemapUrl)
     {
-        var sitemapString = await ClientService.DownloadSitemap(sitemapUrl);
+        var sitemapString = await ClientService.DownloadFile(sitemapUrl);
         var sitemapXmlDocument = new XmlDocument();
         try
         {
