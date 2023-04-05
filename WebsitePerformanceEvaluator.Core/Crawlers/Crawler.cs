@@ -35,10 +35,8 @@ public class Crawler
         var crawlingTask = Task.Run(() => GetLinksByCrawling(url));
         var sitemapTask = Task.Run(() => GetSitemapLinks(url));
 
-        var crawlingResult = (await crawlingTask)
-            .Select(link => new Tuple<string, CrawlingLinkType>(link, CrawlingLinkType.Website));
-        var sitemapResult = (await sitemapTask)
-            .Select(link => new Tuple<string, CrawlingLinkType>(link, CrawlingLinkType.Sitemap));
+        var crawlingResult = await crawlingTask;
+        var sitemapResult = await sitemapTask;
         
         var union = crawlingResult.Union(sitemapResult).Distinct();
         
@@ -60,7 +58,7 @@ public class Crawler
 
         union
             .AsParallel()
-            .Select(link => new Tuple<string, int>(link, HttpClientService.GetTimeResponse(link)))
+            .Select(link => new Tuple<string, int>(link.Item1, HttpClientService.GetTimeResponse(link.Item1)))
             .ForAll(result.Add);
 
 
@@ -68,39 +66,37 @@ public class Crawler
     }
 
 
-    private async Task<IEnumerable<string>> GetLinksByCrawling(string url)
+    private async Task<List<Tuple<string, CrawlingLinkType>>> GetLinksByCrawling(string url)
     {
         var casheKey = url + "crawling";
-        if (MemoryCache.TryGetValue(casheKey, out IEnumerable<string>? result))
+        if (MemoryCache.TryGetValue(casheKey, out List<Tuple<string, CrawlingLinkType>>? result))
         {
             return result!;
         }
 
-        result = await WebsiteCrawler.CrawlWebsiteToFindLinks(url);
-        result = LinkFilter.FilterLinks(result, url);
+        var rawLinks = await WebsiteCrawler.CrawlWebsiteToFindLinks(url);
         
-        var linksByCrawling = result.ToList();
+        result = rawLinks.Select(link=> new Tuple<string, CrawlingLinkType>(link, CrawlingLinkType.Website)).ToList();
 
-        MemoryCache.Set(casheKey, linksByCrawling);
+        MemoryCache.Set(casheKey, result);
 
-        return linksByCrawling;
+        return result;
     }
 
-    private async Task<IEnumerable<string>> GetSitemapLinks(string url)
+    private async Task<List<Tuple<string, CrawlingLinkType>>> GetSitemapLinks(string url)
     {
         var casheKey = url + "sitemap";
 
-        if (MemoryCache.TryGetValue(casheKey, out IEnumerable<string>? result))
+        if (MemoryCache.TryGetValue(casheKey, out List<Tuple<string, CrawlingLinkType>>? result))
         {
             return result!;
         }
 
-        result = await SitemapCrawler.GetAllUrlsFromSitemap(url);
-        result = LinkFilter.FilterLinks(result, url);
+        var rawLinks = await SitemapCrawler.GetAllUrlsFromSitemap(url);
 
-        var sitemapLinks = result.ToList();
-        MemoryCache.Set(casheKey, sitemapLinks);
+        result = rawLinks.Select(link => new Tuple<string, CrawlingLinkType>(link, CrawlingLinkType.Sitemap)).ToList();
+        MemoryCache.Set(casheKey, result);
 
-        return sitemapLinks;
+        return result;
     }
 }
