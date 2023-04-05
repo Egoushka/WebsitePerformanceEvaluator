@@ -4,10 +4,9 @@ public class LinkValidator
 {
     public bool IsValidLink(string link)
     {
-        return DoesNotContainAnchor(link) 
-               && IsNotFileLink(link) 
-               && DoesNotContainAttributes(link)
-               && IsHttpOrHttpsLink(link);
+        return DoesNotContainAnchor(link)
+               && IsNotFileLink(link)
+               && DoesNotContainAttributes(link);
     }
 
     private bool DoesNotContainAnchor(string link)

@@ -1,4 +1,5 @@
 using Microsoft.Extensions.Caching.Memory;
+using WebsitePerformanceEvaluator.Core.Data.Enums;
 using WebsitePerformanceEvaluator.Core.Filters;
 using WebsitePerformanceEvaluator.Core.Service;
 
@@ -21,6 +22,27 @@ public class Crawler
         MemoryCache = memoryCache;
         HttpClientService = httpClientService;
         LinkFilter = linkFilter;
+    }
+
+    public async Task<IEnumerable<Tuple<string, CrawlingLinkType>>> GetLinksByCrawlingAndSitemap(string url)
+    {
+        var casheKey = url + "crawlingAndSitemap";
+        if (MemoryCache.TryGetValue(casheKey, out IEnumerable<Tuple<string, CrawlingLinkType>>? result))
+        {
+            return result!;
+        }
+
+        var crawlingTask = Task.Run(() => GetLinksByCrawling(url));
+        var sitemapTask = Task.Run(() => GetSitemapLinks(url));
+
+        var crawlingResult = (await crawlingTask)
+            .Select(link => new Tuple<string, CrawlingLinkType>(link, CrawlingLinkType.Website));
+        var sitemapResult = (await sitemapTask)
+            .Select(link => new Tuple<string, CrawlingLinkType>(link, CrawlingLinkType.Sitemap));
+        
+        var union = crawlingResult.Union(sitemapResult).Distinct();
+        
+        return union;
     }
 
     public async Task<IEnumerable<Tuple<string, int>>> GetLinksWithTimeResponse(string url)
@@ -46,7 +68,7 @@ public class Crawler
     }
 
 
-    public async Task<IEnumerable<string>> GetLinksByCrawling(string url)
+    private async Task<IEnumerable<string>> GetLinksByCrawling(string url)
     {
         var casheKey = url + "crawling";
         if (MemoryCache.TryGetValue(casheKey, out IEnumerable<string>? result))
@@ -64,7 +86,7 @@ public class Crawler
         return linksByCrawling;
     }
 
-    public async Task<IEnumerable<string>> GetSitemapLinks(string url)
+    private async Task<IEnumerable<string>> GetSitemapLinks(string url)
     {
         var casheKey = url + "sitemap";
 
