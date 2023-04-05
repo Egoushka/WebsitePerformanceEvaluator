@@ -22,12 +22,6 @@ public class Crawler
 
     public async Task<IEnumerable<Tuple<string, CrawlingLinkType>>> GetLinksByCrawlingAndSitemap(string url)
     {
-        var casheKey = url + "crawlingAndSitemap";
-        if (MemoryCache.TryGetValue(casheKey, out IEnumerable<Tuple<string, CrawlingLinkType>>? result))
-        {
-            return result!;
-        }
-
         var crawlingTask = Task.Run(() => GetLinksByCrawling(url));
         var sitemapTask = Task.Run(() => GetSitemapLinks(url));
 
@@ -43,7 +37,6 @@ public class Crawler
     {
         var crawlingTask = Task.Run(() => GetLinksByCrawling(url));
         var sitemapTask = Task.Run(() => GetSitemapLinks(url));
-
 
         var crawlingResult = await crawlingTask;
         var sitemapResult = await sitemapTask;
@@ -63,34 +56,18 @@ public class Crawler
 
     private async Task<List<Tuple<string, CrawlingLinkType>>> GetLinksByCrawling(string url)
     {
-        var casheKey = url + "crawling";
-        if (MemoryCache.TryGetValue(casheKey, out List<Tuple<string, CrawlingLinkType>>? result))
-        {
-            return result!;
-        }
-
         var rawLinks = await WebsiteCrawler.CrawlWebsiteToFindLinks(url);
         
-        result = rawLinks.Select(link=> new Tuple<string, CrawlingLinkType>(link, CrawlingLinkType.Website)).ToList();
-
-        MemoryCache.Set(casheKey, result);
+        var result = rawLinks.Select(link=> new Tuple<string, CrawlingLinkType>(link, CrawlingLinkType.Website)).ToList();
 
         return result;
     }
 
     private async Task<List<Tuple<string, CrawlingLinkType>>> GetSitemapLinks(string url)
     {
-        var casheKey = url + "sitemap";
-
-        if (MemoryCache.TryGetValue(casheKey, out List<Tuple<string, CrawlingLinkType>>? result))
-        {
-            return result!;
-        }
-
         var rawLinks = await SitemapCrawler.GetAllUrlsFromSitemap(url);
 
-        result = rawLinks.Select(link => new Tuple<string, CrawlingLinkType>(link, CrawlingLinkType.Sitemap)).ToList();
-        MemoryCache.Set(casheKey, result);
+        var result = rawLinks.Select(link => new Tuple<string, CrawlingLinkType>(link, CrawlingLinkType.Sitemap)).ToList();
 
         return result;
     }

@@ -1,6 +1,5 @@
 ﻿using Autofac;
 using Autofac.Extensions.DependencyInjection;
-using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.DependencyInjection;
 using Serilog;
 using WebsitePerformanceEvaluator.Core.Crawlers;
@@ -17,10 +16,7 @@ internal static class Program
     {
         var services = new ServiceCollection();
 
-        services.AddMemoryCache();
         services.AddOptions();
-        services.Configure<MemoryCacheEntryOptions>(options => options.SetSlidingExpiration(TimeSpan.FromMinutes(1)));
-        
         services.AddHttpClient();
         
         services.AddTransient<Crawler>();
