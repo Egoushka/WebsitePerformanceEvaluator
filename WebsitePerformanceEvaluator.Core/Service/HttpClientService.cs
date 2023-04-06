@@ -27,9 +27,9 @@ public class HttpClientService
         return doc;
     }
 
-    public async Task<int> GetTimeResponse(string url)
+    public async Task<long> GetTimeResponse(string url)
     {
-        var time = 0;
+        var time = 0l;
         try
         {
             var stopWatch = new Stopwatch();
@@ -38,7 +38,7 @@ public class HttpClientService
             await _client.GetAsync(url);
             stopWatch.Stop();
 
-            time = (int)stopWatch.ElapsedMilliseconds;
+            time = stopWatch.ElapsedMilliseconds;
         }
         catch (Exception)
         {
