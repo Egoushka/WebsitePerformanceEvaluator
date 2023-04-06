@@ -12,21 +12,29 @@ public class HtmlParser
         _clientService = httpClientService;
     }
 
-    public async Task<LinkPerformance> GetLinks(string url)
+    public async Task<IEnumerable<LinkPerformance>> GetLinks(string url)
     {
-        var result = new LinkPerformance
+        var result = new List<LinkPerformance>
         {
-            Link = url,
-            CrawlingLinkType = CrawlingLinkType.Website,
+            new()
+            {
+                Link = url,
+                CrawlingLinkType = CrawlingLinkType.Website
+
+            }
         };
-       
-        var doc = await _clientService.GetDocument(result);
+        
+        var doc = await _clientService.GetDocument(result.First());
 
         var linkNodes = doc.DocumentNode.SelectNodes("//a[@href]");
 
         if (linkNodes != null)
         {
-            result.FoundLinks = linkNodes.Select(x => x.Attributes["href"].Value);
+            result.AddRange(linkNodes.Select(linkNode => new LinkPerformance
+            {
+                Link = linkNode.Attributes["href"].Value,
+                CrawlingLinkType = CrawlingLinkType.Website,
+            }));
         }
 
         return result;

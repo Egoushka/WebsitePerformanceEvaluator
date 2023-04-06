@@ -7,7 +7,6 @@ public class LinkPerformance
     public string Link { get; set; }
     public long TimeResponse { get; set; }
     public CrawlingLinkType CrawlingLinkType { get; set; }
-    public IEnumerable<string> FoundLinks { get; set; }
     
     public override int GetHashCode()
     {

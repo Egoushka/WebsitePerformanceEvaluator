@@ -18,7 +18,6 @@ public class XmlParser
             {
                 Link = node["loc"].InnerText,
                 CrawlingLinkType = CrawlingLinkType.Sitemap,
-                FoundLinks = new List<string>()
             };
             result.Add(linkToAdd);
         }

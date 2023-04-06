@@ -1,3 +1,4 @@
+using System.Collections;
 using WebsitePerformanceEvaluator.Core.Filters;
 using WebsitePerformanceEvaluator.Core.Helpers;
 using WebsitePerformanceEvaluator.Core.Models;
@@ -25,11 +26,11 @@ public class WebsiteCrawler
         while (linksToVisit.Count > 0)
         {
             var newLinks = await CrawlQueue(linksToVisit, visitedLinks);
-            var filteredLinks = NormalizeLinks(newLinks, url);
+            var normalizedLinks = NormalizeLinks(newLinks, url);
 
-            links.UnionWith(filteredLinks);
+            links.UnionWith(normalizedLinks);
 
-            var linksToAddToQueue = filteredLinks.SelectMany(item => item.FoundLinks)
+            var linksToAddToQueue = normalizedLinks.Select(item => item.Link)
                 .Except(visitedLinks);
             
             foreach (var link in linksToAddToQueue)
@@ -42,9 +43,9 @@ public class WebsiteCrawler
     }
 
     private async Task<IEnumerable<LinkPerformance>> CrawlQueue(Queue<string> linksToVisit,
-        ICollection<string> visitedLinks)
+        ISet<string> visitedLinks)
     {
-        var tasks = new List<Task<LinkPerformance>>();
+        var tasks = new List<Task<IEnumerable<LinkPerformance>>>();
 
         for (var i = 0; i < linksToVisit.Count; i++)
         {
@@ -52,7 +53,7 @@ public class WebsiteCrawler
 
             visitedLinks.Add(link);
 
-            var task = Task<LinkPerformance>.Factory.StartNew(() =>
+            var task = Task<IEnumerable<LinkPerformance>>.Factory.StartNew(() =>
             {
                 var newLinks = _htmlParser.GetLinks(link).Result;
 
@@ -61,23 +62,21 @@ public class WebsiteCrawler
             
             tasks.Add(task);
         }
-        var results = await Task.WhenAll(tasks);
+        var result = (await Task.WhenAll(tasks)).SelectMany(item => item);
         
-        return results;
+        return result;
     }
 
     private IEnumerable<LinkPerformance> NormalizeLinks(IEnumerable<LinkPerformance> links, string url)
     {
-        foreach (var result in links)
-        {
-            result.Link = result.Link.RemoveLastSlashFromLink();
-            
-            result.FoundLinks = result.FoundLinks.AddBaseUrl(url);
-            
-            result.FoundLinks = _linkFilter
-                .FilterLinks(result.FoundLinks, url)
-                .RemoveLastSlashFromLinks();
-        }
+        links = links
+            .Where(link => !string.IsNullOrEmpty(link.Link))
+            .RemoveLastSlashFromLinks()
+            .AddBaseUrl(url);
+        
+        links = _linkFilter
+            .FilterLinks(links, url);
+        
         return links;
     }
 }

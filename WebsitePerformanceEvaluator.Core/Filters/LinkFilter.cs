@@ -1,3 +1,4 @@
+using System.Collections;
 using WebsitePerformanceEvaluator.Core.Models;
 using WebsitePerformanceEvaluator.Core.Validators;
 
@@ -21,6 +22,7 @@ public class LinkFilter
     {
         links = links.Distinct();
         links = RemoveInvalidLinks(links);
+        links = RemoveUnsupportedSchemes(links);
         links = RemoveExternalLinks(links, baseUrl);
         
         return links;
@@ -34,6 +36,10 @@ public class LinkFilter
     private IEnumerable<string> RemoveExternalLinks(IEnumerable<string> links, string baseUrl)
     {
         return links.Where(link => CompareHosts(link, baseUrl) != string.Empty);
+    }
+    private IEnumerable<string> RemoveUnsupportedSchemes(IEnumerable<string> links)
+    {
+        return links.Where(link => link.StartsWith(Uri.UriSchemeHttp) || link.StartsWith(Uri.UriSchemeHttps));
     }
     private string CompareHosts(string url, string baseUrl)
     {
