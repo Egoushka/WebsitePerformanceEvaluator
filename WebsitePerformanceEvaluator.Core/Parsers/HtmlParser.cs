@@ -12,7 +12,7 @@ public class HtmlParser
         _clientService = httpClientService;
     }
 
-    public async Task<IEnumerable<LinkPerformance>> GetLinks(string url)
+    public async Task<IEnumerable<LinkPerformance>> GetLinksAsync(string url)
     {
         var result = new List<LinkPerformance>();
         var firstLink = new LinkPerformance
@@ -21,7 +21,7 @@ public class HtmlParser
             CrawlingLinkType = CrawlingLinkType.Website,
         };
         
-        var doc = await _clientService.GetDocument(firstLink);
+        var doc = await _clientService.GetDocumentAsync(firstLink);
         result.Add(firstLink);
 
         var linkNodes = doc.DocumentNode.SelectNodes("//a[@href]");

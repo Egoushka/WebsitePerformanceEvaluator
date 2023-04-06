@@ -17,12 +17,12 @@ public class HttpClientService
         _logger = logger;
     }
 
-    public async Task<HtmlDocument> GetDocument(LinkPerformance link)
+    public async Task<HtmlDocument> GetDocumentAsync(LinkPerformance link)
     {
         var stopWatch = new Stopwatch();
         
         stopWatch.Start();
-        var doc = await GetDocument(link.Link);
+        var doc = await GetDocumentAsync(link.Link);
         stopWatch.Stop();
         
         var time = stopWatch.ElapsedMilliseconds;
@@ -30,7 +30,7 @@ public class HttpClientService
         
         return doc;
     }
-    public async Task<HtmlDocument> GetDocument(string url)
+    public async Task<HtmlDocument> GetDocumentAsync(string url)
     {
         var doc = new HtmlDocument();
 
@@ -52,7 +52,7 @@ public class HttpClientService
         return doc;
     }
 
-    public async Task<long> GetTimeResponse(string url)
+    public async Task<long> GetTimeResponseAsync(string url)
     {
         var stopWatch = new Stopwatch();
 
@@ -63,7 +63,7 @@ public class HttpClientService
         return stopWatch.ElapsedMilliseconds;
     }
 
-    public async Task<string> DownloadFile(string fileUrl)
+    public async Task<string> DownloadFileAsync(string fileUrl)
     {
         try
         {

@@ -22,7 +22,7 @@ public class TaskRunner
 
         watch.Start();
 
-        var links = await _crawler.CrawlWebsiteAndSitemap(url);
+        var links = await _crawler.CrawlWebsiteAndSitemapAsync(url);
 
         PrintLinksInCrawlingNotInSitemap(links);
         PrintLinksInSitemapNotInCrawling(links);

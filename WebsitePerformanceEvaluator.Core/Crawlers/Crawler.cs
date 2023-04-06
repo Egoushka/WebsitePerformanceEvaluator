@@ -12,10 +12,10 @@ public class Crawler
         _websiteCrawler = websiteCrawler;
         _sitemapCrawler = sitemapCrawler;
     }
-    public async Task<IEnumerable<LinkPerformance>> CrawlWebsiteAndSitemap(string url)
+    public async Task<IEnumerable<LinkPerformance>> CrawlWebsiteAndSitemapAsync(string url)
     {
-        var crawlingTask = Task.Run(() => _websiteCrawler.FindLinks(url));
-        var sitemapTask = Task.Run(() => _sitemapCrawler.FindLinks(url));
+        var crawlingTask = Task.Run(() => _websiteCrawler.FindLinksAsync(url));
+        var sitemapTask = Task.Run(() => _sitemapCrawler.FindLinksAsync(url));
 
         var crawlingResult = (await crawlingTask).ToList();
         var sitemapResult = (await sitemapTask).ToList();

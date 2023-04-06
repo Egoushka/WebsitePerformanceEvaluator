@@ -25,31 +25,30 @@ public class SitemapCrawler
         _linkHelper = linkHelper;
     }
 
-    public async Task<IEnumerable<LinkPerformance>> FindLinks(string url)
+    public async Task<IEnumerable<LinkPerformance>> FindLinksAsync(string url)
     {
-        var sitemapXml = await GetSitemap(url);
+        var sitemapXml = await GetSitemapAsync(url);
         var xmlSitemapList = sitemapXml.GetElementsByTagName("url");
 
         var urls = _parser.GetLinks(xmlSitemapList);
-        
-        
+
         var filteredUrls = _filter.FilterLinks(urls, url);
         
         filteredUrls = _linkHelper.RemoveLastSlashFromLinks(filteredUrls);
 
-        var result = await AddTimeToLinks(filteredUrls);
+        var result = await AddTimeToLinksAsync(filteredUrls);
 
         return result;
     }
 
-    private async Task<XmlDocument> GetSitemap(string url)
+    private async Task<XmlDocument> GetSitemapAsync(string url)
     {
         var uri = new Uri(url);
         url = uri.Scheme + "://" + uri.Host;
 
         var sitemapUrl = $"{url}/sitemap.xml";
 
-        var sitemapXmlDocument = await GetSitemapXml(sitemapUrl);
+        var sitemapXmlDocument = await GetSitemapXmlAsync(sitemapUrl);
 
         if (sitemapXmlDocument.DocumentElement == null)
         {
@@ -59,9 +58,9 @@ public class SitemapCrawler
         return sitemapXmlDocument;
     }
 
-    private async Task<XmlDocument> GetSitemapXml(string sitemapUrl)
+    private async Task<XmlDocument> GetSitemapXmlAsync(string sitemapUrl)
     {
-        var sitemapString = await _clientService.DownloadFile(sitemapUrl);
+        var sitemapString = await _clientService.DownloadFileAsync(sitemapUrl);
         var sitemapXmlDocument = new XmlDocument();
         try
         {
@@ -76,11 +75,11 @@ public class SitemapCrawler
         return sitemapXmlDocument;
     }
     
-    private async Task<IEnumerable<LinkPerformance>> AddTimeToLinks(IEnumerable<LinkPerformance> links)
+    private async Task<IEnumerable<LinkPerformance>> AddTimeToLinksAsync(IEnumerable<LinkPerformance> links)
     {
         foreach (var link in links)
         {
-            var time = await _clientService.GetTimeResponse(link.Link);
+            var time = await _clientService.GetTimeResponseAsync(link.Link);
             
             link.TimeResponse = time;
         }
