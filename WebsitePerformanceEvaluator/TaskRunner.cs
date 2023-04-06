@@ -99,7 +99,7 @@ public class TaskRunner
         var allLinks = WebsiteCrawlingLinks.Intersect(SitemapLinks);
         
         var rowsList = allLinks.Select(x => new Tuple<string,long>(x.Link, x.TimeResponse))
-            .OrderByDescending(x => x.Item2)
+            .OrderBy(x => x.Item2)
             .ToList();
         
         Console.WriteLine("Links with time response:");
