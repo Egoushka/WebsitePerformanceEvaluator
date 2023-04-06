@@ -2,7 +2,7 @@ using WebsitePerformanceEvaluator.Core.Models.Enums;
 
 namespace WebsitePerformanceEvaluator.Core.Models;
 
-public class LinkPerformanceResult
+public class LinkPerformance
 {
     public string Link { get; set; }
     public long TimeResponse { get; set; }
@@ -16,6 +16,6 @@ public class LinkPerformanceResult
 
     public override bool Equals(object? obj)
     {
-        return obj is LinkPerformanceResult link && link.Link == Link;
+        return obj is LinkPerformance link && link.Link == Link;
     }
 }

@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Xml;
 using WebsitePerformanceEvaluator.Core.Filters;
 using WebsitePerformanceEvaluator.Core.Helpers;
@@ -24,46 +23,40 @@ public class SitemapCrawler
         _filter = linkFilter;
     }
 
-    public async Task<IEnumerable<LinkPerformanceResult>> GetAllUrlsFromSitemap(string baseUrl)
+    public async Task<IEnumerable<LinkPerformance>> FindLinks(string url)
     {
-        var sitemapXml = await GetSitemap(baseUrl);
+        var sitemapXml = await GetSitemap(url);
         var xmlSitemapList = sitemapXml.GetElementsByTagName("url");
 
         var urls = _parser.GetLinks(xmlSitemapList);
         
-        var filteredLinks = _filter.FilterLinks(urls, baseUrl)
+        var filteredUrls = _filter.FilterLinks(urls, url)
             .RemoveLastSlashFromLinks()
-            .AddBaseUrl(baseUrl);
+            .AddBaseUrl(url);
         
-        var result = await AddTimeToLinks(filteredLinks);
+        var result = await AddTimeToLinks(filteredUrls);
 
         return result;
     }
 
-    private async Task<IEnumerable<LinkPerformanceResult>> AddTimeToLinks(IEnumerable<LinkPerformanceResult> links)
+    private async Task<XmlDocument> GetSitemap(string url)
     {
-        foreach (var link in links)
+        var uri = new Uri(url);
+        url = uri.Scheme + "://" + uri.Host;
+
+        var sitemapUrl = $"{url}/sitemap.xml";
+
+        var sitemapXmlDocument = await GetSitemapXml(sitemapUrl);
+
+        if (sitemapXmlDocument.DocumentElement == null)
         {
-            var time = await _clientService.GetTimeResponse(link.Link);
-            
-            link.TimeResponse = time;
+            sitemapXmlDocument = new XmlDocument();
         }
         
-        return links;
-    }
-    private async Task<XmlDocument> GetSitemap(string baseUrl)
-    {
-        var uri = new Uri(baseUrl);
-        baseUrl = uri.Scheme + "://" + uri.Host;
-
-        var sitemapUrl = $"{baseUrl}/sitemap.xml";
-
-        var sitemapXmlDocument = await GetSitemapXmlDocument(sitemapUrl);
-
-        return sitemapXmlDocument.DocumentElement != null ? sitemapXmlDocument : new XmlDocument();
+        return sitemapXmlDocument;
     }
 
-    private async Task<XmlDocument> GetSitemapXmlDocument(string sitemapUrl)
+    private async Task<XmlDocument> GetSitemapXml(string sitemapUrl)
     {
         var sitemapString = await _clientService.DownloadFile(sitemapUrl);
         var sitemapXmlDocument = new XmlDocument();
@@ -78,5 +71,17 @@ public class SitemapCrawler
         }
 
         return sitemapXmlDocument;
+    }
+    
+    private async Task<IEnumerable<LinkPerformance>> AddTimeToLinks(IEnumerable<LinkPerformance> links)
+    {
+        foreach (var link in links)
+        {
+            var time = await _clientService.GetTimeResponse(link.Link);
+            
+            link.TimeResponse = time;
+        }
+        
+        return links;
     }
 }

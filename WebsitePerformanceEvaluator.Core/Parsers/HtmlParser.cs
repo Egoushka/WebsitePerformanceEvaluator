@@ -1,4 +1,3 @@
-using System.Diagnostics;
 using WebsitePerformanceEvaluator.Core.Models;
 using WebsitePerformanceEvaluator.Core.Models.Enums;
 using WebsitePerformanceEvaluator.Core.Service;
@@ -13,27 +12,21 @@ public class HtmlParser
         _clientService = httpClientService;
     }
 
-    public async Task<LinkPerformanceResult> GetLinks(string url)
+    public async Task<LinkPerformance> GetLinks(string url)
     {
-        var result = new LinkPerformanceResult
+        var result = new LinkPerformance
         {
             Link = url,
             CrawlingLinkType = CrawlingLinkType.Website,
         };
-        var stopWatch = new Stopwatch();
-        stopWatch.Start();
-        
-        var doc = await _clientService.GetDocument(url);
-        
-        stopWatch.Stop();
-        var time = stopWatch.ElapsedMilliseconds;
-        result.TimeResponse = time;
+       
+        var doc = await _clientService.GetDocument(result);
 
         var linkNodes = doc.DocumentNode.SelectNodes("//a[@href]");
 
         if (linkNodes != null)
         {
-            result.FoundLinks = linkNodes.Select(x => x.Attributes["href"].Value).ToList();
+            result.FoundLinks = linkNodes.Select(x => x.Attributes["href"].Value);
         }
 
         return result;

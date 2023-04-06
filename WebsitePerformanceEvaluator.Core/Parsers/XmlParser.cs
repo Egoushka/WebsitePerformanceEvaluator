@@ -6,18 +6,19 @@ namespace WebsitePerformanceEvaluator.Core.Parsers;
 
 public class XmlParser
 {
-    public List<LinkPerformanceResult> GetLinks(XmlNodeList xmlList)
+    public IEnumerable<LinkPerformance> GetLinks(XmlNodeList xmlList)
     {
-        var result = new List<LinkPerformanceResult>();
+        var result = new List<LinkPerformance>();
 
         foreach (XmlNode node in xmlList)
         {
             if (node["loc"] == null) continue;
             
-            var linkToAdd = new LinkPerformanceResult
+            var linkToAdd = new LinkPerformance
             {
-                Link = node["loc"]!.InnerText,
+                Link = node["loc"].InnerText,
                 CrawlingLinkType = CrawlingLinkType.Sitemap,
+                FoundLinks = new List<string>()
             };
             result.Add(linkToAdd);
         }

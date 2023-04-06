@@ -15,8 +15,8 @@ public class TaskRunner
 
     public int LinksCountInSitemap { get; set; }
     public int LinksCountAfterCrawling { get; set; }
-    public List<LinkPerformanceResult> WebsiteCrawlingLinks { get; set; }
-    public List<LinkPerformanceResult> SitemapLinks { get; set; }
+    public List<LinkPerformance> WebsiteCrawlingLinks { get; set; }
+    public List<LinkPerformance> SitemapLinks { get; set; }
 
     public async Task Start()
     {
@@ -44,7 +44,7 @@ public class TaskRunner
 
     private async Task GetLinksFromWebsiteAnsSitemap(string url)
     {
-        var links = await _crawler.GetLinksByCrawlingAndSitemap(url);
+        var links = await _crawler.CrawlWebsiteAndSitemap(url);
 
         WebsiteCrawlingLinks = GetLinksByType(links, CrawlingLinkType.Website).ToList();
         SitemapLinks = GetLinksByType(links, CrawlingLinkType.Sitemap).ToList();
@@ -53,7 +53,7 @@ public class TaskRunner
         LinksCountAfterCrawling = WebsiteCrawlingLinks.Count;
     }
 
-    private IEnumerable<LinkPerformanceResult> GetLinksByType(IEnumerable<LinkPerformanceResult> links,
+    private IEnumerable<LinkPerformance> GetLinksByType(IEnumerable<LinkPerformance> links,
         CrawlingLinkType type)
     {
         return links.Where(x => x.CrawlingLinkType == type);

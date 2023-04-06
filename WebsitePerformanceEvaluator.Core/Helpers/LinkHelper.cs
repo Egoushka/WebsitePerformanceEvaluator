@@ -4,21 +4,23 @@ namespace WebsitePerformanceEvaluator.Core.Helpers;
 
 public static class LinkHelper
 {
-    public static IEnumerable<LinkPerformanceResult> AddBaseUrl(this IEnumerable<LinkPerformanceResult> links, string baseUrl)
+    public static IEnumerable<LinkPerformance> AddBaseUrl(this IEnumerable<LinkPerformance> links, string baseUrl)
     {
         foreach (var link in links)
         {
             link.Link = link.Link.AddBaseUrl(baseUrl);
-            yield return link;
         }
+        
+        return links;
     }
-    public static IEnumerable<LinkPerformanceResult> RemoveLastSlashFromLinks(this IEnumerable<LinkPerformanceResult> links)
+    public static IEnumerable<LinkPerformance> RemoveLastSlashFromLinks(this IEnumerable<LinkPerformance> links)
     {
         foreach (var link in links)
         {
             link.Link = link.Link.RemoveLastSlashFromLink();
-            yield return link;
         }
+        
+        return links;
     }
     public static IEnumerable<string> AddBaseUrl(this IEnumerable<string> links, string baseUrl)
     {

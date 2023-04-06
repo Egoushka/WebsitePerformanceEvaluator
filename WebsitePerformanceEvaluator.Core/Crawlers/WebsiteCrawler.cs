@@ -16,21 +16,23 @@ public class WebsiteCrawler
         _linkFilter = linkFilter;
     }
 
-    public async Task<IEnumerable<LinkPerformanceResult>> FindLinks(string url)
+    public async Task<IEnumerable<LinkPerformance>> FindLinks(string url)
     {
-        var links = new HashSet<LinkPerformanceResult> { new(){ Link = url.RemoveLastSlashFromLink() } };
+        var links = new HashSet<LinkPerformance>();
         var visitedLinks = new HashSet<string>();
         var linksToVisit = new Queue<string>(new[] { url });
 
         while (linksToVisit.Count > 0)
         {
-            var tasks = GetTasks(linksToVisit, visitedLinks);
-
-            var filteredLinks = await GetLinksFromTasks(tasks, url);
+            var newLinks = await CrawlQueue(linksToVisit, visitedLinks);
+            var filteredLinks = NormalizeLinks(newLinks, url);
 
             links.UnionWith(filteredLinks);
+
+            var linksToAddToQueue = filteredLinks.SelectMany(item => item.FoundLinks)
+                .Except(visitedLinks);
             
-            foreach (var link in filteredLinks.SelectMany(item=>item.FoundLinks).Except(visitedLinks))
+            foreach (var link in linksToAddToQueue)
             {
                 linksToVisit.Enqueue(link);
             }
@@ -39,10 +41,10 @@ public class WebsiteCrawler
         return links;
     }
 
-    private IEnumerable<Task<LinkPerformanceResult>> GetTasks(Queue<string> linksToVisit,
+    private async Task<IEnumerable<LinkPerformance>> CrawlQueue(Queue<string> linksToVisit,
         ICollection<string> visitedLinks)
     {
-        var tasks = new List<Task<LinkPerformanceResult>>();
+        var tasks = new List<Task<LinkPerformance>>();
 
         for (var i = 0; i < linksToVisit.Count; i++)
         {
@@ -50,33 +52,32 @@ public class WebsiteCrawler
 
             visitedLinks.Add(link);
 
-            var task = Task<LinkPerformanceResult>.Factory.StartNew(() =>
+            var task = Task<LinkPerformance>.Factory.StartNew(() =>
             {
                 var newLinks = _htmlParser.GetLinks(link).Result;
 
                 return newLinks;
             });
+            
             tasks.Add(task);
         }
-
-        return tasks;
-    }
-
-    private async Task<IEnumerable<LinkPerformanceResult>> GetLinksFromTasks(IEnumerable<Task<LinkPerformanceResult>> tasks,
-        string url)
-    {
         var results = await Task.WhenAll(tasks);
         
-        foreach (var result in results)
+        return results;
+    }
+
+    private IEnumerable<LinkPerformance> NormalizeLinks(IEnumerable<LinkPerformance> links, string url)
+    {
+        foreach (var result in links)
         {
             result.Link = result.Link.RemoveLastSlashFromLink();
+            
             result.FoundLinks = result.FoundLinks.AddBaseUrl(url);
+            
             result.FoundLinks = _linkFilter
                 .FilterLinks(result.FoundLinks, url)
                 .RemoveLastSlashFromLinks();
         }
-        
-        
-        return results;
+        return links;
     }
 }

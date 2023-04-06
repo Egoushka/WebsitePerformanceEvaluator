@@ -1,4 +1,3 @@
-using CommunityToolkit.HighPerformance.Buffers;
 using WebsitePerformanceEvaluator.Core.Models;
 using WebsitePerformanceEvaluator.Core.Validators;
 
@@ -11,17 +10,13 @@ public class LinkFilter
     {
         _validator = new LinkValidator();
     }
-    public IEnumerable<LinkPerformanceResult> FilterLinks(IEnumerable<LinkPerformanceResult> links, string baseUrl)
+
+    public IEnumerable<LinkPerformance> FilterLinks(IEnumerable<LinkPerformance> links, string baseUrl)
     {
-       return FilterLinks(links.Select(link => link.Link), baseUrl)
-           .Select(link => new LinkPerformanceResult
-           {
-               Link = link,
-               TimeResponse = links.First(l => l.Link == link).TimeResponse,
-               CrawlingLinkType = links.First(l => l.Link == link).CrawlingLinkType,
-               FoundLinks = links.First(l => l.Link == link).FoundLinks
-           });
+        return FilterLinks(links.Select(link => link.Link), baseUrl)
+            .Select(filteredLink => links.First(l => l.Link == filteredLink));
     }
+
     public IEnumerable<string> FilterLinks(IEnumerable<string> links, string baseUrl)
     {
         links = links.Distinct();
@@ -49,12 +44,8 @@ public class LinkFilter
 
     private string GetHost(string url)
     {
-        const int schemeLength = 3;
-        var prefixOffset = url.AsSpan().IndexOf(stackalloc char[] { ':', '/', '/' });
-        var startIndex = prefixOffset == -1 ? 0 : prefixOffset + schemeLength;
-        var endIndex = url.AsSpan(startIndex).IndexOf('/');
+        var host = new Uri(url).Host;
 
-        var host = endIndex == -1 ? url.AsSpan(startIndex) : url.AsSpan(startIndex, endIndex);
-        return StringPool.Shared.GetOrAdd(host);
+        return host;
     }
 }

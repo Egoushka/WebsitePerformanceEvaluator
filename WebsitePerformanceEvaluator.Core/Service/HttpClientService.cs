@@ -1,6 +1,7 @@
 using System.Diagnostics;
 using HtmlAgilityPack;
 using WebsitePerformanceEvaluator.Core.Interfaces;
+using WebsitePerformanceEvaluator.Core.Models;
 
 namespace WebsitePerformanceEvaluator.Core.Service;
 
@@ -15,11 +16,25 @@ public class HttpClientService
         _logger = logger;
     }
 
+    public async Task<HtmlDocument> GetDocument(LinkPerformance link)
+    {
+        var stopWatch = new Stopwatch();
+        
+        stopWatch.Start();
+        var doc = await GetDocument(link.Link);
+        stopWatch.Stop();
+        
+        var time = stopWatch.ElapsedMilliseconds;
+        link.TimeResponse = time;
+        
+        return doc;
+    }
     public async Task<HtmlDocument> GetDocument(string url)
     {
         var doc = new HtmlDocument();
 
         using var response = await _client.GetAsync(url);
+        
         var html = await response.Content.ReadAsStringAsync();
 
         doc.LoadHtml(html);
@@ -29,23 +44,13 @@ public class HttpClientService
 
     public async Task<long> GetTimeResponse(string url)
     {
-        var time = 0l;
-        try
-        {
-            var stopWatch = new Stopwatch();
+        var stopWatch = new Stopwatch();
 
-            stopWatch.Start();
-            await _client.GetAsync(url);
-            stopWatch.Stop();
+        stopWatch.Start();
+        await _client.GetAsync(url);
+        stopWatch.Stop();
 
-            time = stopWatch.ElapsedMilliseconds;
-        }
-        catch (Exception)
-        {
-            _logger.Error("Error while getting response time");
-        }
-
-        return time;
+        return stopWatch.ElapsedMilliseconds;
     }
 
     public async Task<string> DownloadFile(string fileUrl)
