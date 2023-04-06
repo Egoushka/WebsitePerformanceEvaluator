@@ -28,7 +28,7 @@ public class WebsiteCrawler
             var newLinks = await CrawlQueue(linksToVisit, visitedLinks);
             var normalizedLinks = NormalizeLinks(newLinks, url);
 
-            links.UnionWith(normalizedLinks);
+            links.UnionWith(normalizedLinks.Where(item => item.TimeResponse > 0));
 
             var linksToAddToQueue = normalizedLinks.Select(item => item.Link)
                 .Except(visitedLinks);
@@ -63,6 +63,9 @@ public class WebsiteCrawler
             tasks.Add(task);
         }
         var result = (await Task.WhenAll(tasks)).SelectMany(item => item);
+        
+        var linksWithTimeResponse = result.Where(item => item.TimeResponse > 0);
+        result = linksWithTimeResponse.Concat(result.Except(linksWithTimeResponse));
         
         return result;
     }

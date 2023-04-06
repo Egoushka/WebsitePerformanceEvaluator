@@ -17,13 +17,14 @@ public class Crawler
         var crawlingTask = Task.Run(() => _websiteCrawler.FindLinks(url));
         var sitemapTask = Task.Run(() => _sitemapCrawler.FindLinks(url));
 
-        var crawlingResult = await crawlingTask;
-        var sitemapResult = await sitemapTask;
+        var crawlingResult = (await crawlingTask).ToList();
+        var sitemapResult = (await sitemapTask).ToList();
         
-        var matches = sitemapResult.Intersect(crawlingResult).Select(item => new LinkPerformance
+        var matches = crawlingResult.Intersect(sitemapResult).Select(item => new LinkPerformance
         {
             Link = item.Link,
-            CrawlingLinkType = CrawlingLinkType.Website | CrawlingLinkType.Sitemap
+            CrawlingLinkType = CrawlingLinkType.Website | CrawlingLinkType.Sitemap,
+            TimeResponse = item.TimeResponse
         });
 
         var result = matches

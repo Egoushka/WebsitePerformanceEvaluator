@@ -1,4 +1,3 @@
-using System.Collections;
 using WebsitePerformanceEvaluator.Core.Crawlers;
 using WebsitePerformanceEvaluator.Core.Models;
 using WebsitePerformanceEvaluator.Core.Models.Enums;
@@ -27,17 +26,11 @@ public class TaskRunner
 
         PrintLinksInCrawlingNotInSitemap(links);
         PrintLinksInSitemapNotInCrawling(links);
+        
         PrintLinksWithTimeResponse(links);
-
-        var sitemapLinksCount =
-            links.Count(l => (l.CrawlingLinkType & CrawlingLinkType.Sitemap) == CrawlingLinkType.Sitemap);
-
-        var crawlingLinksCount =
-            links.Count(l => (l.CrawlingLinkType & CrawlingLinkType.Website) == CrawlingLinkType.Website);
-
-        Console.WriteLine($"Links in sitemap: {sitemapLinksCount}");
-        Console.WriteLine($"Links after crawling: {crawlingLinksCount}");
-
+        
+        PrintAmountOfFoundLinks(links);
+        
         watch.Stop();
         Console.WriteLine($"Time elapsed: {watch.ElapsedMilliseconds / 1000} s");
     }
@@ -100,6 +93,20 @@ public class TaskRunner
 
         ConsoleHelper.PrintTable(new List<string> { "Link", "Time(ms)" }, rowsList);
 
+        Console.WriteLine();
+    }
+    private void PrintAmountOfFoundLinks(IEnumerable<LinkPerformance> links)
+    {
+     
+        var sitemapLinksCount =
+            links.Count(l => (l.CrawlingLinkType & CrawlingLinkType.Sitemap) == CrawlingLinkType.Sitemap);
+
+        var crawlingLinksCount =
+            links.Count(l => (l.CrawlingLinkType & CrawlingLinkType.Website) == CrawlingLinkType.Website);
+
+        Console.WriteLine($"Links in sitemap: {sitemapLinksCount}");
+        Console.WriteLine($"Links after crawling: {crawlingLinksCount}");
+        
         Console.WriteLine();
     }
 }
