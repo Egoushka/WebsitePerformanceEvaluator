@@ -35,13 +35,13 @@ public class HttpClientService
         var doc = new HtmlDocument();
 
         using var response = await _client.GetAsync(url);
+        
         var contentType = response.Content.Headers.ContentType;
+        
         if (contentType.MediaType != "text/html")
         {
-            Console.WriteLine($"Content type is not text/html, but {contentType.MediaType}");
             return new HtmlDocument();
         }
-        
         
         var charset = contentType.CharSet ?? Encoding.UTF8.WebName;
         var html = await response.Content.ReadAsStringAsync();

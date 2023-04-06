@@ -14,13 +14,15 @@ public class SitemapCrawler
     private readonly HttpClientService _clientService;
     private readonly XmlParser _parser;
     private readonly LinkFilter _filter;
+    private readonly LinkHelper _linkHelper;
     public SitemapCrawler(ILogger logger, HttpClientService httpClientService, XmlParser xmlParser,
-        LinkFilter linkFilter)
+        LinkFilter linkFilter, LinkHelper linkHelper)
     {
         _logger = logger;
         _clientService = httpClientService;
         _parser = xmlParser;
         _filter = linkFilter;
+        _linkHelper = linkHelper;
     }
 
     public async Task<IEnumerable<LinkPerformance>> FindLinks(string url)
@@ -30,10 +32,11 @@ public class SitemapCrawler
 
         var urls = _parser.GetLinks(xmlSitemapList);
         
-        var filteredUrls = _filter.FilterLinks(urls, url)
-            .RemoveLastSlashFromLinks()
-            .AddBaseUrl(url);
         
+        var filteredUrls = _filter.FilterLinks(urls, url);
+        
+        filteredUrls = _linkHelper.RemoveLastSlashFromLinks(filteredUrls);
+
         var result = await AddTimeToLinks(filteredUrls);
 
         return result;

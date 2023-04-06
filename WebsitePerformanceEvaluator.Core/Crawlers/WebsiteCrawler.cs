@@ -1,4 +1,3 @@
-using System.Collections;
 using WebsitePerformanceEvaluator.Core.Filters;
 using WebsitePerformanceEvaluator.Core.Helpers;
 using WebsitePerformanceEvaluator.Core.Models;
@@ -10,11 +9,13 @@ public class WebsiteCrawler
 {
     private readonly HtmlParser _htmlParser;
     private readonly LinkFilter _linkFilter;
+    private readonly LinkHelper _linkHelper;
 
-    public WebsiteCrawler(HtmlParser htmlParser, LinkFilter linkFilter)
+    public WebsiteCrawler(HtmlParser htmlParser, LinkFilter linkFilter, LinkHelper linkHelper)
     {
         _htmlParser = htmlParser;
         _linkFilter = linkFilter;
+        _linkHelper = linkHelper;
     }
 
     public async Task<IEnumerable<LinkPerformance>> FindLinks(string url)
@@ -64,21 +65,22 @@ public class WebsiteCrawler
         }
         var result = (await Task.WhenAll(tasks)).SelectMany(item => item);
         
-        var linksWithTimeResponse = result.Where(item => item.TimeResponse > 0);
-        result = linksWithTimeResponse.Concat(result.Except(linksWithTimeResponse));
+        
         
         return result;
     }
 
     private IEnumerable<LinkPerformance> NormalizeLinks(IEnumerable<LinkPerformance> links, string url)
     {
-        links = links
-            .Where(link => !string.IsNullOrEmpty(link.Link))
-            .RemoveLastSlashFromLinks()
-            .AddBaseUrl(url);
+        var linksWithTimeResponse = links.Where(item => item.TimeResponse > 0);
+        links = linksWithTimeResponse.Concat(links.Except(linksWithTimeResponse));
         
-        links = _linkFilter
-            .FilterLinks(links, url);
+        links = links.Where(link => !string.IsNullOrEmpty(link.Link));
+            
+        links = _linkHelper.RemoveLastSlashFromLinks(links);
+        links = _linkHelper.AddBaseUrl(links, url);
+        
+        links = _linkFilter.FilterLinks(links, url);
         
         return links;
     }

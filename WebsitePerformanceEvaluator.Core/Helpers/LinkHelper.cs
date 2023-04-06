@@ -2,31 +2,31 @@ using WebsitePerformanceEvaluator.Core.Models;
 
 namespace WebsitePerformanceEvaluator.Core.Helpers;
 
-public static class LinkHelper
+public class LinkHelper
 {
-    public static IEnumerable<LinkPerformance> AddBaseUrl(this IEnumerable<LinkPerformance> links, string baseUrl)
+    public IEnumerable<LinkPerformance> AddBaseUrl(IEnumerable<LinkPerformance> links, string baseUrl)
     {
         foreach (var link in links)
         {
-            link.Link = link.Link.AddBaseUrl(baseUrl);
+            link.Link = AddBaseUrl(link.Link, baseUrl);
         }
         
         return links;
     }
-    public static IEnumerable<LinkPerformance> RemoveLastSlashFromLinks(this IEnumerable<LinkPerformance> links)
+    public IEnumerable<LinkPerformance> RemoveLastSlashFromLinks(IEnumerable<LinkPerformance> links)
     {
         foreach (var link in links)
         {
-            link.Link = link.Link.RemoveLastSlashFromLink();
+            link.Link = RemoveLastSlashFromLink(link.Link);
         }
         
         return links;
     }
-    public static string AddBaseUrl(this string link, string baseUrl)
+    public string AddBaseUrl(string link, string baseUrl)
     {
         return link.StartsWith("/") ? baseUrl[..^1] + link : link;
     }
-    public static string RemoveLastSlashFromLink(this string link)
+    public string RemoveLastSlashFromLink(string link)
     {
         return link.EndsWith("/") ? link.Remove(link.Length - 1) : link;
     }
