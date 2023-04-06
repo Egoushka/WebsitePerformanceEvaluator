@@ -1,7 +1,8 @@
 namespace WebsitePerformanceEvaluator.Core.Models.Enums;
 
+[Flags]
 public enum CrawlingLinkType
 {
-    Website,
+    Website = 1,
     Sitemap
 }

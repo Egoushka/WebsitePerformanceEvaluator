@@ -1,3 +1,4 @@
+using System.Collections;
 using WebsitePerformanceEvaluator.Core.Crawlers;
 using WebsitePerformanceEvaluator.Core.Models;
 using WebsitePerformanceEvaluator.Core.Models.Enums;
@@ -13,11 +14,6 @@ public class TaskRunner
         _crawler = crawler;
     }
 
-    public int LinksCountInSitemap { get; set; }
-    public int LinksCountAfterCrawling { get; set; }
-    public List<LinkPerformance> WebsiteCrawlingLinks { get; set; }
-    public List<LinkPerformance> SitemapLinks { get; set; }
-
     public async Task Start()
     {
         var watch = System.Diagnostics.Stopwatch.StartNew();
@@ -27,44 +23,36 @@ public class TaskRunner
 
         watch.Start();
 
-        await GetLinksFromWebsiteAnsSitemap(url);
+        var links = await _crawler.CrawlWebsiteAndSitemap(url);
 
-        PrintLinksInCrawlingNotInSitemap();
-        PrintLinksInSitemapNotInCrawling();
-        PrintLinksWithTimeResponse();
+        PrintLinksInCrawlingNotInSitemap(links);
+        PrintLinksInSitemapNotInCrawling(links);
+        PrintLinksWithTimeResponse(links);
 
-        Console.WriteLine($"Links in sitemap: {LinksCountInSitemap}");
-        Console.WriteLine($"Links after crawling: {LinksCountAfterCrawling}");
+        var sitemapLinksCount =
+            links.Count(l => (l.CrawlingLinkType & CrawlingLinkType.Sitemap) == CrawlingLinkType.Sitemap);
+
+        var crawlingLinksCount =
+            links.Count(l => (l.CrawlingLinkType & CrawlingLinkType.Website) == CrawlingLinkType.Website);
+
+        Console.WriteLine($"Links in sitemap: {sitemapLinksCount}");
+        Console.WriteLine($"Links after crawling: {crawlingLinksCount}");
 
         watch.Stop();
         Console.WriteLine($"Time elapsed: {watch.ElapsedMilliseconds / 1000} s");
     }
 
-    private async Task GetLinksFromWebsiteAnsSitemap(string url)
+    private void PrintLinksInCrawlingNotInSitemap(IEnumerable<LinkPerformance> linkPerformances)
     {
-        var links = await _crawler.CrawlWebsiteAndSitemap(url);
-
-        WebsiteCrawlingLinks = GetLinksByType(links, CrawlingLinkType.Website).ToList();
-        SitemapLinks = GetLinksByType(links, CrawlingLinkType.Sitemap).ToList();
-
-        LinksCountInSitemap = SitemapLinks.Count;
-        LinksCountAfterCrawling = WebsiteCrawlingLinks.Count;
-    }
-
-    private IEnumerable<LinkPerformance> GetLinksByType(IEnumerable<LinkPerformance> links,
-        CrawlingLinkType type)
-    {
-        return links.Where(x => x.CrawlingLinkType == type);
-    }
-
-    private void PrintLinksInCrawlingNotInSitemap()
-    {
-        var linksInCrawlingNotInSitemap = WebsiteCrawlingLinks
-            .Except(SitemapLinks)
+        var linksInCrawlingNotInSitemap = linkPerformances
+            .Where(x =>
+                (x.CrawlingLinkType & CrawlingLinkType.Website) == CrawlingLinkType.Website
+                &&
+                (x.CrawlingLinkType & CrawlingLinkType.Sitemap) != CrawlingLinkType.Sitemap)
             .Select(x => x.Link);
-        
+
         Console.WriteLine("Links found after crawling website, but not in sitemap:");
-        
+
         if (linksInCrawlingNotInSitemap.Any())
         {
             ConsoleHelper.PrintTable(new List<string> { "Link" }, linksInCrawlingNotInSitemap);
@@ -77,12 +65,15 @@ public class TaskRunner
         Console.WriteLine();
     }
 
-    private void PrintLinksInSitemapNotInCrawling()
+    private void PrintLinksInSitemapNotInCrawling(IEnumerable<LinkPerformance> linkPerformances)
     {
-        var linksInSitemapNotInCrawling = SitemapLinks
-            .Except(WebsiteCrawlingLinks)
+        var linksInSitemapNotInCrawling = linkPerformances
+            .Where(x =>
+                (x.CrawlingLinkType & CrawlingLinkType.Website) != CrawlingLinkType.Website
+                &&
+                (x.CrawlingLinkType & CrawlingLinkType.Sitemap) == CrawlingLinkType.Sitemap)
             .Select(x => x.Link);
-        
+
         Console.WriteLine("Links in sitemap, that wasn't found after crawling:");
 
         if (linksInSitemapNotInCrawling.Any())
@@ -97,18 +88,18 @@ public class TaskRunner
         Console.WriteLine();
     }
 
-    private void PrintLinksWithTimeResponse()
+    private void PrintLinksWithTimeResponse(IEnumerable<LinkPerformance> linkPerformances)
     {
-        var allLinks = WebsiteCrawlingLinks.Intersect(SitemapLinks);
+        var allLinks = linkPerformances.Distinct();
 
         var rowsList = allLinks
             .Select(x => new Tuple<string, long>(x.Link, x.TimeResponse))
             .OrderBy(x => x.Item2);
 
         Console.WriteLine("Links with time response:");
-        
+
         ConsoleHelper.PrintTable(new List<string> { "Link", "Time(ms)" }, rowsList);
-        
+
         Console.WriteLine();
     }
 }

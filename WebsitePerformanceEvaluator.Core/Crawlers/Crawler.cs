@@ -1,4 +1,5 @@
 using WebsitePerformanceEvaluator.Core.Models;
+using WebsitePerformanceEvaluator.Core.Models.Enums;
 
 namespace WebsitePerformanceEvaluator.Core.Crawlers;
 
@@ -13,29 +14,21 @@ public class Crawler
     }
     public async Task<IEnumerable<LinkPerformance>> CrawlWebsiteAndSitemap(string url)
     {
-        var crawlingTask = Task.Run(() => CrawlWebsite(url));
-        var sitemapTask = Task.Run(() => CrawlSitemap(url));
+        var crawlingTask = Task.Run(() => _websiteCrawler.FindLinks(url));
+        var sitemapTask = Task.Run(() => _sitemapCrawler.FindLinks(url));
 
         var crawlingResult = await crawlingTask;
         var sitemapResult = await sitemapTask;
-
-        var result = new List<LinkPerformance>();
         
-        result.AddRange(sitemapResult);
-        result.AddRange(crawlingResult);
+        var matches = sitemapResult.Intersect(crawlingResult).Select(item => new LinkPerformance
+        {
+            Link = item.Link,
+            CrawlingLinkType = CrawlingLinkType.Website | CrawlingLinkType.Sitemap
+        });
 
-        return result;
-    }
-    private async Task<IEnumerable<LinkPerformance>> CrawlWebsite(string url)
-    {
-        var result = await _websiteCrawler.FindLinks(url);
-
-        return result;
-    }
-
-    private async Task<IEnumerable<LinkPerformance>> CrawlSitemap(string url)
-    {
-        var result = await _sitemapCrawler.FindLinks(url);
+        var result = matches
+            .Concat(crawlingResult.Except(sitemapResult))
+            .Concat(sitemapResult.Except(crawlingResult));
 
         return result;
     }
