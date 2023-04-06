@@ -39,6 +39,7 @@ public class LinkFilter
     {
         var urlHost = GetHost(url);
         var baseUrlHost = GetHost(baseUrl);
+        
         return urlHost == baseUrlHost ? url : string.Empty;
     }
 

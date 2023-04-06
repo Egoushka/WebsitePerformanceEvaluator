@@ -31,9 +31,7 @@ public class TaskRunner
 
         PrintLinksInCrawlingNotInSitemap();
         PrintLinksInSitemapNotInCrawling();
-
-        await PrintLinksWithTimeResponse();
-
+        PrintLinksWithTimeResponse();
 
         Console.WriteLine($"Links in sitemap: {LinksCountInSitemap}");
         Console.WriteLine($"Links after crawling: {LinksCountAfterCrawling}");
@@ -61,16 +59,19 @@ public class TaskRunner
 
     private void PrintLinksInCrawlingNotInSitemap()
     {
-        var linksInCrawlingNotInSitemap = WebsiteCrawlingLinks.Except(SitemapLinks)
-            .Select(x => x.Link).ToList();
-        Console.WriteLine("Links found after crawling, but not in sitemap:");
-        if (!linksInCrawlingNotInSitemap.Any())
+        var linksInCrawlingNotInSitemap = WebsiteCrawlingLinks
+            .Except(SitemapLinks)
+            .Select(x => x.Link);
+        
+        Console.WriteLine("Links found after crawling website, but not in sitemap:");
+        
+        if (linksInCrawlingNotInSitemap.Any())
         {
-            Console.WriteLine("No links found");
+            ConsoleHelper.PrintTable(new List<string> { "Link" }, linksInCrawlingNotInSitemap);
         }
         else
         {
-            ConsoleHelper.PrintTable(new List<string> { "Link" }, linksInCrawlingNotInSitemap);
+            Console.WriteLine("No links found");
         }
 
         Console.WriteLine();
@@ -78,32 +79,36 @@ public class TaskRunner
 
     private void PrintLinksInSitemapNotInCrawling()
     {
-        var linksInSitemapNotInCrawling = SitemapLinks.Except(WebsiteCrawlingLinks)
-            .Select(x => x.Link).ToList();
+        var linksInSitemapNotInCrawling = SitemapLinks
+            .Except(WebsiteCrawlingLinks)
+            .Select(x => x.Link);
+        
         Console.WriteLine("Links in sitemap, that wasn't found after crawling:");
 
-        if (!linksInSitemapNotInCrawling.Any())
+        if (linksInSitemapNotInCrawling.Any())
         {
-            Console.WriteLine("No links found");
+            ConsoleHelper.PrintTable(new List<string> { "Link" }, linksInSitemapNotInCrawling);
         }
         else
         {
-            ConsoleHelper.PrintTable(new List<string> { "Link" }, linksInSitemapNotInCrawling);
+            Console.WriteLine("No links found");
         }
 
         Console.WriteLine();
     }
 
-    private async Task PrintLinksWithTimeResponse()
+    private void PrintLinksWithTimeResponse()
     {
         var allLinks = WebsiteCrawlingLinks.Intersect(SitemapLinks);
-        
-        var rowsList = allLinks.Select(x => new Tuple<string,long>(x.Link, x.TimeResponse))
-            .OrderBy(x => x.Item2)
-            .ToList();
-        
+
+        var rowsList = allLinks
+            .Select(x => new Tuple<string, long>(x.Link, x.TimeResponse))
+            .OrderBy(x => x.Item2);
+
         Console.WriteLine("Links with time response:");
+        
         ConsoleHelper.PrintTable(new List<string> { "Link", "Time(ms)" }, rowsList);
+        
         Console.WriteLine();
     }
 }
