@@ -2,6 +2,7 @@ using System.Xml;
 using WebsitePerformanceEvaluator.Core.Filters;
 using WebsitePerformanceEvaluator.Core.Helpers;
 using WebsitePerformanceEvaluator.Core.Interfaces;
+using WebsitePerformanceEvaluator.Core.Models;
 using WebsitePerformanceEvaluator.Core.Parsers;
 using WebsitePerformanceEvaluator.Core.Service;
 
@@ -22,12 +23,13 @@ public class SitemapCrawler
         _filter = linkFilter;
     }
 
-    public async Task<IEnumerable<string>> GetAllUrlsFromSitemap(string baseUrl)
+    public async Task<IEnumerable<LinkPerformanceResult>> GetAllUrlsFromSitemap(string baseUrl)
     {
         var sitemapXml = await GetSitemap(baseUrl);
         var xmlSitemapList = sitemapXml.GetElementsByTagName("url");
 
         var urls = _parser.GetLinks(xmlSitemapList);
+        
         var filteredLinks = _filter.FilterLinks(urls, baseUrl)
             .RemoveLastSlashFromLinks()
             .AddBaseUrl(baseUrl);

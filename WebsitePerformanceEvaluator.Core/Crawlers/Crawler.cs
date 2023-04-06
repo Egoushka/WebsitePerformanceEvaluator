@@ -1,5 +1,4 @@
-using WebsitePerformanceEvaluator.Core.Models.Enums;
-using WebsitePerformanceEvaluator.Core.Service;
+using WebsitePerformanceEvaluator.Core.Models;
 
 namespace WebsitePerformanceEvaluator.Core.Crawlers;
 
@@ -7,25 +6,12 @@ public class Crawler
 {
     private readonly WebsiteCrawler _websiteCrawler;
     private readonly SitemapCrawler _sitemapCrawler;
-    private readonly HttpClientService _httpClientService;
-    public Crawler(WebsiteCrawler websiteCrawler, SitemapCrawler sitemapCrawler,  HttpClientService httpClientService)
+    public Crawler(WebsiteCrawler websiteCrawler, SitemapCrawler sitemapCrawler)
     {
         _websiteCrawler = websiteCrawler;
         _sitemapCrawler = sitemapCrawler;
-        _httpClientService = httpClientService;
     }
-    public async Task<IEnumerable<Tuple<string, int>>> GetLinksWithTimeResponse(string url)
-    {
-        var links = await GetLinksByCrawlingAndSitemap(url);
-
-        var result = links
-            .AsParallel()
-            .Select(async link =>
-                new Tuple<string, int>(link.Item1, await _httpClientService.GetTimeResponse(link.Item1)));
-        
-        return await Task.WhenAll(result);
-    }
-    public async Task<IEnumerable<Tuple<string, CrawlingLinkType>>> GetLinksByCrawlingAndSitemap(string url)
+    public async Task<IEnumerable<LinkPerformanceResult>> GetLinksByCrawlingAndSitemap(string url)
     {
         var crawlingTask = Task.Run(() => GetLinksByCrawling(url));
         var sitemapTask = Task.Run(() => GetSitemapLinks(url));
@@ -33,26 +19,22 @@ public class Crawler
         var crawlingResult = await crawlingTask;
         var sitemapResult = await sitemapTask;
 
-        var union = crawlingResult.Union(sitemapResult).Distinct();
+        var result = new List<LinkPerformanceResult>();
+        result.AddRange(sitemapResult);
+        result.AddRange(crawlingResult);
 
-        return union;
+        return result;
     }
-    private async Task<List<Tuple<string, CrawlingLinkType>>> GetLinksByCrawling(string url)
+    private async Task<IEnumerable<LinkPerformanceResult>> GetLinksByCrawling(string url)
     {
-        var rawLinks = await _websiteCrawler.FindLinks(url);
-
-        var result = rawLinks.Select(link => new Tuple<string, CrawlingLinkType>(link, CrawlingLinkType.Website))
-            .ToList();
+        var result = await _websiteCrawler.FindLinks(url);
 
         return result;
     }
 
-    private async Task<List<Tuple<string, CrawlingLinkType>>> GetSitemapLinks(string url)
+    private async Task<IEnumerable<LinkPerformanceResult>> GetSitemapLinks(string url)
     {
-        var rawLinks = await _sitemapCrawler.GetAllUrlsFromSitemap(url);
-
-        var result = rawLinks.Select(link => new Tuple<string, CrawlingLinkType>(link, CrawlingLinkType.Sitemap))
-            .ToList();
+        var result = await _sitemapCrawler.GetAllUrlsFromSitemap(url);
 
         return result;
     }

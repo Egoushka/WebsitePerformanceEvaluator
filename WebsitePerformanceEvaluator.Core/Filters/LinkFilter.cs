@@ -1,4 +1,5 @@
 using CommunityToolkit.HighPerformance.Buffers;
+using WebsitePerformanceEvaluator.Core.Models;
 using WebsitePerformanceEvaluator.Core.Validators;
 
 namespace WebsitePerformanceEvaluator.Core.Filters;
@@ -10,11 +11,20 @@ public class LinkFilter
     {
         _validator = new LinkValidator();
     }
-
+    public IEnumerable<LinkPerformanceResult> FilterLinks(IEnumerable<LinkPerformanceResult> links, string baseUrl)
+    {
+       return FilterLinks(links.Select(link => link.Link), baseUrl)
+           .Select(link => new LinkPerformanceResult
+           {
+               Link = link,
+               TimeResponse = links.First(l => l.Link == link).TimeResponse,
+               CrawlingLinkType = links.First(l => l.Link == link).CrawlingLinkType,
+               FoundLinks = links.First(l => l.Link == link).FoundLinks
+           });
+    }
     public IEnumerable<string> FilterLinks(IEnumerable<string> links, string baseUrl)
     {
         links = links.Distinct();
-        
         links = RemoveInvalidLinks(links);
         links = RemoveExternalLinks(links, baseUrl);
         
