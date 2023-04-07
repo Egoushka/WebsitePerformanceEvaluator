@@ -11,13 +11,17 @@ public class HttpClientService
     private readonly HttpClient _client;
     private readonly ILogger _logger;
 
+    public HttpClientService()
+    {
+    }
+
     public HttpClientService(IHttpClientFactory httpClientFactory, ILogger logger)
     {
         _client = httpClientFactory.CreateClient();
         _logger = logger;
     }
 
-    public async Task<HtmlDocument> GetDocumentAsync(LinkPerformance link)
+    public virtual async Task<HtmlDocument> GetDocumentAsync(LinkPerformance link)
     {
         var stopWatch = new Stopwatch();
 
@@ -61,7 +65,7 @@ public class HttpClientService
         return stopWatch.ElapsedMilliseconds;
     }
 
-    public async Task<string> DownloadFileAsync(string fileUrl)
+    public virtual async Task<string> DownloadFileAsync(string fileUrl)
     {
         try
         {

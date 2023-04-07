@@ -12,7 +12,7 @@ public class LinkFilter
         _validator = new LinkValidator();
     }
 
-    public IEnumerable<LinkPerformance> FilterLinks(IEnumerable<LinkPerformance> links, string baseUrl)
+    public virtual IEnumerable<LinkPerformance> FilterLinks(IEnumerable<LinkPerformance> links, string baseUrl)
     {
         links = links.Distinct();
         links = RemoveInvalidLinks(links);

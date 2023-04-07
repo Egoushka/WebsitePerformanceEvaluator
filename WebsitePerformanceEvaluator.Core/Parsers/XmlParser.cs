@@ -6,7 +6,8 @@ namespace WebsitePerformanceEvaluator.Core.Parsers;
 
 public class XmlParser
 {
-    public IEnumerable<LinkPerformance> GetLinks(XmlNodeList xmlList)
+    public XmlParser(){}
+    public virtual IEnumerable<LinkPerformance> GetLinks(XmlNodeList xmlList)
     {
         var result = new List<LinkPerformance>();
 

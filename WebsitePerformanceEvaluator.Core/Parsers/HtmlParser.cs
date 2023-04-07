@@ -6,6 +6,8 @@ namespace WebsitePerformanceEvaluator.Core.Parsers;
 
 public class HtmlParser
 {
+    public HtmlParser(){}
+
     private readonly HttpClientService _clientService;
 
     public HtmlParser(HttpClientService httpClientService)
@@ -13,7 +15,7 @@ public class HtmlParser
         _clientService = httpClientService;
     }
 
-    public async Task<IEnumerable<LinkPerformance>> GetLinksAsync(string url)
+    public virtual async Task<IEnumerable<LinkPerformance>> GetLinksAsync(string url)
     {
         var result = new List<LinkPerformance>
         {
