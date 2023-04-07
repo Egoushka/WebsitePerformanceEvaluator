@@ -26,7 +26,7 @@ public class HttpClientService
         stopWatch.Stop();
 
         var time = stopWatch.ElapsedMilliseconds;
-        link.TimeResponse = time;
+        link.TimeResponseMs = (int)time;
 
         return doc;
     }

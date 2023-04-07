@@ -36,7 +36,7 @@ public class SitemapCrawler
 
         filteredUrls = _linkHelper.RemoveLastSlashFromLinks(filteredUrls);
 
-        var result = await _linkHelper.AddTimeToLinksAsync(filteredUrls);
+        var result = await _linkHelper.AddResponseTimeAsync(filteredUrls);
 
         return result;
     }

@@ -5,7 +5,7 @@ namespace WebsitePerformanceEvaluator.Core.Models;
 public class LinkPerformance
 {
     public string Link { get; set; }
-    public long TimeResponse { get; set; }
+    public int TimeResponseMs { get; set; }
     public CrawlingLinkType CrawlingLinkType { get; set; }
 
     public override int GetHashCode()

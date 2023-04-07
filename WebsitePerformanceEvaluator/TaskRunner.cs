@@ -48,9 +48,13 @@ public class TaskRunner
         Console.WriteLine("Links found after crawling website, but not in sitemap:");
 
         if (linksInCrawlingNotInSitemap.Any())
+        {
             ConsoleHelper.PrintTable(new List<string> { "Link" }, linksInCrawlingNotInSitemap);
+        }
         else
+        {
             Console.WriteLine("No links found");
+        }
 
         Console.WriteLine();
     }
@@ -67,20 +71,23 @@ public class TaskRunner
         Console.WriteLine("Links in sitemap, that wasn't found after crawling:");
 
         if (linksInSitemapNotInCrawling.Any())
+        {
             ConsoleHelper.PrintTable(new List<string> { "Link" }, linksInSitemapNotInCrawling);
+        }
         else
+        {
             Console.WriteLine("No links found");
+        }
 
         Console.WriteLine();
     }
 
     private void PrintLinksWithTimeResponse(IEnumerable<LinkPerformance> linkPerformances)
     {
-        var allLinks = linkPerformances.Distinct();
 
-        var rowsList = allLinks
-            .Select(x => new Tuple<string, long>(x.Link, x.TimeResponse))
-            .OrderBy(x => x.Item2);
+        var rowsList = linkPerformances
+            .OrderBy(item => item.TimeResponseMs)
+            .Select(x => new Tuple<string, long>(x.Link, x.TimeResponseMs));
 
         Console.WriteLine("Links with time response:");
 
@@ -91,11 +98,9 @@ public class TaskRunner
 
     private void PrintAmountOfFoundLinks(IEnumerable<LinkPerformance> links)
     {
-        var sitemapLinksCount =
-            links.Count(l => (l.CrawlingLinkType & CrawlingLinkType.Sitemap) == CrawlingLinkType.Sitemap);
+        var sitemapLinksCount = links.Count(l => (l.CrawlingLinkType & CrawlingLinkType.Sitemap) == CrawlingLinkType.Sitemap);
 
-        var crawlingLinksCount =
-            links.Count(l => (l.CrawlingLinkType & CrawlingLinkType.Website) == CrawlingLinkType.Website);
+        var crawlingLinksCount = links.Count(l => (l.CrawlingLinkType & CrawlingLinkType.Website) == CrawlingLinkType.Website);
 
         Console.WriteLine($"Links in sitemap: {sitemapLinksCount}");
         Console.WriteLine($"Links after crawling: {crawlingLinksCount}");

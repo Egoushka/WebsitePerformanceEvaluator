@@ -27,7 +27,7 @@ public class Crawler
             {
                 Link = item.Link,
                 CrawlingLinkType = CrawlingLinkType.Website | CrawlingLinkType.Sitemap,
-                TimeResponse = item.TimeResponse
+                TimeResponseMs = item.TimeResponseMs
             });
 
         var result = matches

@@ -14,14 +14,20 @@ public class LinkHelper
 
     public IEnumerable<LinkPerformance> AddBaseUrl(IEnumerable<LinkPerformance> links, string baseUrl)
     {
-        foreach (var link in links) link.Link = AddBaseUrl(link.Link, baseUrl);
+        foreach (var link in links)
+        {
+            link.Link = AddBaseUrl(link.Link, baseUrl);
+        }
 
         return links;
     }
 
     public IEnumerable<LinkPerformance> RemoveLastSlashFromLinks(IEnumerable<LinkPerformance> links)
     {
-        foreach (var link in links) link.Link = RemoveLastSlashFromLink(link.Link);
+        foreach (var link in links)
+        {
+            link.Link = RemoveLastSlashFromLink(link.Link);
+        }
 
         return links;
     }
@@ -36,13 +42,13 @@ public class LinkHelper
         return link.EndsWith("/") ? link.Remove(link.Length - 1) : link;
     }
 
-    public async Task<IEnumerable<LinkPerformance>> AddTimeToLinksAsync(IEnumerable<LinkPerformance> links)
+    public async Task<IEnumerable<LinkPerformance>> AddResponseTimeAsync(IEnumerable<LinkPerformance> links)
     {
         foreach (var link in links)
         {
             var time = await _clientService.GetTimeResponseAsync(link.Link);
 
-            link.TimeResponse = time;
+            link.TimeResponseMs = (int)time;
         }
 
         return links;

@@ -29,19 +29,22 @@ public class WebsiteCrawler
             var newLinks = await CrawlQueueAsync(linksToVisit, visitedLinks);
             var normalizedLinks = NormalizeLinks(newLinks, url);
 
-            links.UnionWith(normalizedLinks.Where(item => item.TimeResponse > 0));
+            links.UnionWith(normalizedLinks.Where(item => item.TimeResponseMs > 0));
 
             var linksToAddToQueue = normalizedLinks.Select(item => item.Link)
                 .Except(visitedLinks);
 
-            foreach (var link in linksToAddToQueue) linksToVisit.Enqueue(link);
+            foreach (var link in linksToAddToQueue)
+            {
+                linksToVisit.Enqueue(link);
+            }
         }
 
         return links;
     }
 
     private async Task<IEnumerable<LinkPerformance>> CrawlQueueAsync(Queue<string> linksToVisit,
-        ISet<string> visitedLinks)
+        ICollection<string> visitedLinks)
     {
         var tasks = new List<Task<IEnumerable<LinkPerformance>>>();
 
@@ -51,12 +54,8 @@ public class WebsiteCrawler
 
             visitedLinks.Add(link);
 
-            var task = Task<IEnumerable<LinkPerformance>>.Factory.StartNew(() =>
-            {
-                var newLinks = _htmlParser.GetLinksAsync(link).Result;
-
-                return newLinks;
-            });
+            var task = Task<IEnumerable<LinkPerformance>>.Factory
+                .StartNew(() => _htmlParser.GetLinksAsync(link).Result);
 
             tasks.Add(task);
         }
@@ -68,7 +67,7 @@ public class WebsiteCrawler
 
     private IEnumerable<LinkPerformance> NormalizeLinks(IEnumerable<LinkPerformance> links, string url)
     {
-        var linksWithTimeResponse = links.Where(item => item.TimeResponse > 0);
+        var linksWithTimeResponse = links.Where(item => item.TimeResponseMs > 0);
         links = linksWithTimeResponse.Concat(links.Except(linksWithTimeResponse));
 
         links = links.Where(link => !string.IsNullOrEmpty(link.Link));
