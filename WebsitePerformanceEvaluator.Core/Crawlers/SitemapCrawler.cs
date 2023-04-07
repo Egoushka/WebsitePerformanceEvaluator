@@ -15,6 +15,7 @@ public class SitemapCrawler
     private readonly LinkHelper _linkHelper;
     private readonly ILogger _logger;
     private readonly XmlParser _parser;
+    public SitemapCrawler(){}
 
     public SitemapCrawler(ILogger logger, HttpClientService httpClientService, XmlParser xmlParser,
         LinkFilter linkFilter, LinkHelper linkHelper)
@@ -26,7 +27,7 @@ public class SitemapCrawler
         _linkHelper = linkHelper;
     }
 
-    public async Task<IEnumerable<LinkPerformance>> FindLinksAsync(string url)
+    public virtual async Task<IEnumerable<LinkPerformance>> FindLinksAsync(string url)
     {
         var sitemapXml = await GetSitemapAsync(url);
         var xmlSitemapList = sitemapXml.GetElementsByTagName("url");

@@ -10,6 +10,7 @@ public class WebsiteCrawler
     private readonly HtmlParser _htmlParser;
     private readonly LinkFilter _linkFilter;
     private readonly LinkHelper _linkHelper;
+    public WebsiteCrawler(){}
 
     public WebsiteCrawler(HtmlParser htmlParser, LinkFilter linkFilter, LinkHelper linkHelper)
     {
@@ -18,7 +19,7 @@ public class WebsiteCrawler
         _linkHelper = linkHelper;
     }
 
-    public async Task<IEnumerable<LinkPerformance>> FindLinksAsync(string url)
+    public virtual async Task<IEnumerable<LinkPerformance>> FindLinksAsync(string url)
     {
         var links = new HashSet<LinkPerformance>();
         var visitedLinks = new HashSet<string>();
