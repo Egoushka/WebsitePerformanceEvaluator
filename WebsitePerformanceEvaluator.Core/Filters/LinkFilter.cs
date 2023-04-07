@@ -6,6 +6,10 @@ namespace WebsitePerformanceEvaluator.Core.Filters;
 public class LinkFilter
 {
     private readonly LinkValidator _validator;
+    
+    public LinkFilter()
+    {
+    }
 
     public LinkFilter(LinkValidator validator)
     {
