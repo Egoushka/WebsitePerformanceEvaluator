@@ -51,6 +51,7 @@ public class CrawlerTests
         var sitemapLinks = result.Where(x => x.CrawlingLinkSource == CrawlingLinkSource.Sitemap);
         Assert.Equal(expectedSitemapLinks.Except(expectedWebsiteLinks).Count(), sitemapLinks.Count());
     }
+    
     [Fact]
     public async Task CrawlWebsiteAndSitemapAsync_WhenWebsiteCrawlerReturnsEmptyList_ReturnsSitemapLinksOnly()
     {
@@ -68,6 +69,7 @@ public class CrawlerTests
         Assert.Equal(expectedSitemapLinks.Count(), result.Count());
         Assert.Equal(expectedSitemapLinks, result);
     }
+    
     [Fact]
     public async Task CrawlWebsiteAndSitemapAsync_WhenSitemapCrawlerReturnsEmptyList_ReturnsWebsiteLinksOnly()
     {
@@ -85,8 +87,7 @@ public class CrawlerTests
         Assert.Equal(expectedWebsiteLinks.Count(), result.Count());
         Assert.Equal(expectedWebsiteLinks, result);
     }
-
-
+    
     [Fact]
     public async Task CrawlWebsiteAndSitemapAsync_WhenCalled_CallsFindLinksAsyncWithCorrectUrl()
     {
@@ -100,6 +101,7 @@ public class CrawlerTests
         _websiteCrawlerMock.Verify(x => x.FindLinksAsync(url), Times.Once);
         _sitemapCrawlerMock.Verify(x => x.FindLinksAsync(url), Times.Once);
     }
+    
     [Fact]
     public async Task CrawlWebsiteAndSitemapAsync_WhenCrawlersReturnEmptyLists_ReturnsEmptyList()
     {
@@ -118,6 +120,7 @@ public class CrawlerTests
         // Assert
         Assert.Empty(result);
     }
+    
     [Fact]
     public async Task CrawlWebsiteAndSitemapAsync_WhenCrawlersThrowException_ThrowsException()
     {
@@ -133,11 +136,11 @@ public class CrawlerTests
         // Act & Assert
         await Assert.ThrowsAsync<Exception>(() => _crawler.CrawlWebsiteAndSitemapAsync(url));
     }
+    
     private IEnumerable<LinkPerformance> GetExpectedLinks(CrawlingLinkSource source, int count)
     {
         return _fixture.Build<LinkPerformance>()
             .With(link => link.CrawlingLinkSource, source)
             .CreateMany(count);
     }
-
 }
