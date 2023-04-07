@@ -44,7 +44,7 @@ public class SitemapCrawlerTests
 
 
     [Fact]
-    public async Task FindLinksAsync_Should_ReturnEmptyList_When_SitemapXmlDoesNotContainUrlElements()
+    public async Task FindLinksAsync_WhenSitemapXmlDoesNotContainUrlElements_ShouldReturnEmptyList()
     {
         // Arrange
         var sitemapUrl = _fixture.Create<Uri>().ToString();
@@ -63,7 +63,7 @@ public class SitemapCrawlerTests
         Assert.Empty(result);
     }
     [Fact]
-    public async Task FindLinksAsync_Should_ReturnLinks_When_SitemapXmlContainsUrlElements()
+    public async Task FindLinksAsync_WhenSitemapXmlContainsUrlElements_ShouldReturnLinks()
     {
         // Arrange
         var links = new List<LinkPerformance>
@@ -95,7 +95,7 @@ public class SitemapCrawlerTests
         Assert.Equal(links, result);
     }
     [Fact]
-    public async Task FindLinksAsync_Should_ReturnEmptyList_When_SitemapXmlIsEmpty()
+    public async Task FindLinksAsync_WhenSitemapXmlIsEmpty_ShouldReturnEmptyList()
     {
         // Arrange
         var sitemapUrl = _fixture.Create<Uri>().ToString();
@@ -111,7 +111,7 @@ public class SitemapCrawlerTests
         Assert.Empty(result);
     }
     [Fact]
-    public async Task FindLinksAsync_Should_ReturnEmptyList_When_SitemapXmlIsMalformed()
+    public async Task FindLinksAsync_WhenSitemapXmlIsMalformed_ShouldReturnEmptyList()
     {
         // Arrange
         var sitemapUrl = _fixture.Create<Uri>().ToString();
@@ -128,7 +128,7 @@ public class SitemapCrawlerTests
     }
 
     [Fact]
-    public async Task FindLinksAsync_Should_ReturnFilteredLinks_When_FilteredUrlsExist()
+    public async Task FindLinksAsync_WhenFilteredUrlsExist_ShouldReturnFilteredLinks()
     {
         // Arrange
         var sitemapUrl = _fixture.Create<Uri>().ToString();

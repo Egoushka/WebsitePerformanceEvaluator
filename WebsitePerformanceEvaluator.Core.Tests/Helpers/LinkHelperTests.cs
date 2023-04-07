@@ -21,7 +21,7 @@ public class LinkHelperTests
     [InlineData("https://example.com/", "/page", "https://example.com/page")]
     [InlineData("https://example.com", "/page", "https://example.com/page")]
     [InlineData("https://example.com", "page", "page")]
-    public void AddBaseUrl_Should_Add_BaseUrl_To_Links(string baseUrl, string link, string expected)
+    public void AddBaseUrl_ShouldAddBaseUrlToLinks(string baseUrl, string link, string expected)
     {
         // Arrange
         var links = new List<LinkPerformance>
@@ -39,7 +39,7 @@ public class LinkHelperTests
 
     [Theory]
     [InlineData("https://example.com")]
-    public void RemoveLastSlashFromLinks_Should_Remove_Last_Slash_From_Links(string baseUrl)
+    public void RemoveLastSlashFromLinks_LinksWithSlashAndWithoutInQuerry_ShouldRemoveLastSlashFromLinks(string baseUrl)
     {
         // Arrange
         var links = new List<LinkPerformance>
@@ -60,7 +60,7 @@ public class LinkHelperTests
     }
 
     [Fact]
-    public async Task AddResponseTimeAsync_Should_Add_Response_Time_To_Links()
+    public async Task AddResponseTimeAsync_ShouldAddResponseTimeToLinks()
     {
         // Arrange
         var links = new List<LinkPerformance>

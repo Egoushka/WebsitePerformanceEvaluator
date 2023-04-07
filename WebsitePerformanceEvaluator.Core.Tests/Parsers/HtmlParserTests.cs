@@ -21,7 +21,7 @@ public class HtmlParserTests
     }
 
     [Fact]
-    public async Task GetLinksAsync_Should_Return_List_With_Single_Link_When_Client_Returns_Null()
+    public async Task GetLinksAsync_WhenClientReturnsNull_ShouldReturnListWithSingleLink()
     {
         // Arrange
         var url = "https://example.com";
@@ -39,7 +39,7 @@ public class HtmlParserTests
     }
 
     [Fact]
-    public async Task GetLinksAsync_Should_Return_List_With_Single_Link_When_No_Links_Are_Found()
+    public async Task GetLinksAsync_WhenNoLinksAreFound_ShouldReturnListWithSingleLink()
     {
         // Arrange
         var url = "https://example.com";
@@ -57,7 +57,7 @@ public class HtmlParserTests
     }
 
     [Fact]
-    public async Task GetLinksAsync_Should_Return_List_When_Links_Found()
+    public async Task GetLinksAsync_WhenLinksFound_ShouldReturnList()
     {
         //Arrange
         var url = "https://example.com";

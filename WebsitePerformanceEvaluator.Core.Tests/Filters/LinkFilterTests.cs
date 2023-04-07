@@ -19,7 +19,7 @@ public class LinkFilterTests
     }
 
     [Fact]
-    public void FilterLinks_Should_Return_Empty_List_When_Given_Empty_List()
+    public void FilterLinks_WhenGivenEmptyList_ShouldReturnEmptyList()
     {
         // Arrange
         var baseUrl = "https://example.com/";
@@ -36,7 +36,7 @@ public class LinkFilterTests
     }
 
     [Fact]
-    public void FilterLinks_Should_Return_Empty_List_When_Given_Only_Invalid_Links()
+    public void FilterLinks_WhenGivenOnlyInvalidLinks_ShouldReturnEmptyList()
     {
         // Arrange
         var baseUrl = "https://example.com/";
@@ -59,7 +59,7 @@ public class LinkFilterTests
     }
 
     [Fact]
-    public void FilterLinks_Should_Return_Filtered_List_When_Given_Valid_Links()
+    public void FilterLinks_WhenGivenValidLinks_ShouldReturnFilteredList()
     {
         // Arrange
         var baseUrl = "https://example.com/";

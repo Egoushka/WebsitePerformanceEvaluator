@@ -31,7 +31,7 @@ public class WebsiteCrawlerTests
     }
 
     [Fact]
-    public async Task FindLinksAsync_Should_ReturnEmptyList_When_NoLinksFound()
+    public async Task FindLinksAsync_WhenNoLinksFound_ShouldReturnEmptyList()
     {
         // Arrange
         var url = "http://example.com/";
@@ -47,7 +47,7 @@ public class WebsiteCrawlerTests
     }
 
     [Fact]
-    public async Task FindLinksAsync_Should_ReturnLinks_When_LinksFound()
+    public async Task FindLinksAsync_WhenLinksFound_ShouldReturnLinks()
     {
         // Arrange
         var url = _fixture.Create<Uri>().ToString();
@@ -77,7 +77,7 @@ public class WebsiteCrawlerTests
     }
     
     [Fact]
-    public async Task FindLinksAsync_Should_ReturnLinks_WithResponseTime_When_Available()
+    public async Task FindLinksAsync_WhenAvailable_ShouldReturnLinksWithResponseTime()
     {
         // Arrange
         var url = _fixture.Create<Uri>().ToString();
