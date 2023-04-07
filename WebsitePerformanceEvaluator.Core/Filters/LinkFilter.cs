@@ -13,12 +13,6 @@ public class LinkFilter
 
     public IEnumerable<LinkPerformance> FilterLinks(IEnumerable<LinkPerformance> links, string baseUrl)
     {
-        return FilterLinks(links.Select(link => link.Link), baseUrl)
-            .Select(filteredLink => links.First(l => l.Link == filteredLink));
-    }
-
-    public IEnumerable<string> FilterLinks(IEnumerable<string> links, string baseUrl)
-    {
         links = links.Distinct();
         links = RemoveInvalidLinks(links);
         links = RemoveUnsupportedSchemes(links);
@@ -27,18 +21,18 @@ public class LinkFilter
         return links;
     }
 
-    private IEnumerable<string> RemoveInvalidLinks(IEnumerable<string> links)
+    private IEnumerable<LinkPerformance> RemoveInvalidLinks(IEnumerable<LinkPerformance> links)
     {
-        return links.Where(link => _validator.IsValidLink(link));
+        return links.Where(link => _validator.IsValidLink(link.Link));
     }
 
-    private IEnumerable<string> RemoveExternalLinks(IEnumerable<string> links, string baseUrl)
+    private IEnumerable<LinkPerformance> RemoveExternalLinks(IEnumerable<LinkPerformance> links, string baseUrl)
     {
-        return links.Where(link => CompareHosts(link, baseUrl) != string.Empty);
+        return links.Where(link => CompareHosts(link.Link, baseUrl) != string.Empty);
     }
-    private IEnumerable<string> RemoveUnsupportedSchemes(IEnumerable<string> links)
+    private IEnumerable<LinkPerformance> RemoveUnsupportedSchemes(IEnumerable<LinkPerformance> links)
     {
-        return links.Where(link => link.StartsWith(Uri.UriSchemeHttp) || link.StartsWith(Uri.UriSchemeHttps));
+        return links.Where(link => link.Link.StartsWith(Uri.UriSchemeHttp) || link.Link.StartsWith(Uri.UriSchemeHttps));
     }
     private string CompareHosts(string url, string baseUrl)
     {

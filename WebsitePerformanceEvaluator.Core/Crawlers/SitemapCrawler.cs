@@ -36,7 +36,7 @@ public class SitemapCrawler
         
         filteredUrls = _linkHelper.RemoveLastSlashFromLinks(filteredUrls);
 
-        var result = await AddTimeToLinksAsync(filteredUrls);
+        var result = await _linkHelper.AddTimeToLinksAsync(filteredUrls);
 
         return result;
     }
@@ -73,17 +73,5 @@ public class SitemapCrawler
         }
 
         return sitemapXmlDocument;
-    }
-    
-    private async Task<IEnumerable<LinkPerformance>> AddTimeToLinksAsync(IEnumerable<LinkPerformance> links)
-    {
-        foreach (var link in links)
-        {
-            var time = await _clientService.GetTimeResponseAsync(link.Link);
-            
-            link.TimeResponse = time;
-        }
-        
-        return links;
     }
 }

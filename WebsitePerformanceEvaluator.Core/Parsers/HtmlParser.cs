@@ -14,15 +14,16 @@ public class HtmlParser
 
     public async Task<IEnumerable<LinkPerformance>> GetLinksAsync(string url)
     {
-        var result = new List<LinkPerformance>();
-        var firstLink = new LinkPerformance
+        var result = new List<LinkPerformance>
         {
-            Link = url,
-            CrawlingLinkType = CrawlingLinkType.Website,
+            new()
+            {
+                Link = url,
+                CrawlingLinkType = CrawlingLinkType.Website,
+            }
         };
         
-        var doc = await _clientService.GetDocumentAsync(firstLink);
-        result.Add(firstLink);
+        var doc = await _clientService.GetDocumentAsync(result.First());
 
         var linkNodes = doc.DocumentNode.SelectNodes("//a[@href]");
 

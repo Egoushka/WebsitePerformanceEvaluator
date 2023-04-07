@@ -65,8 +65,6 @@ public class WebsiteCrawler
         }
         var result = (await Task.WhenAll(tasks)).SelectMany(item => item);
         
-        
-        
         return result;
     }
 

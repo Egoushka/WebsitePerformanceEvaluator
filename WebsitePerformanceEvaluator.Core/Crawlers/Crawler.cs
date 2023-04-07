@@ -17,8 +17,8 @@ public class Crawler
         var crawlingTask = Task.Run(() => _websiteCrawler.FindLinksAsync(url));
         var sitemapTask = Task.Run(() => _sitemapCrawler.FindLinksAsync(url));
 
-        var crawlingResult = (await crawlingTask).ToList();
-        var sitemapResult = (await sitemapTask).ToList();
+        var crawlingResult = await crawlingTask;
+        var sitemapResult = await sitemapTask;
         
         var matches = crawlingResult.Intersect(sitemapResult).Select(item => new LinkPerformance
         {
