@@ -30,6 +30,7 @@ public class WebsiteCrawler
             var normalizedLinks = NormalizeLinks(newLinks, url);
             
             var linksWithResponseTime = normalizedLinks.Where(item => item.TimeResponseMs.HasValue);
+            
             links.UnionWith(linksWithResponseTime);
 
             var linksToAddToQueue = normalizedLinks.Select(item => item.Link).Except(visitedLinks);
@@ -43,8 +44,7 @@ public class WebsiteCrawler
         return links;
     }
 
-    private async Task<IEnumerable<LinkPerformance>> CrawlQueueAsync(Queue<string> linksToVisit,
-        ICollection<string> visitedLinks)
+    private async Task<IEnumerable<LinkPerformance>> CrawlQueueAsync(Queue<string> linksToVisit, ICollection<string> visitedLinks)
     {
         var tasks = new List<Task<IEnumerable<LinkPerformance>>>();
 
