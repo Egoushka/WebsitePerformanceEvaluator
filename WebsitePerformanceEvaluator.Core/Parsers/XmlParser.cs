@@ -14,12 +14,11 @@ public class XmlParser
         {
             if (node["loc"] == null) continue;
 
-            var linkToAdd = new LinkPerformance
+            result.Add(new LinkPerformance
             {
                 Link = node["loc"].InnerText,
                 CrawlingLinkSource = CrawlingLinkSource.Sitemap
-            };
-            result.Add(linkToAdd);
+            });
         }
 
         return result;

@@ -80,7 +80,6 @@ public class TaskRunner
 
     private void PrintLinksWithTimeResponse(IEnumerable<LinkPerformance> linkPerformances)
     {
-
         var rowsList = linkPerformances
             .OrderBy(item => item.TimeResponseMs)
             .Select(x => new Tuple<string, long?>(x.Link, x.TimeResponseMs));
@@ -95,12 +94,13 @@ public class TaskRunner
     private void PrintAmountOfFoundLinks(IEnumerable<LinkPerformance> links)
     {
         var sitemapLinksCount = links.Count(l =>
-            l.CrawlingLinkSource == CrawlingLinkSource.Sitemap ||
+            l.CrawlingLinkSource == CrawlingLinkSource.Sitemap 
+            ||
             l.CrawlingLinkSource == CrawlingLinkSource.WebsiteAndSitemap);
 
-        var crawlingLinksCount =
-            links.Count(l =>
-                l.CrawlingLinkSource == CrawlingLinkSource.Website ||
+        var crawlingLinksCount = links.Count(l =>
+                l.CrawlingLinkSource == CrawlingLinkSource.Website 
+                ||
                 l.CrawlingLinkSource == CrawlingLinkSource.WebsiteAndSitemap);
 
         _consoleWrapper.WriteLine($"Links in sitemap: {sitemapLinksCount}");

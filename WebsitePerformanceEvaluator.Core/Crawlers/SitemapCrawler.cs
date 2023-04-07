@@ -36,9 +36,7 @@ public class SitemapCrawler
 
         filteredUrls = _linkHelper.RemoveLastSlashFromLinks(filteredUrls);
 
-        var result = await _linkHelper.AddResponseTimeAsync(filteredUrls);
-
-        return result;
+        return await _linkHelper.AddResponseTimeAsync(filteredUrls);
     }
 
     private async Task<XmlDocument> GetSitemapAsync(string url)
@@ -50,7 +48,10 @@ public class SitemapCrawler
 
         var result = await GetSitemapXmlAsync(sitemapUrl);
 
-        if (result.DocumentElement == null) result = new XmlDocument();
+        if (result.DocumentElement == null)
+        {
+            result = new XmlDocument();
+        }
 
         return result;
     }
