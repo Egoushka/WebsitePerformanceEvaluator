@@ -15,6 +15,7 @@ public class SitemapCrawler
     private readonly XmlParser _parser;
     private readonly LinkFilter _filter;
     private readonly LinkHelper _linkHelper;
+    
     public SitemapCrawler(ILogger logger, HttpClientService httpClientService, XmlParser xmlParser,
         LinkFilter linkFilter, LinkHelper linkHelper)
     {
@@ -31,7 +32,6 @@ public class SitemapCrawler
         var xmlSitemapList = sitemapXml.GetElementsByTagName("url");
 
         var urls = _parser.GetLinks(xmlSitemapList);
-
         var filteredUrls = _filter.FilterLinks(urls, url);
         
         filteredUrls = _linkHelper.RemoveLastSlashFromLinks(filteredUrls);
@@ -48,23 +48,25 @@ public class SitemapCrawler
 
         var sitemapUrl = $"{url}/sitemap.xml";
 
-        var sitemapXmlDocument = await GetSitemapXmlAsync(sitemapUrl);
+        var result = await GetSitemapXmlAsync(sitemapUrl);
 
-        if (sitemapXmlDocument.DocumentElement == null)
+        if (result.DocumentElement == null)
         {
-            sitemapXmlDocument = new XmlDocument();
+            result = new XmlDocument();
         }
         
-        return sitemapXmlDocument;
+        return result;
     }
 
     private async Task<XmlDocument> GetSitemapXmlAsync(string sitemapUrl)
     {
         var sitemapString = await _clientService.DownloadFileAsync(sitemapUrl);
-        var sitemapXmlDocument = new XmlDocument();
+        
+        var result = new XmlDocument();
+        
         try
         {
-            sitemapXmlDocument.LoadXml(sitemapString);
+            result.LoadXml(sitemapString);
         }
         catch (Exception)
         {
@@ -72,6 +74,6 @@ public class SitemapCrawler
             return new XmlDocument();
         }
 
-        return sitemapXmlDocument;
+        return result;
     }
 }

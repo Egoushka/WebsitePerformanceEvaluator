@@ -7,7 +7,7 @@ namespace WebsitePerformanceEvaluator;
 public class TaskRunner
 {
     private readonly Crawler _crawler;
-
+    
     public TaskRunner(Crawler crawler)
     {
         _crawler = crawler;
@@ -95,6 +95,7 @@ public class TaskRunner
 
         Console.WriteLine();
     }
+    
     private void PrintAmountOfFoundLinks(IEnumerable<LinkPerformance> links)
     {
      

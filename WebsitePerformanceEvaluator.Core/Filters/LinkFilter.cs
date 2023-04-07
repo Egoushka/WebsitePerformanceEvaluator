@@ -6,6 +6,7 @@ namespace WebsitePerformanceEvaluator.Core.Filters;
 public class LinkFilter
 {
     private readonly LinkValidator _validator;
+    
     public LinkFilter()
     {
         _validator = new LinkValidator();
@@ -30,10 +31,12 @@ public class LinkFilter
     {
         return links.Where(link => CompareHosts(link.Link, baseUrl) != string.Empty);
     }
+    
     private IEnumerable<LinkPerformance> RemoveUnsupportedSchemes(IEnumerable<LinkPerformance> links)
     {
         return links.Where(link => link.Link.StartsWith(Uri.UriSchemeHttp) || link.Link.StartsWith(Uri.UriSchemeHttps));
     }
+    
     private string CompareHosts(string url, string baseUrl)
     {
         var urlHost = GetHost(url);

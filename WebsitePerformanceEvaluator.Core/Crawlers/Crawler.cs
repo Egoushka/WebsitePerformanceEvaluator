@@ -7,6 +7,7 @@ public class Crawler
 {
     private readonly WebsiteCrawler _websiteCrawler;
     private readonly SitemapCrawler _sitemapCrawler;
+    
     public Crawler(WebsiteCrawler websiteCrawler, SitemapCrawler sitemapCrawler)
     {
         _websiteCrawler = websiteCrawler;
@@ -20,7 +21,8 @@ public class Crawler
         var crawlingResult = await crawlingTask;
         var sitemapResult = await sitemapTask;
         
-        var matches = crawlingResult.Intersect(sitemapResult).Select(item => new LinkPerformance
+        var matches = crawlingResult.Intersect(sitemapResult)
+            .Select(item => new LinkPerformance
         {
             Link = item.Link,
             CrawlingLinkType = CrawlingLinkType.Website | CrawlingLinkType.Sitemap,

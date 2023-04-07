@@ -7,6 +7,7 @@ namespace WebsitePerformanceEvaluator.Core.Parsers;
 public class HtmlParser
 {
     private readonly HttpClientService _clientService;
+    
     public HtmlParser(HttpClientService httpClientService)
     {
         _clientService = httpClientService;
