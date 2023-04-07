@@ -30,6 +30,7 @@ internal static class Program
         services.AddTransient<LinkValidator>();
         services.AddTransient<LinkHelper>();
         services.AddTransient<TaskRunner>();
+        services.AddTransient<ConsoleWrapper>();
         services.AddTransient<ILogger, ConsoleLogger>();
 
         var builder = new ContainerBuilder();

@@ -8,17 +8,19 @@ namespace WebsitePerformanceEvaluator;
 public class TaskRunner
 {
     private readonly Crawler _crawler;
+    private readonly ConsoleWrapper _consoleWrapper;
 
-    public TaskRunner(Crawler crawler)
+    public TaskRunner(Crawler crawler, ConsoleWrapper consoleWrapper)
     {
         _crawler = crawler;
+        _consoleWrapper = consoleWrapper;
     }
-
     public async Task Run()
     {
         var watch = Stopwatch.StartNew();
 
-        //var url = ConsoleHelper.GetInput("Enter url:");
+        //_consoleWrapper.WriteLine("Enter website url:");
+        //var url = _consoleWrapper.ReadLine();
         var url = "https://ukad-group.com/";
 
         watch.Start();
@@ -33,7 +35,7 @@ public class TaskRunner
         PrintAmountOfFoundLinks(links);
 
         watch.Stop();
-        Console.WriteLine($"Time elapsed: {watch.ElapsedMilliseconds / 1000} s");
+        _consoleWrapper.WriteLine($"Time elapsed: {watch.ElapsedMilliseconds / 1000} s");
     }
 
     private void PrintLinksInCrawlingNotInSitemap(IEnumerable<LinkPerformance> linkPerformances)
@@ -42,7 +44,7 @@ public class TaskRunner
             .Where(x => x.CrawlingLinkSource == CrawlingLinkSource.Website)
             .Select(x => x.Link);
 
-        Console.WriteLine("Links found after crawling website, but not in sitemap:");
+        _consoleWrapper.WriteLine("Links found after crawling website, but not in sitemap:");
 
         if (linksInCrawlingNotInSitemap.Any())
         {
@@ -50,10 +52,10 @@ public class TaskRunner
         }
         else
         {
-            Console.WriteLine("No links found");
+            _consoleWrapper.WriteLine("No links found");
         }
 
-        Console.WriteLine();
+        _consoleWrapper.WriteLine();
     }
 
     private void PrintLinksInSitemapNotInCrawling(IEnumerable<LinkPerformance> linkPerformances)
@@ -62,7 +64,7 @@ public class TaskRunner
                 .Where(link => link.CrawlingLinkSource == CrawlingLinkSource.Sitemap)
                 .Select(link => link.Link);
 
-        Console.WriteLine("Links in sitemap, that wasn't found after crawling:");
+        _consoleWrapper.WriteLine("Links in sitemap, that wasn't found after crawling:");
 
         if (linksInSitemapNotInCrawling.Any())
         {
@@ -70,10 +72,10 @@ public class TaskRunner
         }
         else
         {
-            Console.WriteLine("No links found");
+            _consoleWrapper.WriteLine("No links found");
         }
 
-        Console.WriteLine();
+        _consoleWrapper.WriteLine();
     }
 
     private void PrintLinksWithTimeResponse(IEnumerable<LinkPerformance> linkPerformances)
@@ -83,11 +85,11 @@ public class TaskRunner
             .OrderBy(item => item.TimeResponseMs)
             .Select(x => new Tuple<string, long>(x.Link, x.TimeResponseMs));
 
-        Console.WriteLine("Links with time response:");
+        _consoleWrapper.WriteLine("Links with time response:");
 
         ConsoleHelper.PrintTable(new List<string> { "Link", "Time(ms)" }, rowsList);
 
-        Console.WriteLine();
+        _consoleWrapper.WriteLine();
     }
 
     private void PrintAmountOfFoundLinks(IEnumerable<LinkPerformance> links)
@@ -101,9 +103,9 @@ public class TaskRunner
                 l.CrawlingLinkSource == CrawlingLinkSource.Website ||
                 l.CrawlingLinkSource == CrawlingLinkSource.WebsiteAndSitemap);
 
-        Console.WriteLine($"Links in sitemap: {sitemapLinksCount}");
-        Console.WriteLine($"Links after crawling: {crawlingLinksCount}");
+        _consoleWrapper.WriteLine($"Links in sitemap: {sitemapLinksCount}");
+        _consoleWrapper.WriteLine($"Links after crawling: {crawlingLinksCount}");
 
-        Console.WriteLine();
+        _consoleWrapper.WriteLine();
     }
 }
