@@ -14,7 +14,7 @@ public class TaskRunner
         _crawler = crawler;
     }
 
-    public async Task Start()
+    public async Task Run()
     {
         var watch = Stopwatch.StartNew();
 

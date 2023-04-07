@@ -29,7 +29,6 @@ internal static class Program
         services.AddTransient<LinkFilter>();
         services.AddTransient<LinkValidator>();
         services.AddTransient<LinkHelper>();
-        services.AddTransient<Application>();
         services.AddTransient<TaskRunner>();
         services.AddTransient<ILogger, ConsoleLogger>();
 
@@ -42,6 +41,6 @@ internal static class Program
 
     public static async Task Main()
     {
-        await CompositionRoot().Resolve<Application>().Run();
+        await CompositionRoot().Resolve<TaskRunner>().Run();
     }
 }
