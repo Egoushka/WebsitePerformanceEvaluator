@@ -2,9 +2,9 @@ using ConsoleTableExt;
 
 namespace WebsitePerformanceEvaluator;
 
-public static class ConsoleHelper
+public class ConsoleHelper
 {
-    public static void PrintTable(IEnumerable<string> headers, IEnumerable<string> rows)
+    public void PrintTable(IEnumerable<string> headers, IEnumerable<string> rows)
     {
         ConsoleTableBuilder
             .From(rows.ToList())
@@ -13,7 +13,7 @@ public static class ConsoleHelper
             .ExportAndWriteLine();
     }
 
-    public static void PrintTable(IEnumerable<string> headers, IEnumerable<Tuple<string, long?>> rows)
+    public void PrintTable(IEnumerable<string> headers, IEnumerable<Tuple<string, long?>> rows)
     {
         ConsoleTableBuilder
             .From(rows.ToList())

@@ -9,11 +9,13 @@ public class TaskRunner
 {
     private readonly Crawler _crawler;
     private readonly ConsoleWrapper _consoleWrapper;
+    private readonly ConsoleHelper _consoleHelper;
 
-    public TaskRunner(Crawler crawler, ConsoleWrapper consoleWrapper)
+    public TaskRunner(Crawler crawler, ConsoleWrapper consoleWrapper, ConsoleHelper consoleHelper)
     {
         _crawler = crawler;
         _consoleWrapper = consoleWrapper;
+        _consoleHelper = consoleHelper;
     }
     public async Task Run()
     {
@@ -48,7 +50,7 @@ public class TaskRunner
 
         if (linksInCrawlingNotInSitemap.Any())
         {
-            ConsoleHelper.PrintTable(new List<string> { "Link" }, linksInCrawlingNotInSitemap);
+            _consoleHelper.PrintTable(new List<string> { "Link" }, linksInCrawlingNotInSitemap);
         }
         else
         {
@@ -68,7 +70,7 @@ public class TaskRunner
 
         if (linksInSitemapNotInCrawling.Any())
         {
-            ConsoleHelper.PrintTable(new List<string> { "Link" }, linksInSitemapNotInCrawling);
+            _consoleHelper.PrintTable(new List<string> { "Link" }, linksInSitemapNotInCrawling);
         }
         else
         {
@@ -86,7 +88,7 @@ public class TaskRunner
 
         _consoleWrapper.WriteLine("Links with time response:");
 
-        ConsoleHelper.PrintTable(new List<string> { "Link", "Time(ms)" }, rowsList);
+        _consoleHelper.PrintTable(new List<string> { "Link", "Time(ms)" }, rowsList);
 
         _consoleWrapper.WriteLine();
     }

@@ -31,6 +31,7 @@ internal static class Program
         services.AddTransient<LinkHelper>();
         services.AddTransient<TaskRunner>();
         services.AddTransient<ConsoleWrapper>();
+        services.AddTransient<ConsoleHelper>();
         services.AddTransient<ILogger, ConsoleLogger>();
 
         var builder = new ContainerBuilder();
