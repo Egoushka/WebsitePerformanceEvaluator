@@ -4,5 +4,5 @@ public enum CrawlingLinkSource
 {
     Website,
     Sitemap,
-    WebsiteAndSitemap = Website | Sitemap
+    WebsiteAndSitemap
 }

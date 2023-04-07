@@ -93,16 +93,11 @@ public class TaskRunner
 
     private void PrintAmountOfFoundLinks(IEnumerable<LinkPerformance> links)
     {
-        var sitemapLinksCount = links.Count(l =>
-            l.CrawlingLinkSource == CrawlingLinkSource.Sitemap 
-            ||
-            l.CrawlingLinkSource == CrawlingLinkSource.WebsiteAndSitemap);
+        var countInBoth = links.Count(l => l.CrawlingLinkSource == CrawlingLinkSource.WebsiteAndSitemap);
 
-        var crawlingLinksCount = links.Count(l =>
-                l.CrawlingLinkSource == CrawlingLinkSource.Website 
-                ||
-                l.CrawlingLinkSource == CrawlingLinkSource.WebsiteAndSitemap);
-
+        var sitemapLinksCount = countInBoth + links.Count(l => l.CrawlingLinkSource == CrawlingLinkSource.Sitemap);
+        var crawlingLinksCount = countInBoth + links.Count(l => l.CrawlingLinkSource == CrawlingLinkSource.Website);
+        
         _consoleWrapper.WriteLine($"Links in sitemap: {sitemapLinksCount}");
         _consoleWrapper.WriteLine($"Links after crawling: {crawlingLinksCount}");
 
