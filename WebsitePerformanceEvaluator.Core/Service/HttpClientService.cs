@@ -54,7 +54,7 @@ public class HttpClientService
         return doc;
     }
 
-    public async Task<long> GetTimeResponseAsync(string url)
+    public virtual async Task<long> GetTimeResponseAsync(string url)
     {
         var stopWatch = new Stopwatch();
 
