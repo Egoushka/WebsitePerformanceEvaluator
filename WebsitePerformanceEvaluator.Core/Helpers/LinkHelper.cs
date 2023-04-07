@@ -35,7 +35,10 @@ public class LinkHelper
 
     public string AddBaseUrl(string link, string baseUrl)
     {
-        return link.StartsWith("/") ? baseUrl[..^1] + link : link;
+        if(baseUrl.EndsWith("/"))
+            baseUrl = baseUrl.Remove(baseUrl.Length - 1);
+       
+        return link.StartsWith("/") ? baseUrl + link : link;
     }
 
     public string RemoveLastSlashFromLink(string link)
