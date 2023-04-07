@@ -7,9 +7,9 @@ public class LinkFilter
 {
     private readonly LinkValidator _validator;
 
-    public LinkFilter()
+    public LinkFilter(LinkValidator validator)
     {
-        _validator = new LinkValidator();
+        _validator = validator;
     }
 
     public virtual IEnumerable<LinkPerformance> FilterLinks(IEnumerable<LinkPerformance> links, string baseUrl)
