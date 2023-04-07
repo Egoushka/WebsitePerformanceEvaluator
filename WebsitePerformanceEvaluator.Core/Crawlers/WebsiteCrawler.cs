@@ -28,11 +28,11 @@ public class WebsiteCrawler
         {
             var newLinks = await CrawlQueueAsync(linksToVisit, visitedLinks);
             var normalizedLinks = NormalizeLinks(newLinks, url);
+            
+            var linksWithResponseTime = normalizedLinks.Where(item => item.TimeResponseMs.HasValue);
+            links.UnionWith(linksWithResponseTime);
 
-            links.UnionWith(normalizedLinks.Where(item => item.TimeResponseMs > 0));
-
-            var linksToAddToQueue = normalizedLinks.Select(item => item.Link)
-                .Except(visitedLinks);
+            var linksToAddToQueue = normalizedLinks.Select(item => item.Link).Except(visitedLinks);
 
             foreach (var link in linksToAddToQueue)
             {
@@ -67,12 +67,10 @@ public class WebsiteCrawler
 
     private IEnumerable<LinkPerformance> NormalizeLinks(IEnumerable<LinkPerformance> links, string url)
     {
-        var linksWithTimeResponse = links.Where(item => item.TimeResponseMs > 0);
-        links = linksWithTimeResponse.Concat(links.Except(linksWithTimeResponse));
-
         links = links.Where(link => !string.IsNullOrEmpty(link.Link));
 
         links = _linkHelper.RemoveLastSlashFromLinks(links);
+        
         links = _linkHelper.AddBaseUrl(links, url);
 
         links = _linkFilter.FilterLinks(links, url);

@@ -83,7 +83,7 @@ public class TaskRunner
 
         var rowsList = linkPerformances
             .OrderBy(item => item.TimeResponseMs)
-            .Select(x => new Tuple<string, long>(x.Link, x.TimeResponseMs));
+            .Select(x => new Tuple<string, long?>(x.Link, x.TimeResponseMs));
 
         _consoleWrapper.WriteLine("Links with time response:");
 
