@@ -3,6 +3,7 @@ using Autofac.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection;
 using WebsitePerformanceEvaluator.Core.Crawlers;
 using WebsitePerformanceEvaluator.Core.Filters;
+using WebsitePerformanceEvaluator.Core.Helpers;
 using WebsitePerformanceEvaluator.Core.Interfaces;
 using WebsitePerformanceEvaluator.Core.Parsers;
 using WebsitePerformanceEvaluator.Core.Service;
@@ -27,6 +28,7 @@ internal static class Program
         services.AddTransient<XmlParser>();
         services.AddTransient<LinkFilter>();
         services.AddTransient<LinkValidator>();
+        services.AddTransient<LinkHelper>();
         services.AddTransient<Application>();
         services.AddTransient<TaskRunner>();
         services.AddTransient<ILogger, ConsoleLogger>();
