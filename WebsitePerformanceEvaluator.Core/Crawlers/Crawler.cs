@@ -26,7 +26,7 @@ public class Crawler
             .Select(item => new LinkPerformance
             {
                 Link = item.Link,
-                CrawlingLinkType = CrawlingLinkType.Website | CrawlingLinkType.Sitemap,
+                CrawlingLinkSource = CrawlingLinkSource.WebsiteAndSitemap,
                 TimeResponseMs = item.TimeResponseMs
             });
 

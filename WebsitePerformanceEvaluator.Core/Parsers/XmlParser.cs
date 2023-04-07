@@ -17,7 +17,7 @@ public class XmlParser
             var linkToAdd = new LinkPerformance
             {
                 Link = node["loc"].InnerText,
-                CrawlingLinkType = CrawlingLinkType.Sitemap
+                CrawlingLinkSource = CrawlingLinkSource.Sitemap
             };
             result.Add(linkToAdd);
         }
