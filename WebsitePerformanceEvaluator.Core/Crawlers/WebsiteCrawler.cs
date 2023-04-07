@@ -33,11 +33,8 @@ public class WebsiteCrawler
 
             var linksToAddToQueue = normalizedLinks.Select(item => item.Link)
                 .Except(visitedLinks);
-            
-            foreach (var link in linksToAddToQueue)
-            {
-                linksToVisit.Enqueue(link);
-            }
+
+            foreach (var link in linksToAddToQueue) linksToVisit.Enqueue(link);
         }
 
         return links;
@@ -60,11 +57,12 @@ public class WebsiteCrawler
 
                 return newLinks;
             });
-            
+
             tasks.Add(task);
         }
+
         var result = (await Task.WhenAll(tasks)).SelectMany(item => item);
-        
+
         return result;
     }
 
@@ -72,14 +70,14 @@ public class WebsiteCrawler
     {
         var linksWithTimeResponse = links.Where(item => item.TimeResponse > 0);
         links = linksWithTimeResponse.Concat(links.Except(linksWithTimeResponse));
-        
+
         links = links.Where(link => !string.IsNullOrEmpty(link.Link));
-            
+
         links = _linkHelper.RemoveLastSlashFromLinks(links);
         links = _linkHelper.AddBaseUrl(links, url);
-        
+
         links = _linkFilter.FilterLinks(links, url);
-        
+
         return links;
     }
 }

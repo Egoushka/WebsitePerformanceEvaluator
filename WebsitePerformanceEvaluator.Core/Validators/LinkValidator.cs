@@ -6,7 +6,7 @@ public class LinkValidator
     {
         var doesNotContainAnchor = !link.Contains('#');
         var doesNotContainAttributes = !link.Contains('?');
-        
+
         return doesNotContainAnchor && doesNotContainAttributes;
     }
 }

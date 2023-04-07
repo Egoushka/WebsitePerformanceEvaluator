@@ -10,12 +10,12 @@ namespace WebsitePerformanceEvaluator.Core.Crawlers;
 
 public class SitemapCrawler
 {
-    private readonly ILogger _logger;
     private readonly HttpClientService _clientService;
-    private readonly XmlParser _parser;
     private readonly LinkFilter _filter;
     private readonly LinkHelper _linkHelper;
-    
+    private readonly ILogger _logger;
+    private readonly XmlParser _parser;
+
     public SitemapCrawler(ILogger logger, HttpClientService httpClientService, XmlParser xmlParser,
         LinkFilter linkFilter, LinkHelper linkHelper)
     {
@@ -33,7 +33,7 @@ public class SitemapCrawler
 
         var urls = _parser.GetLinks(xmlSitemapList);
         var filteredUrls = _filter.FilterLinks(urls, url);
-        
+
         filteredUrls = _linkHelper.RemoveLastSlashFromLinks(filteredUrls);
 
         var result = await _linkHelper.AddTimeToLinksAsync(filteredUrls);
@@ -50,20 +50,17 @@ public class SitemapCrawler
 
         var result = await GetSitemapXmlAsync(sitemapUrl);
 
-        if (result.DocumentElement == null)
-        {
-            result = new XmlDocument();
-        }
-        
+        if (result.DocumentElement == null) result = new XmlDocument();
+
         return result;
     }
 
     private async Task<XmlDocument> GetSitemapXmlAsync(string sitemapUrl)
     {
         var sitemapString = await _clientService.DownloadFileAsync(sitemapUrl);
-        
+
         var result = new XmlDocument();
-        
+
         try
         {
             result.LoadXml(sitemapString);

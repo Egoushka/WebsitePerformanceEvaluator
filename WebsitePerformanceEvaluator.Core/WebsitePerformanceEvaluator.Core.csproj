@@ -7,13 +7,13 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="8.0.0" />
-      <PackageReference Include="CommunityToolkit.HighPerformance" Version="8.1.0" />
-      <PackageReference Include="HtmlAgilityPack" Version="1.11.46" />
-      <PackageReference Include="Microsoft.Extensions.Caching.Abstractions" Version="8.0.0-preview.1.23110.8" />
-      <PackageReference Include="Microsoft.Extensions.Http" Version="8.0.0-preview.1.23110.8" />
-      <PackageReference Include="System.Linq.Async" Version="6.0.1" />
-      <PackageReference Include="System.ServiceModel.Primitives" Version="6.0.0-preview1.23060.3" />
+        <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="8.0.0"/>
+        <PackageReference Include="CommunityToolkit.HighPerformance" Version="8.1.0"/>
+        <PackageReference Include="HtmlAgilityPack" Version="1.11.46"/>
+        <PackageReference Include="Microsoft.Extensions.Caching.Abstractions" Version="8.0.0-preview.1.23110.8"/>
+        <PackageReference Include="Microsoft.Extensions.Http" Version="8.0.0-preview.1.23110.8"/>
+        <PackageReference Include="System.Linq.Async" Version="6.0.1"/>
+        <PackageReference Include="System.ServiceModel.Primitives" Version="6.0.0-preview1.23060.3"/>
     </ItemGroup>
 
 </Project>

@@ -13,11 +13,11 @@ public class XmlParser
         foreach (XmlNode node in xmlList)
         {
             if (node["loc"] == null) continue;
-            
+
             var linkToAdd = new LinkPerformance
             {
                 Link = node["loc"].InnerText,
-                CrawlingLinkType = CrawlingLinkType.Sitemap,
+                CrawlingLinkType = CrawlingLinkType.Sitemap
             };
             result.Add(linkToAdd);
         }

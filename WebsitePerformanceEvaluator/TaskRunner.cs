@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using WebsitePerformanceEvaluator.Core.Crawlers;
 using WebsitePerformanceEvaluator.Core.Models;
 using WebsitePerformanceEvaluator.Core.Models.Enums;
@@ -7,7 +8,7 @@ namespace WebsitePerformanceEvaluator;
 public class TaskRunner
 {
     private readonly Crawler _crawler;
-    
+
     public TaskRunner(Crawler crawler)
     {
         _crawler = crawler;
@@ -15,7 +16,7 @@ public class TaskRunner
 
     public async Task Start()
     {
-        var watch = System.Diagnostics.Stopwatch.StartNew();
+        var watch = Stopwatch.StartNew();
 
         //var url = ConsoleHelper.GetInput("Enter url:");
         var url = "https://ukad-group.com/";
@@ -26,11 +27,11 @@ public class TaskRunner
 
         PrintLinksInCrawlingNotInSitemap(links);
         PrintLinksInSitemapNotInCrawling(links);
-        
+
         PrintLinksWithTimeResponse(links);
-        
+
         PrintAmountOfFoundLinks(links);
-        
+
         watch.Stop();
         Console.WriteLine($"Time elapsed: {watch.ElapsedMilliseconds / 1000} s");
     }
@@ -47,13 +48,9 @@ public class TaskRunner
         Console.WriteLine("Links found after crawling website, but not in sitemap:");
 
         if (linksInCrawlingNotInSitemap.Any())
-        {
             ConsoleHelper.PrintTable(new List<string> { "Link" }, linksInCrawlingNotInSitemap);
-        }
         else
-        {
             Console.WriteLine("No links found");
-        }
 
         Console.WriteLine();
     }
@@ -70,13 +67,9 @@ public class TaskRunner
         Console.WriteLine("Links in sitemap, that wasn't found after crawling:");
 
         if (linksInSitemapNotInCrawling.Any())
-        {
             ConsoleHelper.PrintTable(new List<string> { "Link" }, linksInSitemapNotInCrawling);
-        }
         else
-        {
             Console.WriteLine("No links found");
-        }
 
         Console.WriteLine();
     }
@@ -95,10 +88,9 @@ public class TaskRunner
 
         Console.WriteLine();
     }
-    
+
     private void PrintAmountOfFoundLinks(IEnumerable<LinkPerformance> links)
     {
-     
         var sitemapLinksCount =
             links.Count(l => (l.CrawlingLinkType & CrawlingLinkType.Sitemap) == CrawlingLinkType.Sitemap);
 
@@ -107,7 +99,7 @@ public class TaskRunner
 
         Console.WriteLine($"Links in sitemap: {sitemapLinksCount}");
         Console.WriteLine($"Links after crawling: {crawlingLinksCount}");
-        
+
         Console.WriteLine();
     }
 }
