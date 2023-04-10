@@ -39,7 +39,7 @@ public class LinkHelperTests
 
     [Theory]
     [InlineData("https://example.com")]
-    public void RemoveLastSlashFromLinks_LinksWithSlashAndWithoutInQuerry_ShouldRemoveLastSlashFromLinks(string baseUrl)
+    public void RemoveLastSlashFromLinks_ShouldRemoveLastSlashFromLinks(string baseUrl)
     {
         // Arrange
         var links = new List<LinkPerformance>
@@ -63,13 +63,13 @@ public class LinkHelperTests
     public async Task AddResponseTimeAsync_ShouldAddResponseTimeToLinks()
     {
         // Arrange
+        var expectedTimes = new[] { 100, 200, 300 };
         var links = new List<LinkPerformance>
         {
             new() { Link = "https://example.com" },
             new() { Link = "https://example.com/page" },
             new() { Link = "https://example.com/contact" }
         };
-        var expectedTimes = new[] { 100, 200, 300 };
         _httpClientServiceMock.Setup(x => x.GetTimeResponseAsync(It.IsAny<string>())).ReturnsAsync((string url) =>
         {
             return url switch
@@ -85,9 +85,6 @@ public class LinkHelperTests
 
         // Assert
         Assert.Equal(3, result.Count);
-        for (var i = 0; i < result.Count; i++)
-        {
-            Assert.Equal(expectedTimes[i], result[i].TimeResponseMs);
-        }
+        Assert.All(result, link => Assert.Equal(expectedTimes[result.IndexOf(link)], link.TimeResponseMs));
     }
 }

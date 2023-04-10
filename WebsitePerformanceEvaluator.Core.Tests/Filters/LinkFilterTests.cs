@@ -59,7 +59,7 @@ public class LinkFilterTests
     }
 
     [Fact]
-    public void FilterLinks_WhenGivenValidLinks_ShouldReturnFilteredList()
+    public void FilterLinks_WhenGivenLinks_ShouldReturnFilteredList()
     {
         // Arrange
         var baseUrl = "https://example.com/";

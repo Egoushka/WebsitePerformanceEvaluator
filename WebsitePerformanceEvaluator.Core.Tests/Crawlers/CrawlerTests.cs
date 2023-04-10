@@ -66,7 +66,6 @@ public class CrawlerTests
         var result = await _crawler.CrawlWebsiteAndSitemapAsync(websiteUrl);
 
         // Assert
-        Assert.Equal(expectedSitemapLinks.Count(), result.Count());
         Assert.Equal(expectedSitemapLinks, result);
     }
     
@@ -84,7 +83,6 @@ public class CrawlerTests
         var result = await _crawler.CrawlWebsiteAndSitemapAsync(websiteUrl);
 
         // Assert
-        Assert.Equal(expectedWebsiteLinks.Count(), result.Count());
         Assert.Equal(expectedWebsiteLinks, result);
     }
     

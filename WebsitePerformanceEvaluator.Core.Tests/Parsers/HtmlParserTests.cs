@@ -75,5 +75,4 @@ public class HtmlParserTests
         Assert.NotNull(result);
         Assert.Equal(3, result.Count);
     }
-
 }

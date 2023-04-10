@@ -56,6 +56,7 @@ namespace WebsitePerformanceEvaluator.Core.Tests.Services
             // Assert
             Assert.Equal(expectedDoc.DocumentNode.OuterHtml, result.DocumentNode.OuterHtml);
         }
+        
         [Fact]
         public async Task GetDocumentAsync_ShouldReturnEmptyHtmlDocument_WhenMediaTypeIsNotHtml()
         {
