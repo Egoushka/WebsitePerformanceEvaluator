@@ -1,19 +1,19 @@
+using AutoFixture;
+using Moq;
 using WebsitePerformanceEvaluator.Core.Crawlers;
 using WebsitePerformanceEvaluator.Core.Models;
 using WebsitePerformanceEvaluator.Core.Models.Enums;
-using AutoFixture;
 using Xunit;
-using Moq;
 
 namespace WebsitePerformanceEvaluator.Core.Tests.Crawlers;
 
 public class CrawlerTests
 {
-    private readonly Mock<WebsiteCrawler> _websiteCrawlerMock;
-    private readonly Mock<SitemapCrawler> _sitemapCrawlerMock;
     private readonly Crawler _crawler;
     private readonly Fixture _fixture;
-    
+    private readonly Mock<SitemapCrawler> _sitemapCrawlerMock;
+    private readonly Mock<WebsiteCrawler> _websiteCrawlerMock;
+
     public CrawlerTests()
     {
         _websiteCrawlerMock = new Mock<WebsiteCrawler>();
@@ -21,19 +21,19 @@ public class CrawlerTests
         _crawler = new Crawler(_websiteCrawlerMock.Object, _sitemapCrawlerMock.Object);
         _fixture = new Fixture();
     }
-    
+
     [Fact]
     public async Task CrawlWebsiteAndSitemapAsync_WhenNoneReturnEmptyList_ReturnsAllLinksAndCheckThem()
     {
         // Arrange
         var expectedWebsiteLinks = GetExpectedLinks(CrawlingLinkSource.Website, 3);
         var expectedSitemapLinks = GetExpectedLinks(CrawlingLinkSource.Sitemap, 3);
-        
+
         _websiteCrawlerMock.Setup(x => x.FindLinksAsync(It.IsAny<string>()))
             .ReturnsAsync(expectedWebsiteLinks);
         _sitemapCrawlerMock.Setup(x => x.FindLinksAsync(It.IsAny<string>()))
             .ReturnsAsync(expectedSitemapLinks);
-        
+
         // Act
         var result = await _crawler.CrawlWebsiteAndSitemapAsync(_fixture.Create<string>());
 
@@ -51,14 +51,14 @@ public class CrawlerTests
         var sitemapLinks = result.Where(x => x.CrawlingLinkSource == CrawlingLinkSource.Sitemap);
         Assert.Equal(expectedSitemapLinks.Except(expectedWebsiteLinks).Count(), sitemapLinks.Count());
     }
-    
+
     [Fact]
     public async Task CrawlWebsiteAndSitemapAsync_WhenWebsiteCrawlerReturnsEmptyList_ReturnsSitemapLinksOnly()
     {
         // Arrange
         var websiteUrl = _fixture.Create<string>();
         var expectedSitemapLinks = GetExpectedLinks(CrawlingLinkSource.Sitemap, 3);
-        
+
         _websiteCrawlerMock.Setup(x => x.FindLinksAsync(websiteUrl)).ReturnsAsync(new List<LinkPerformance>());
         _sitemapCrawlerMock.Setup(x => x.FindLinksAsync(websiteUrl)).ReturnsAsync(expectedSitemapLinks);
 
@@ -68,14 +68,14 @@ public class CrawlerTests
         // Assert
         Assert.Equal(expectedSitemapLinks, result);
     }
-    
+
     [Fact]
     public async Task CrawlWebsiteAndSitemapAsync_WhenSitemapCrawlerReturnsEmptyList_ReturnsWebsiteLinksOnly()
     {
         // Arrange
         var websiteUrl = _fixture.Create<string>();
         var expectedWebsiteLinks = GetExpectedLinks(CrawlingLinkSource.Website, 3);
-        
+
         _websiteCrawlerMock.Setup(x => x.FindLinksAsync(websiteUrl)).ReturnsAsync(expectedWebsiteLinks);
         _sitemapCrawlerMock.Setup(x => x.FindLinksAsync(websiteUrl)).ReturnsAsync(new List<LinkPerformance>());
 
@@ -85,7 +85,7 @@ public class CrawlerTests
         // Assert
         Assert.Equal(expectedWebsiteLinks, result);
     }
-    
+
     [Fact]
     public async Task CrawlWebsiteAndSitemapAsync_WhenCalled_CallsFindLinksAsyncWithCorrectUrl()
     {
@@ -99,7 +99,7 @@ public class CrawlerTests
         _websiteCrawlerMock.Verify(x => x.FindLinksAsync(url), Times.Once);
         _sitemapCrawlerMock.Verify(x => x.FindLinksAsync(url), Times.Once);
     }
-    
+
     [Fact]
     public async Task CrawlWebsiteAndSitemapAsync_WhenCrawlersReturnEmptyLists_ReturnsEmptyList()
     {
@@ -118,7 +118,7 @@ public class CrawlerTests
         // Assert
         Assert.Empty(result);
     }
-    
+
     [Fact]
     public async Task CrawlWebsiteAndSitemapAsync_WhenCrawlersThrowException_ThrowsException()
     {
@@ -134,7 +134,7 @@ public class CrawlerTests
         // Act & Assert
         await Assert.ThrowsAsync<Exception>(() => _crawler.CrawlWebsiteAndSitemapAsync(url));
     }
-    
+
     private IEnumerable<LinkPerformance> GetExpectedLinks(CrawlingLinkSource source, int count)
     {
         return _fixture.Build<LinkPerformance>()

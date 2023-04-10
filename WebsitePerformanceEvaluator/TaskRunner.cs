@@ -7,9 +7,9 @@ namespace WebsitePerformanceEvaluator;
 
 public class TaskRunner
 {
-    private readonly Crawler _crawler;
-    private readonly ConsoleWrapper _consoleWrapper;
     private readonly ConsoleHelper _consoleHelper;
+    private readonly ConsoleWrapper _consoleWrapper;
+    private readonly Crawler _crawler;
 
     public TaskRunner(Crawler crawler, ConsoleWrapper consoleWrapper, ConsoleHelper consoleHelper)
     {
@@ -17,6 +17,7 @@ public class TaskRunner
         _consoleWrapper = consoleWrapper;
         _consoleHelper = consoleHelper;
     }
+
     public async Task Run()
     {
         var watch = Stopwatch.StartNew();
@@ -49,13 +50,9 @@ public class TaskRunner
         _consoleWrapper.WriteLine("Links found after crawling website, but not in sitemap:");
 
         if (linksInCrawlingNotInSitemap.Any())
-        {
             _consoleHelper.PrintTable(new List<string> { "Link" }, linksInCrawlingNotInSitemap);
-        }
         else
-        {
             _consoleWrapper.WriteLine("No links found");
-        }
 
         _consoleWrapper.WriteLine();
     }
@@ -63,19 +60,15 @@ public class TaskRunner
     private void PrintLinksInSitemapNotInCrawling(IEnumerable<LinkPerformance> linkPerformances)
     {
         var linksInSitemapNotInCrawling = linkPerformances
-                .Where(link => link.CrawlingLinkSource == CrawlingLinkSource.Sitemap)
-                .Select(link => link.Link);
+            .Where(link => link.CrawlingLinkSource == CrawlingLinkSource.Sitemap)
+            .Select(link => link.Link);
 
         _consoleWrapper.WriteLine("Links in sitemap, that wasn't found after crawling:");
 
         if (linksInSitemapNotInCrawling.Any())
-        {
             _consoleHelper.PrintTable(new List<string> { "Link" }, linksInSitemapNotInCrawling);
-        }
         else
-        {
             _consoleWrapper.WriteLine("No links found");
-        }
 
         _consoleWrapper.WriteLine();
     }
@@ -99,7 +92,7 @@ public class TaskRunner
 
         var sitemapLinksCount = countInBoth + links.Count(l => l.CrawlingLinkSource == CrawlingLinkSource.Sitemap);
         var crawlingLinksCount = countInBoth + links.Count(l => l.CrawlingLinkSource == CrawlingLinkSource.Website);
-        
+
         _consoleWrapper.WriteLine($"Links in sitemap: {sitemapLinksCount}");
         _consoleWrapper.WriteLine($"Links after crawling: {crawlingLinksCount}");
 

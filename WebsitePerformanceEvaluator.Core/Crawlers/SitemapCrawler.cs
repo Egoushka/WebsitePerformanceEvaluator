@@ -15,7 +15,10 @@ public class SitemapCrawler
     private readonly LinkHelper _linkHelper;
     private readonly ILogger _logger;
     private readonly XmlParser _parser;
-    public SitemapCrawler(){}
+
+    public SitemapCrawler()
+    {
+    }
 
     public SitemapCrawler(ILogger logger, HttpClientService httpClientService, XmlParser xmlParser,
         LinkFilter linkFilter, LinkHelper linkHelper)
@@ -49,10 +52,7 @@ public class SitemapCrawler
 
         var result = await GetSitemapXmlAsync(sitemapUrl);
 
-        if (result.DocumentElement == null)
-        {
-            result = new XmlDocument();
-        }
+        if (result.DocumentElement == null) result = new XmlDocument();
 
         return result;
     }

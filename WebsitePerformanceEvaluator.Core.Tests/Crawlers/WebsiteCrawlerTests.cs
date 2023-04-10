@@ -11,18 +11,17 @@ namespace WebsitePerformanceEvaluator.Core.Tests.Crawlers;
 
 public class WebsiteCrawlerTests
 {
+    private readonly WebsiteCrawler _crawler;
     private readonly Fixture _fixture;
 
     private readonly Mock<HtmlParser> _htmlParserMock;
     private readonly Mock<LinkFilter> _linkFilterMock;
     private readonly Mock<LinkHelper> _linkHelperMock;
 
-    private readonly WebsiteCrawler _crawler;
-
     public WebsiteCrawlerTests()
     {
         _fixture = new Fixture();
-        
+
         _htmlParserMock = new Mock<HtmlParser>();
         _linkFilterMock = new Mock<LinkFilter>();
         _linkHelperMock = new Mock<LinkHelper>();
@@ -52,7 +51,7 @@ public class WebsiteCrawlerTests
         // Arrange
         var url = _fixture.Create<Uri>().ToString();
         var links = _fixture.CreateMany<LinkPerformance>().ToList();
-        
+
         _htmlParserMock
             .Setup(x => x.GetLinksAsync(url))
             .ReturnsAsync(links);
@@ -75,7 +74,7 @@ public class WebsiteCrawlerTests
         // Assert
         Assert.Equal(links, result);
     }
-    
+
     [Fact]
     public async Task FindLinksAsync_WhenAvailable_ShouldReturnLinksWithResponseTime()
     {

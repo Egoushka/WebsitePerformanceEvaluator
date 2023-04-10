@@ -9,12 +9,11 @@ using Xunit;
 
 namespace WebsitePerformanceEvaluator.Core.Tests.Parsers;
 
-
 public class HtmlParserTests
 {
-    private readonly Mock<HttpClientService> _httpClientServiceMock;
-    private readonly HtmlParser _htmlParser;
     private readonly Fixture _fixture;
+    private readonly HtmlParser _htmlParser;
+    private readonly Mock<HttpClientService> _httpClientServiceMock;
 
     public HtmlParserTests()
     {
@@ -64,16 +63,17 @@ public class HtmlParserTests
     {
         //Arrange
         var url = _fixture.Create<Uri>().ToString();
-        
+
         var htmlDocument = new HtmlDocument();
-        htmlDocument.LoadHtml("<html><body><a href=\"https://example.com/1\">1</a><a href=\"https://example.com/2\">2</a></body></html>");
-        
+        htmlDocument.LoadHtml(
+            "<html><body><a href=\"https://example.com/1\">1</a><a href=\"https://example.com/2\">2</a></body></html>");
+
         _httpClientServiceMock.Setup(service => service.GetDocumentAsync(It.IsAny<LinkPerformance>()))
             .ReturnsAsync(htmlDocument);
-        
+
         //Act
         var result = (await _htmlParser.GetLinksAsync(url)).ToList();
-        
+
         //Assert
         Assert.NotNull(result);
         Assert.Equal(3, result.Count);

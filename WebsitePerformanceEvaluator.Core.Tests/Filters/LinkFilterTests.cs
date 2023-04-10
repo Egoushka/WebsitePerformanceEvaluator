@@ -8,13 +8,13 @@ namespace WebsitePerformanceEvaluator.Core.Tests.Filters;
 
 public class LinkFilterTests
 {
-    private readonly Mock<LinkValidator> _validatorMock;
     private readonly LinkFilter _linkFilter;
+    private readonly Mock<LinkValidator> _validatorMock;
 
     public LinkFilterTests()
     {
         _validatorMock = new Mock<LinkValidator>();
-        
+
         _linkFilter = new LinkFilter(_validatorMock.Object);
     }
 
@@ -23,7 +23,7 @@ public class LinkFilterTests
     {
         // Arrange
         var baseUrl = "https://example.com/";
-        
+
         _validatorMock
             .Setup(x => x.IsValidLink(It.IsAny<string>()))
             .Returns(true);
@@ -44,9 +44,9 @@ public class LinkFilterTests
         {
             new() { Link = "ftp://example.com" },
             new() { Link = "mailto:me@example.com" },
-            new() { Link = "javascript:alert('hello world')" },
+            new() { Link = "javascript:alert('hello world')" }
         };
-        
+
         _validatorMock
             .Setup(x => x.IsValidLink(It.IsAny<string>()))
             .Returns(false);

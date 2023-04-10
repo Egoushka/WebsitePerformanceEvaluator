@@ -6,9 +6,11 @@ namespace WebsitePerformanceEvaluator.Core.Parsers;
 
 public class HtmlParser
 {
-    public HtmlParser(){}
-
     private readonly HttpClientService _clientService;
+
+    public HtmlParser()
+    {
+    }
 
     public HtmlParser(HttpClientService httpClientService)
     {
@@ -31,13 +33,11 @@ public class HtmlParser
         var linkNodes = doc.DocumentNode.SelectNodes("//a[@href]");
 
         if (linkNodes != null)
-        {
             result.AddRange(linkNodes.Select(linkNode => new LinkPerformance
             {
                 Link = linkNode.Attributes["href"].Value,
                 CrawlingLinkSource = CrawlingLinkSource.Website
             }));
-        }
 
         return result;
     }

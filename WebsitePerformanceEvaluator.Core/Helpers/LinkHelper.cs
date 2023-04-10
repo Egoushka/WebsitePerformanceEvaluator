@@ -6,7 +6,10 @@ namespace WebsitePerformanceEvaluator.Core.Helpers;
 public class LinkHelper
 {
     private readonly HttpClientService _clientService;
-    public LinkHelper(){}
+
+    public LinkHelper()
+    {
+    }
 
     public LinkHelper(HttpClientService httpClientService)
     {
@@ -15,29 +18,25 @@ public class LinkHelper
 
     public virtual IEnumerable<LinkPerformance> AddBaseUrl(IEnumerable<LinkPerformance> links, string baseUrl)
     {
-        foreach (var link in links)
-        {
-            link.Link = AddBaseUrl(link.Link, baseUrl);
-        }
+        foreach (var link in links) link.Link = AddBaseUrl(link.Link, baseUrl);
 
         return links;
     }
 
     public virtual IEnumerable<LinkPerformance> RemoveLastSlashFromLinks(IEnumerable<LinkPerformance> links)
     {
-        foreach (var link in links)
-        {
-            link.Link = RemoveLastSlashFromLink(link.Link);
-        }
+        foreach (var link in links) link.Link = RemoveLastSlashFromLink(link.Link);
 
         return links;
     }
 
     public string AddBaseUrl(string link, string baseUrl)
     {
-        if(baseUrl.EndsWith("/"))
+        if (baseUrl.EndsWith("/"))
+        {
             baseUrl = baseUrl.Remove(baseUrl.Length - 1);
-       
+        }
+
         return link.StartsWith("/") ? baseUrl + link : link;
     }
 
