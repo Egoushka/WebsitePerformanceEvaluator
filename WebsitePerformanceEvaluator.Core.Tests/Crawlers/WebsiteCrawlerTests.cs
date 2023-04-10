@@ -34,7 +34,7 @@ public class WebsiteCrawlerTests
     public async Task FindLinksAsync_WhenNoLinksFound_ShouldReturnEmptyList()
     {
         // Arrange
-        var url = "http://example.com/";
+        var url = _fixture.Create<Uri>().ToString();
         _htmlParserMock
             .Setup(x => x.GetLinksAsync(url))
             .ReturnsAsync(new List<LinkPerformance>());

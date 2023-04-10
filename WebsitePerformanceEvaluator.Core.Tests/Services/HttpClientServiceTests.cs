@@ -8,79 +8,78 @@ using WebsitePerformanceEvaluator.Core.Models;
 using WebsitePerformanceEvaluator.Core.Service;
 using Xunit;
 
-namespace WebsitePerformanceEvaluator.Core.Tests.Services
+namespace WebsitePerformanceEvaluator.Core.Tests.Services;
+
+public class HttpClientServiceTests
 {
-    public class HttpClientServiceTests
+    private readonly HttpClientService _httpClientService;
+    private readonly Mock<ILogger> _loggerMock;
+    private readonly Mock<HttpMessageHandler> _httpMessageHandlerMock;
+
+    public HttpClientServiceTests()
     {
-        private readonly HttpClientService _httpClientService;
-        private readonly Mock<ILogger> _loggerMock;
-        private readonly Mock<HttpMessageHandler> _httpMessageHandlerMock;
+        _httpMessageHandlerMock = new Mock<HttpMessageHandler>(MockBehavior.Strict);
+            
+        var httpClientFactoryMock = new Mock<IHttpClientFactory>();
+        var httpClientMock = new Mock<HttpClient>(_httpMessageHandlerMock.Object);
+            
+        httpClientMock.Object.DefaultRequestHeaders.Clear();
+        httpClientMock.Object.DefaultRequestHeaders.Add("User-Agent", "HttpClientServiceTests");
+        httpClientFactoryMock.Setup(_ => _.CreateClient(It.IsAny<string>())).Returns(httpClientMock.Object);
+            
+        _loggerMock = new Mock<ILogger>();
+        _httpClientService = new HttpClientService(httpClientFactoryMock.Object, _loggerMock.Object);
+    }
 
-        public HttpClientServiceTests()
+    [Fact]
+    public async Task GetDocumentAsync_ShouldReturnHtmlDocument_WhenGivenValidLink()
+    {
+        // Arrange
+        var expectedHtml = "<html><head></head><body><h1>Hello World!</h1></body></html>";
+        var linkPerformance = new LinkPerformance { Link = "https://example.com" };
+            
+        var httpResponse = new HttpResponseMessage(HttpStatusCode.OK)
         {
-            _httpMessageHandlerMock = new Mock<HttpMessageHandler>(MockBehavior.Strict);
-            
-            var httpClientFactoryMock = new Mock<IHttpClientFactory>();
-            var httpClientMock = new Mock<HttpClient>(_httpMessageHandlerMock.Object);
-            
-            httpClientMock.Object.DefaultRequestHeaders.Clear();
-            httpClientMock.Object.DefaultRequestHeaders.Add("User-Agent", "HttpClientServiceTests");
-            httpClientFactoryMock.Setup(_ => _.CreateClient(It.IsAny<string>())).Returns(httpClientMock.Object);
-            
-            _loggerMock = new Mock<ILogger>();
-            _httpClientService = new HttpClientService(httpClientFactoryMock.Object, _loggerMock.Object);
-        }
+            Content = new StringContent(expectedHtml, Encoding.UTF8, "text/html")
+        };
 
-        [Fact]
-        public async Task GetDocumentAsync_ShouldReturnHtmlDocument_WhenGivenValidLink()
-        {
-            // Arrange
-            var expectedHtml = "<html><head></head><body><h1>Hello World!</h1></body></html>";
-            var linkPerformance = new LinkPerformance { Link = "https://example.com" };
+        _httpMessageHandlerMock.Protected()
+            .Setup<Task<HttpResponseMessage>>("SendAsync", ItExpr.IsAny<HttpRequestMessage>(), ItExpr.IsAny<CancellationToken>())
+            .ReturnsAsync(httpResponse);
             
-            var httpResponse = new HttpResponseMessage(HttpStatusCode.OK)
-            {
-                Content = new StringContent(expectedHtml, Encoding.UTF8, "text/html")
-            };
+        var expectedDoc = new HtmlDocument();
+        expectedDoc.LoadHtml(expectedHtml);
 
-            _httpMessageHandlerMock.Protected()
-                .Setup<Task<HttpResponseMessage>>("SendAsync", ItExpr.IsAny<HttpRequestMessage>(), ItExpr.IsAny<CancellationToken>())
-                .ReturnsAsync(httpResponse);
-            
-            var expectedDoc = new HtmlDocument();
-            expectedDoc.LoadHtml(expectedHtml);
+        // Act
+        var result = await _httpClientService.GetDocumentAsync(linkPerformance);
 
-            // Act
-            var result = await _httpClientService.GetDocumentAsync(linkPerformance);
-
-            // Assert
-            Assert.Equal(expectedDoc.DocumentNode.OuterHtml, result.DocumentNode.OuterHtml);
-        }
+        // Assert
+        Assert.Equal(expectedDoc.DocumentNode.OuterHtml, result.DocumentNode.OuterHtml);
+    }
         
-        [Fact]
-        public async Task GetDocumentAsync_ShouldReturnEmptyHtmlDocument_WhenMediaTypeIsNotHtml()
+    [Fact]
+    public async Task GetDocumentAsync_ShouldReturnEmptyHtmlDocument_WhenMediaTypeIsNotHtml()
+    {
+        // Arrange
+        var expectedHtml = string.Empty;
+        var linkPerformance = new LinkPerformance { Link = "https://example.com" };
+            
+        var httpResponse = new HttpResponseMessage(HttpStatusCode.OK)
         {
-            // Arrange
-            var expectedHtml = "";
-            var linkPerformance = new LinkPerformance { Link = "https://example.com" };
+            Content = new StringContent(expectedHtml, Encoding.UTF8, "text/plain")
+        };
+
+        _httpMessageHandlerMock.Protected()
+            .Setup<Task<HttpResponseMessage>>("SendAsync", ItExpr.IsAny<HttpRequestMessage>(), ItExpr.IsAny<CancellationToken>())
+            .ReturnsAsync(httpResponse);
             
-            var httpResponse = new HttpResponseMessage(HttpStatusCode.OK)
-            {
-                Content = new StringContent(expectedHtml, Encoding.UTF8, "text/plain")
-            };
+        var expectedDoc = new HtmlDocument();
+        expectedDoc.LoadHtml(expectedHtml);
 
-            _httpMessageHandlerMock.Protected()
-                .Setup<Task<HttpResponseMessage>>("SendAsync", ItExpr.IsAny<HttpRequestMessage>(), ItExpr.IsAny<CancellationToken>())
-                .ReturnsAsync(httpResponse);
-            
-            var expectedDoc = new HtmlDocument();
-            expectedDoc.LoadHtml(expectedHtml);
+        // Act
+        var result = await _httpClientService.GetDocumentAsync(linkPerformance);
 
-            // Act
-            var result = await _httpClientService.GetDocumentAsync(linkPerformance);
-
-            // Assert
-            Assert.Empty(result.DocumentNode.ChildNodes);
-        }
+        // Assert
+        Assert.Empty(result.DocumentNode.ChildNodes);
     }
 }

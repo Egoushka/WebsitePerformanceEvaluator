@@ -1,3 +1,4 @@
+using AutoFixture;
 using HtmlAgilityPack;
 using Moq;
 using WebsitePerformanceEvaluator.Core.Models;
@@ -13,11 +14,13 @@ public class HtmlParserTests
 {
     private readonly Mock<HttpClientService> _httpClientServiceMock;
     private readonly HtmlParser _htmlParser;
+    private readonly Fixture _fixture;
 
     public HtmlParserTests()
     {
         _httpClientServiceMock = new Mock<HttpClientService>();
         _htmlParser = new HtmlParser(_httpClientServiceMock.Object);
+        _fixture = new Fixture();
     }
 
     [Fact]
@@ -42,7 +45,7 @@ public class HtmlParserTests
     public async Task GetLinksAsync_WhenNoLinksAreFound_ShouldReturnListWithSingleLink()
     {
         // Arrange
-        var url = "https://example.com";
+        var url = _fixture.Create<Uri>().ToString();
         _httpClientServiceMock.Setup(service => service.GetDocumentAsync(It.IsAny<LinkPerformance>()))
             .ReturnsAsync(new HtmlDocument());
 
@@ -60,7 +63,7 @@ public class HtmlParserTests
     public async Task GetLinksAsync_WhenLinksFound_ShouldReturnList()
     {
         //Arrange
-        var url = "https://example.com";
+        var url = _fixture.Create<Uri>().ToString();
         
         var htmlDocument = new HtmlDocument();
         htmlDocument.LoadHtml("<html><body><a href=\"https://example.com/1\">1</a><a href=\"https://example.com/2\">2</a></body></html>");

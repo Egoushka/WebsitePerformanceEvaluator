@@ -1,4 +1,3 @@
-using System.Net;
 using System.Xml;
 using AutoFixture;
 using WebsitePerformanceEvaluator.Core.Crawlers;
