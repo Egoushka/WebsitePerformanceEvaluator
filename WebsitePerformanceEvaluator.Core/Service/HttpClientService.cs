@@ -35,7 +35,7 @@ public class HttpClientService
         return doc;
     }
 
-    public async Task<HtmlDocument> GetDocumentAsync(string url)
+    private async Task<HtmlDocument> GetDocumentAsync(string url)
     {
         var doc = new HtmlDocument();
 
