@@ -50,9 +50,13 @@ public class TaskRunner
         _consoleWrapper.WriteLine("Links found after crawling website, but not in sitemap:");
 
         if (linksInCrawlingNotInSitemap.Any())
+        {
             _consoleHelper.PrintTable(new List<string> { "Link" }, linksInCrawlingNotInSitemap);
+        }
         else
+        {
             _consoleWrapper.WriteLine("No links found");
+        }
 
         _consoleWrapper.WriteLine();
     }
@@ -66,9 +70,13 @@ public class TaskRunner
         _consoleWrapper.WriteLine("Links in sitemap, that wasn't found after crawling:");
 
         if (linksInSitemapNotInCrawling.Any())
+        {
             _consoleHelper.PrintTable(new List<string> { "Link" }, linksInSitemapNotInCrawling);
+        }
         else
+        {
             _consoleWrapper.WriteLine("No links found");
+        }
 
         _consoleWrapper.WriteLine();
     }

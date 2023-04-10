@@ -39,7 +39,10 @@ public class WebsiteCrawler
 
             var linksToAddToQueue = normalizedLinks.Select(item => item.Link).Except(visitedLinks);
 
-            foreach (var link in linksToAddToQueue) linksToVisit.Enqueue(link);
+            foreach (var link in linksToAddToQueue)
+            {
+                linksToVisit.Enqueue(link);
+            }
         }
 
         return links;
