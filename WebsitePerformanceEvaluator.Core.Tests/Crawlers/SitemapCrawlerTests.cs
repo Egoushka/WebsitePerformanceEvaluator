@@ -1,5 +1,4 @@
 using System.Xml;
-using AutoFixture;
 using Moq;
 using WebsitePerformanceEvaluator.Core.Crawlers;
 using WebsitePerformanceEvaluator.Core.Filters;
@@ -15,7 +14,6 @@ namespace WebsitePerformanceEvaluator.Core.Tests.Crawlers;
 public class SitemapCrawlerTests
 {
     private readonly SitemapCrawler _crawler;
-    private readonly Fixture _fixture;
     private readonly Mock<HttpClientService> _httpClientServiceMock;
     private readonly Mock<LinkFilter> _linkFilterMock;
     private readonly Mock<LinkHelper> _linkHelperMock;
@@ -24,8 +22,6 @@ public class SitemapCrawlerTests
 
     public SitemapCrawlerTests()
     {
-        _fixture = new Fixture();
-
         _loggerMock = new Mock<ILogger>();
         _httpClientServiceMock = new Mock<HttpClientService>();
         _xmlParserMock = new Mock<XmlParser>();
@@ -45,7 +41,7 @@ public class SitemapCrawlerTests
     public async Task FindLinksAsync_WhenSitemapXmlDoesNotContainUrlElements_ShouldReturnEmptyList()
     {
         // Arrange
-        var sitemapUrl = _fixture.Create<Uri>().ToString();
+        var sitemapUrl = "http://example.com/sitemap.xml";
 
         _httpClientServiceMock
             .Setup(x => x.DownloadFileAsync(sitemapUrl))
@@ -65,6 +61,7 @@ public class SitemapCrawlerTests
     public async Task FindLinksAsync_WhenSitemapXmlContainsUrlElements_ShouldReturnLinks()
     {
         // Arrange
+        var sitemapUrl = "http://example.com/sitemap.xml";
         var links = new List<LinkPerformance>
         {
             new() { Link = "http://example.com/" },
@@ -73,7 +70,7 @@ public class SitemapCrawlerTests
 
         _httpClientServiceMock
             .Setup(x => x.DownloadFileAsync(It.IsAny<string>()))
-            .ReturnsAsync(_fixture.Create<string>());
+            .ReturnsAsync(string.Empty);
         _xmlParserMock
             .Setup(x => x.GetLinks(It.IsAny<XmlNodeList>()))
             .Returns(links);
@@ -88,7 +85,7 @@ public class SitemapCrawlerTests
             .ReturnsAsync(links);
 
         // Act
-        var result = await _crawler.FindLinksAsync(_fixture.Create<Uri>().ToString());
+        var result = await _crawler.FindLinksAsync(sitemapUrl);
 
         // Assert
         Assert.Equal(links, result);
@@ -98,7 +95,7 @@ public class SitemapCrawlerTests
     public async Task FindLinksAsync_WhenSitemapXmlIsEmpty_ShouldReturnEmptyList()
     {
         // Arrange
-        var sitemapUrl = _fixture.Create<Uri>().ToString();
+        var sitemapUrl = "http://example.com/sitemap.xml";
 
         _httpClientServiceMock
             .Setup(x => x.DownloadFileAsync(sitemapUrl))
@@ -115,7 +112,7 @@ public class SitemapCrawlerTests
     public async Task FindLinksAsync_WhenSitemapXmlIsMalformed_ShouldReturnEmptyList()
     {
         // Arrange
-        var sitemapUrl = _fixture.Create<Uri>().ToString();
+        var sitemapUrl = "http://example.com/sitemap.xml";
 
         _httpClientServiceMock
             .Setup(x => x.DownloadFileAsync(sitemapUrl))
@@ -132,7 +129,7 @@ public class SitemapCrawlerTests
     public async Task FindLinksAsync_WhenFilteredUrlsExist_ShouldReturnFilteredLinks()
     {
         // Arrange
-        var sitemapUrl = _fixture.Create<Uri>().ToString();
+        var sitemapUrl = "http://example.com/sitemap.xml";
 
         var links = new List<LinkPerformance>
         {
@@ -146,7 +143,7 @@ public class SitemapCrawlerTests
 
         _httpClientServiceMock
             .Setup(x => x.DownloadFileAsync(It.IsAny<string>()))
-            .ReturnsAsync(_fixture.Create<string>());
+            .ReturnsAsync(string.Empty);
         _xmlParserMock
             .Setup(x => x.GetLinks(It.IsAny<XmlNodeList>()))
             .Returns(links);

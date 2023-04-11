@@ -1,4 +1,3 @@
-using AutoFixture;
 using Moq;
 using WebsitePerformanceEvaluator.Core.Crawlers;
 using WebsitePerformanceEvaluator.Core.Models;
@@ -10,7 +9,6 @@ namespace WebsitePerformanceEvaluator.Core.Tests.Crawlers;
 public class CrawlerTests
 {
     private readonly Crawler _crawler;
-    private readonly Fixture _fixture;
     private readonly Mock<SitemapCrawler> _sitemapCrawlerMock;
     private readonly Mock<WebsiteCrawler> _websiteCrawlerMock;
 
@@ -19,12 +17,12 @@ public class CrawlerTests
         _websiteCrawlerMock = new Mock<WebsiteCrawler>();
         _sitemapCrawlerMock = new Mock<SitemapCrawler>();
         _crawler = new Crawler(_websiteCrawlerMock.Object, _sitemapCrawlerMock.Object);
-        _fixture = new Fixture();
     }
 
     [Fact]
     public async Task CrawlWebsiteAndSitemapAsync_WhenNoneReturnEmptyList_ReturnsAllLinksAndCheckThem()
     {
+        var url = "https://example.com";
         // Arrange
         var expectedWebsiteLinks = GetExpectedLinks(CrawlingLinkSource.Website, 3);
         var expectedSitemapLinks = GetExpectedLinks(CrawlingLinkSource.Sitemap, 3);
@@ -35,7 +33,7 @@ public class CrawlerTests
             .ReturnsAsync(expectedSitemapLinks);
 
         // Act
-        var result = await _crawler.CrawlWebsiteAndSitemapAsync(_fixture.Create<string>());
+        var result = await _crawler.CrawlWebsiteAndSitemapAsync(url);
 
         // Assert
         var expectedLinks = expectedWebsiteLinks.Union(expectedSitemapLinks);
@@ -56,7 +54,7 @@ public class CrawlerTests
     public async Task CrawlWebsiteAndSitemapAsync_WhenWebsiteCrawlerReturnsEmptyList_ReturnsSitemapLinksOnly()
     {
         // Arrange
-        var websiteUrl = _fixture.Create<string>();
+        var websiteUrl = "https://example.com";
         var expectedSitemapLinks = GetExpectedLinks(CrawlingLinkSource.Sitemap, 3);
 
         _websiteCrawlerMock.Setup(x => x.FindLinksAsync(websiteUrl)).ReturnsAsync(new List<LinkPerformance>());
@@ -73,7 +71,7 @@ public class CrawlerTests
     public async Task CrawlWebsiteAndSitemapAsync_WhenSitemapCrawlerReturnsEmptyList_ReturnsWebsiteLinksOnly()
     {
         // Arrange
-        var websiteUrl = _fixture.Create<string>();
+        var websiteUrl = "https://example.com";
         var expectedWebsiteLinks = GetExpectedLinks(CrawlingLinkSource.Website, 3);
 
         _websiteCrawlerMock.Setup(x => x.FindLinksAsync(websiteUrl)).ReturnsAsync(expectedWebsiteLinks);
@@ -90,7 +88,7 @@ public class CrawlerTests
     public async Task CrawlWebsiteAndSitemapAsync_WhenCalled_CallsFindLinksAsyncWithCorrectUrl()
     {
         // Arrange
-        var url = _fixture.Create<string>();
+        var url = "https://example.com";
 
         // Act
         await _crawler.CrawlWebsiteAndSitemapAsync(url);
@@ -104,7 +102,7 @@ public class CrawlerTests
     public async Task CrawlWebsiteAndSitemapAsync_WhenCrawlersReturnEmptyLists_ReturnsEmptyList()
     {
         // Arrange
-        var url = _fixture.Create<string>();
+        var url = "https://example.com";
 
         _websiteCrawlerMock.Setup(x => x.FindLinksAsync(It.IsAny<string>()))
             .ReturnsAsync(new List<LinkPerformance>());
@@ -121,8 +119,13 @@ public class CrawlerTests
 
     private IEnumerable<LinkPerformance> GetExpectedLinks(CrawlingLinkSource source, int count)
     {
-        return _fixture.Build<LinkPerformance>()
-            .With(link => link.CrawlingLinkSource, source)
-            .CreateMany(count);
+        for (var i = 0; i < count; i++)
+        {
+            yield return new LinkPerformance
+            {
+                CrawlingLinkSource = source,
+                Link = $"https://example.com/{i}",
+            };
+        }
     }
 }

@@ -1,9 +1,9 @@
-using AutoFixture;
 using Moq;
 using WebsitePerformanceEvaluator.Core.Crawlers;
 using WebsitePerformanceEvaluator.Core.Filters;
 using WebsitePerformanceEvaluator.Core.Helpers;
 using WebsitePerformanceEvaluator.Core.Models;
+using WebsitePerformanceEvaluator.Core.Models.Enums;
 using WebsitePerformanceEvaluator.Core.Parsers;
 using Xunit;
 
@@ -12,7 +12,6 @@ namespace WebsitePerformanceEvaluator.Core.Tests.Crawlers;
 public class WebsiteCrawlerTests
 {
     private readonly WebsiteCrawler _crawler;
-    private readonly Fixture _fixture;
 
     private readonly Mock<HtmlParser> _htmlParserMock;
     private readonly Mock<LinkFilter> _linkFilterMock;
@@ -20,8 +19,6 @@ public class WebsiteCrawlerTests
 
     public WebsiteCrawlerTests()
     {
-        _fixture = new Fixture();
-
         _htmlParserMock = new Mock<HtmlParser>();
         _linkFilterMock = new Mock<LinkFilter>();
         _linkHelperMock = new Mock<LinkHelper>();
@@ -33,7 +30,7 @@ public class WebsiteCrawlerTests
     public async Task FindLinksAsync_WhenNoLinksFound_ShouldReturnEmptyList()
     {
         // Arrange
-        var url = _fixture.Create<Uri>().ToString();
+        var url = "https://www.google.com";
         _htmlParserMock
             .Setup(x => x.GetLinksAsync(url))
             .ReturnsAsync(new List<LinkPerformance>());
@@ -49,8 +46,8 @@ public class WebsiteCrawlerTests
     public async Task FindLinksAsync_WhenLinksFound_ShouldReturnLinks()
     {
         // Arrange
-        var url = _fixture.Create<Uri>().ToString();
-        var links = _fixture.CreateMany<LinkPerformance>().ToList();
+        var url = "https://www.google.com";
+        var links = GetExpectedLinks(CrawlingLinkSource.Website, 2).ToList();
 
         _htmlParserMock
             .Setup(x => x.GetLinksAsync(url))
@@ -79,8 +76,8 @@ public class WebsiteCrawlerTests
     public async Task FindLinksAsync_WhenAvailable_ShouldReturnLinksWithResponseTime()
     {
         // Arrange
-        var url = _fixture.Create<Uri>().ToString();
-        var links = _fixture.CreateMany<LinkPerformance>().ToList();
+        var url = "https://www.google.com";
+        var links = GetExpectedLinks(CrawlingLinkSource.Website, 2).ToList();
         links[0].TimeResponseMs = 100;
         links[1].TimeResponseMs = null;
 
@@ -105,5 +102,16 @@ public class WebsiteCrawlerTests
 
         // Assert
         Assert.True(result.All(x => x.TimeResponseMs.HasValue));
+    }
+    private IEnumerable<LinkPerformance> GetExpectedLinks(CrawlingLinkSource source, int count)
+    {
+        for (var i = 0; i < count; i++)
+        {
+            yield return new LinkPerformance
+            {
+                CrawlingLinkSource = source,
+                Link = $"https://example.com/{i}",
+            };
+        }
     }
 }

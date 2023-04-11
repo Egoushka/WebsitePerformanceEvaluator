@@ -1,4 +1,3 @@
-using AutoFixture;
 using HtmlAgilityPack;
 using Moq;
 using WebsitePerformanceEvaluator.Core.Models;
@@ -11,7 +10,6 @@ namespace WebsitePerformanceEvaluator.Core.Tests.Parsers;
 
 public class HtmlParserTests
 {
-    private readonly Fixture _fixture;
     private readonly HtmlParser _htmlParser;
     private readonly Mock<HttpClientService> _httpClientServiceMock;
 
@@ -19,7 +17,6 @@ public class HtmlParserTests
     {
         _httpClientServiceMock = new Mock<HttpClientService>();
         _htmlParser = new HtmlParser(_httpClientServiceMock.Object);
-        _fixture = new Fixture();
     }
     
     [Fact]
