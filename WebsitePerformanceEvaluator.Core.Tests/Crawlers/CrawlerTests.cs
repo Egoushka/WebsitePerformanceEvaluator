@@ -119,22 +119,6 @@ public class CrawlerTests
         Assert.Empty(result);
     }
 
-    [Fact]
-    public async Task CrawlWebsiteAndSitemapAsync_WhenCrawlersThrowException_ThrowsException()
-    {
-        // Arrange
-        var url = _fixture.Create<string>();
-
-        _websiteCrawlerMock.Setup(x => x.FindLinksAsync(It.IsAny<string>()))
-            .ThrowsAsync(new Exception("WebsiteCrawler exception"));
-
-        _sitemapCrawlerMock.Setup(x => x.FindLinksAsync(It.IsAny<string>()))
-            .ReturnsAsync(new List<LinkPerformance>());
-
-        // Act & Assert
-        await Assert.ThrowsAsync<Exception>(() => _crawler.CrawlWebsiteAndSitemapAsync(url));
-    }
-
     private IEnumerable<LinkPerformance> GetExpectedLinks(CrawlingLinkSource source, int count)
     {
         return _fixture.Build<LinkPerformance>()

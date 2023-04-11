@@ -19,20 +19,26 @@ public class LinkFilterTests
     }
 
     [Fact]
-    public void FilterLinks_WhenGivenEmptyList_ShouldReturnEmptyList()
+    public void FilterLinks_WhenGivenOnlyValidLinks_ShouldReturnThem()
     {
         // Arrange
         var baseUrl = "https://example.com/";
+        var links = new List<LinkPerformance>
+        {
+            new() { Link = "https://example.com/1" },
+            new() { Link = "https://example.com/2" },
+            new() { Link = "https://example.com/3" }
+        };
 
         _validatorMock
             .Setup(x => x.IsValidLink(It.IsAny<string>()))
             .Returns(true);
 
         // Act
-        var result = _linkFilter.FilterLinks(new List<LinkPerformance>(), baseUrl);
+        var result = _linkFilter.FilterLinks(links, baseUrl);
 
         // Assert
-        Assert.Empty(result);
+        Assert.Equal(links, result);
     }
 
     [Fact]
@@ -59,33 +65,45 @@ public class LinkFilterTests
     }
 
     [Fact]
-    public void FilterLinks_WhenGivenLinks_ShouldReturnFilteredList()
+    public void FilterLinks_WhenGivenOnlyLinksWithAnchor_ShouldReturnEmptyList()
     {
         // Arrange
         var baseUrl = "https://example.com/";
 
         var links = new List<LinkPerformance>
         {
-            new() { Link = "https://example.com/" },
-            new() { Link = "https://example.com/about-us" },
-            new() { Link = "https://example.com/blog" },
-            new() { Link = "https://example.com/contact" },
-            new() { Link = "https://external.com" },
             new() { Link = "https://example.com/#anchor" }
         };
-
+        
         _validatorMock
-            .Setup(x => x.IsValidLink(It.IsNotIn("https://example.com/#anchor")))
-            .Returns(true);
+            .Setup(x => x.IsValidLink(It.IsAny<string>()))
+            .Returns(false);
 
         // Act
         var result = _linkFilter.FilterLinks(links, baseUrl);
 
         // Assert
-        Assert.Equal(4, result.Count());
-        Assert.True(result.All(link => link.Link.StartsWith("https://example.com")));
-        Assert.DoesNotContain(result, link => link.Link.Contains("#anchor"));
-        Assert.DoesNotContain(result, link => link.Link.StartsWith("http://"));
-        Assert.DoesNotContain(result, link => link.Link.StartsWith("https://external.com"));
+        Assert.Empty(result);
+    }
+    [Fact]
+    public void FilterLinks_WhenGivenOnlyExternalLinks_ShouldReturnEmptyList()
+    {
+        // Arrange
+        var baseUrl = "https://example.com/";
+
+        var links = new List<LinkPerformance>
+        {
+            new() { Link = "https://external.com/" },
+        };
+
+        _validatorMock
+            .Setup(x => x.IsValidLink(It.IsAny<string>()))
+            .Returns(false);
+
+        // Act
+        var result = _linkFilter.FilterLinks(links, baseUrl);
+
+        // Assert
+        Assert.Empty(result);
     }
 }

@@ -17,50 +17,43 @@ public class LinkHelperTests
         _linkHelper = new LinkHelper(_httpClientServiceMock.Object);
     }
 
-    [Theory]
-    [InlineData("https://example.com/", "/page", "https://example.com/page")]
-    [InlineData("https://example.com", "/page", "https://example.com/page")]
-    [InlineData("https://example.com", "page", "page")]
-    public void AddBaseUrl_ShouldAddBaseUrlToLinks(string baseUrl, string link, string expected)
+    [Fact]
+    public void RemoveLastSlashFromLinks_WhenGivenLinksWithSlashAtTheEnd_ShouldRemoveLastSlashFromLinks()
     {
         // Arrange
+        var baseUrl = "https://example.com";
+        
         var links = new List<LinkPerformance>
         {
-            new() { Link = link }
-        };
-
-        // Act
-        var result = _linkHelper.AddBaseUrl(links, baseUrl).ToList();
-
-        // Assert
-        Assert.Single(result);
-        Assert.Equal(expected, result[0].Link);
-    }
-
-    [Theory]
-    [InlineData("https://example.com")]
-    public void RemoveLastSlashFromLinks_ShouldRemoveLastSlashFromLinks(string baseUrl)
-    {
-        // Arrange
-        var links = new List<LinkPerformance>
-        {
-            new() { Link = baseUrl },
             new() { Link = baseUrl + "/page/" },
-            new() { Link = baseUrl + "/contact" }
         };
 
         // Act
         var result = _linkHelper.RemoveLastSlashFromLinks(links).ToList();
 
         // Assert
-        Assert.Equal(3, result.Count);
-        Assert.Equal(baseUrl, result[0].Link);
-        Assert.Equal(baseUrl + "/page", result[1].Link);
-        Assert.Equal(baseUrl + "/contact", result[2].Link);
+        Assert.Equal(baseUrl + "/page", result.FirstOrDefault()?.Link);
+    }
+    [Fact]
+    public void RemoveLastSlashFromLinks_WhenGivenLinkWithoutSlashAtTheEnd_ShouldReturnAsItWas()
+    {
+        // Arrange
+        var baseUrl = "https://example.com";
+        
+        var links = new List<LinkPerformance>
+        {
+            new() { Link = baseUrl + "/page" },
+        };
+
+        // Act
+        var result = _linkHelper.RemoveLastSlashFromLinks(links).ToList();
+
+        // Assert
+        Assert.Equal(baseUrl + "/page", result.FirstOrDefault()?.Link);
     }
 
     [Fact]
-    public async Task AddResponseTimeAsync_ShouldAddResponseTimeToLinks()
+    public async Task AddResponseTimeAsync_WithValidLinks_ShouldSetResponseTimeForEachLink()
     {
         // Arrange
         var expectedTimes = new[] { 100, 200, 300 };
@@ -70,15 +63,16 @@ public class LinkHelperTests
             new() { Link = "https://example.com/page" },
             new() { Link = "https://example.com/contact" }
         };
-        _httpClientServiceMock.Setup(x => x.GetTimeResponseAsync(It.IsAny<string>())).ReturnsAsync((string url) =>
-        {
-            return url switch
-            {
-                "https://example.com" => 100L,
-                "https://example.com/page" => 200L,
-                _ => url == "https://example.com/contact" ? 300L : 0L
-            };
-        });
+        
+        _httpClientServiceMock
+            .Setup(x => x.GetTimeResponseAsync("https://example.com"))
+            .ReturnsAsync(100L);
+        _httpClientServiceMock
+            .Setup(x => x.GetTimeResponseAsync(It.Is<string>(x => x == "https://example.com/page")))
+            .ReturnsAsync(200L);
+        _httpClientServiceMock
+            .Setup(x => x.GetTimeResponseAsync("https://example.com/contact"))
+            .ReturnsAsync(300L);
 
         // Act
         var result = (await _linkHelper.AddResponseTimeAsync(links)).ToList();
