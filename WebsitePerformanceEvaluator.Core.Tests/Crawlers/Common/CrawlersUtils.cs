@@ -13,6 +13,7 @@ public static class CrawlersUtils
             {
                 CrawlingLinkSource = source,
                 Link = $"https://example.com/{i}",
+                TimeResponseMs = 100
             };
         }
     }
