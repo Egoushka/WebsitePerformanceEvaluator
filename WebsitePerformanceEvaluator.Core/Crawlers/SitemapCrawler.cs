@@ -52,7 +52,10 @@ public class SitemapCrawler
 
         var result = await GetSitemapXmlAsync(sitemapUrl);
 
-        if (result.DocumentElement == null) result = new XmlDocument();
+        if (result.DocumentElement == null)
+        {
+            result = new XmlDocument();
+        }
 
         return result;
     }

@@ -33,11 +33,15 @@ public class HtmlParser
         var linkNodes = doc.DocumentNode.SelectNodes("//a[@href]");
 
         if (linkNodes != null)
-            result.AddRange(linkNodes.Select(linkNode => new LinkPerformance
+        {
+            var links = linkNodes.Select(linkNode => new LinkPerformance
             {
                 Link = linkNode.Attributes["href"].Value,
                 CrawlingLinkSource = CrawlingLinkSource.Website
-            }));
+            });
+            result.AddRange(links);
+
+        }
 
         return result;
     }
