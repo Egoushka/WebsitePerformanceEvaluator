@@ -88,13 +88,6 @@ public class HtmlParserTests
     {
         //Arrange
         var url = "https://example.com";
-        
-        var expectedLinks = new List<string>
-        {
-            "https://example.com",
-            "https://example.com/1",
-            "https://example.com/2"
-        };
 
         var htmlDocument = new HtmlDocument();
         htmlDocument.LoadHtml(

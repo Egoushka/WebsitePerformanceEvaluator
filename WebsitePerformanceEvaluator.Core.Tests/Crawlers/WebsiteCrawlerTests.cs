@@ -5,6 +5,7 @@ using WebsitePerformanceEvaluator.Core.Helpers;
 using WebsitePerformanceEvaluator.Core.Models;
 using WebsitePerformanceEvaluator.Core.Models.Enums;
 using WebsitePerformanceEvaluator.Core.Parsers;
+using WebsitePerformanceEvaluator.Core.Tests.Crawlers.Common;
 using Xunit;
 
 namespace WebsitePerformanceEvaluator.Core.Tests.Crawlers;
@@ -47,7 +48,7 @@ public class WebsiteCrawlerTests
     {
         // Arrange
         var url = "https://www.google.com";
-        var links = GetExpectedLinks(CrawlingLinkSource.Website, 2).ToList();
+        var links = CrawlersUtils.GetExpectedLinks(CrawlingLinkSource.Website, 2).ToList();
 
         _htmlParserMock
             .Setup(x => x.GetLinksAsync(url))
@@ -77,7 +78,7 @@ public class WebsiteCrawlerTests
     {
         // Arrange
         var url = "https://www.google.com";
-        var links = GetExpectedLinks(CrawlingLinkSource.Website, 2).ToList();
+        var links = CrawlersUtils.GetExpectedLinks(CrawlingLinkSource.Website, 2).ToList();
         links[0].TimeResponseMs = 100;
         links[1].TimeResponseMs = null;
 
@@ -102,16 +103,5 @@ public class WebsiteCrawlerTests
 
         // Assert
         Assert.True(result.All(x => x.TimeResponseMs.HasValue));
-    }
-    private IEnumerable<LinkPerformance> GetExpectedLinks(CrawlingLinkSource source, int count)
-    {
-        for (var i = 0; i < count; i++)
-        {
-            yield return new LinkPerformance
-            {
-                CrawlingLinkSource = source,
-                Link = $"https://example.com/{i}",
-            };
-        }
     }
 }

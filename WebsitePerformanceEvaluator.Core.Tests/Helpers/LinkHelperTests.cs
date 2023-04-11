@@ -38,18 +38,18 @@ public class LinkHelperTests
     public void RemoveLastSlashFromLinks_WhenGivenLinkWithoutSlashAtTheEnd_ShouldReturnAsItWas()
     {
         // Arrange
-        var baseUrl = "https://example.com";
-        
+        var expected = "https://example.com/page";
+
         var links = new List<LinkPerformance>
         {
-            new() { Link = baseUrl + "/page" },
+            new() { Link = expected },
         };
 
         // Act
         var result = _linkHelper.RemoveLastSlashFromLinks(links).ToList();
 
         // Assert
-        Assert.Equal(baseUrl + "/page", result.FirstOrDefault()?.Link);
+        Assert.Equal(expected, result.FirstOrDefault()?.Link);
     }
 
     [Fact]
@@ -68,7 +68,7 @@ public class LinkHelperTests
             .Setup(x => x.GetTimeResponseAsync("https://example.com"))
             .ReturnsAsync(100L);
         _httpClientServiceMock
-            .Setup(x => x.GetTimeResponseAsync(It.Is<string>(x => x == "https://example.com/page")))
+            .Setup(x => x.GetTimeResponseAsync("https://example.com/page"))
             .ReturnsAsync(200L);
         _httpClientServiceMock
             .Setup(x => x.GetTimeResponseAsync("https://example.com/contact"))
@@ -79,6 +79,6 @@ public class LinkHelperTests
 
         // Assert
         Assert.Equal(3, result.Count);
-        Assert.All(result, link => Assert.Equal(expectedTimes[result.IndexOf(link)], link.TimeResponseMs));
+        Assert.All(result, link => Assert.Equal(expectedTimes.ElementAt(result.IndexOf(link)), link.TimeResponseMs));
     }
 }
