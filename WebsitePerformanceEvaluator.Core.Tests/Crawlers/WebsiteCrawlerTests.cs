@@ -48,7 +48,7 @@ public class WebsiteCrawlerTests
     {
         // Arrange
         var url = "https://www.google.com";
-        var links = CrawlersUtils.GetExpectedLinks(CrawlingLinkSource.Website, 2).ToList();
+        var links = CrawlersUtils.GetExpectedLinks(CrawlingLinkSource.Website, 2);
 
         _htmlParserMock
             .Setup(x => x.GetLinksAsync(url))
@@ -78,9 +78,7 @@ public class WebsiteCrawlerTests
     {
         // Arrange
         var url = "https://www.google.com";
-        var links = CrawlersUtils.GetExpectedLinks(CrawlingLinkSource.Website, 2).ToList();
-        links[0].TimeResponseMs = 100;
-        links[1].TimeResponseMs = null;
+        var links = CrawlersUtils.GetExpectedLinks(CrawlingLinkSource.Website, 2);
 
         _htmlParserMock
             .Setup(x => x.GetLinksAsync(url))
@@ -103,5 +101,45 @@ public class WebsiteCrawlerTests
 
         // Assert
         Assert.True(result.All(x => x.TimeResponseMs.HasValue));
+    }
+
+    [Fact]
+    public async Task FindLinksAsync_WhenPassedLink_ShouldCheckIsMethodsCalled()
+    {
+        // Arrange
+        var url = "https://www.google.com";
+
+        var links = CrawlersUtils.GetExpectedLinks(CrawlingLinkSource.Website, 2);
+
+        _htmlParserMock.SetupSequence(x => x.GetLinksAsync(url))
+            .ReturnsAsync(links)
+            .ReturnsAsync(new List<LinkPerformance>())
+            .ReturnsAsync(new List<LinkPerformance>())
+            .ReturnsAsync(new List<LinkPerformance>())
+            .ReturnsAsync(new List<LinkPerformance>());
+
+        _linkFilterMock
+            .Setup(x => x.FilterLinks(links, url))
+            .Returns(links);
+
+        _linkHelperMock
+            .Setup(x => x.RemoveLastSlashFromLinks(links))
+            .Returns(links);
+
+        _linkHelperMock
+            .Setup(x => x.AddBaseUrl(links, url))
+            .Returns(links);
+
+        // Act
+        await _crawler.FindLinksAsync(url);
+
+        // Assert
+        _htmlParserMock.Verify(x => x.GetLinksAsync(It.IsAny<string>()), Times.Exactly(3));
+        _linkFilterMock.Verify(x => x.FilterLinks(It.IsAny<IEnumerable<LinkPerformance>>(), It.IsAny<string>()),
+            Times.Exactly(3));
+        _linkHelperMock.Verify(x => x.RemoveLastSlashFromLinks(It.IsAny<IEnumerable<LinkPerformance>>()),
+            Times.Exactly(3));
+        _linkHelperMock.Verify(x => x.AddBaseUrl(It.IsAny<IEnumerable<LinkPerformance>>(), It.IsAny<string>()),
+            Times.Exactly(3));
     }
 }

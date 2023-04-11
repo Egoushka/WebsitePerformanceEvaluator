@@ -43,7 +43,10 @@ public class HttpClientService
 
         var contentType = response.Content.Headers.ContentType;
 
-        if (contentType.MediaType != "text/html") return new HtmlDocument();
+        if (contentType.MediaType != "text/html")
+        {
+            return new HtmlDocument();
+        }
 
         var charset = contentType.CharSet ?? Encoding.UTF8.WebName;
         var html = await response.Content.ReadAsStringAsync();

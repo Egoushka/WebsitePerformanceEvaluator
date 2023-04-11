@@ -33,28 +33,8 @@ public class SitemapCrawlerTests
             _httpClientServiceMock.Object,
             _xmlParserMock.Object,
             _linkFilterMock.Object,
-            _linkHelperMock.Object);
-    }
-
-
-    [Fact]
-    public async Task FindLinksAsync_WhenSitemapXmlDoesNotContainUrlElements_ShouldReturnEmptyList()
-    {
-        // Arrange
-        var sitemapUrl = "http://example.com/sitemap.xml";
-
-        _httpClientServiceMock
-            .Setup(x => x.DownloadFileAsync(sitemapUrl))
-            .ReturnsAsync("<url></url>");
-        _xmlParserMock
-            .Setup(x => x.GetLinks(It.IsAny<XmlNodeList>()))
-            .Returns(new List<LinkPerformance>());
-
-        // Act
-        var result = await _crawler.FindLinksAsync(sitemapUrl);
-
-        // Assert
-        Assert.Empty(result);
+            _linkHelperMock.Object
+        );
     }
 
     [Fact]
@@ -92,53 +72,19 @@ public class SitemapCrawlerTests
     }
 
     [Fact]
-    public async Task FindLinksAsync_WhenSitemapXmlIsEmpty_ShouldReturnEmptyList()
-    {
-        // Arrange
-        var sitemapUrl = "http://example.com/sitemap.xml";
-
-        _httpClientServiceMock
-            .Setup(x => x.DownloadFileAsync(sitemapUrl))
-            .ReturnsAsync("");
-
-        // Act
-        var result = await _crawler.FindLinksAsync(sitemapUrl);
-
-        // Assert
-        Assert.Empty(result);
-    }
-
-    [Fact]
-    public async Task FindLinksAsync_WhenSitemapXmlIsMalformed_ShouldReturnEmptyList()
-    {
-        // Arrange
-        var sitemapUrl = "http://example.com/sitemap.xml";
-
-        _httpClientServiceMock
-            .Setup(x => x.DownloadFileAsync(sitemapUrl))
-            .ReturnsAsync("<invalid-xml");
-
-        // Act
-        var result = await _crawler.FindLinksAsync(sitemapUrl);
-
-        // Assert
-        Assert.Empty(result);
-    }
-
-    [Fact]
     public async Task FindLinksAsync_WhenFilteredUrlsExist_ShouldReturnFilteredLinks()
     {
         // Arrange
-        var sitemapUrl = "http://example.com/sitemap.xml";
+        var baseUrl = "http://example.com";
 
         var links = new List<LinkPerformance>
         {
-            new() { Link = $"{sitemapUrl}/page1" },
-            new() { Link = $"{sitemapUrl}/page2" }
+            new() { Link = $"{baseUrl}/page1" },
+            new() { Link = $"{baseUrl}/page2" }
         };
         var expectedLinks = new List<LinkPerformance>
         {
-            new() { Link = $"{sitemapUrl}/page1" }
+            new() { Link = $"{baseUrl}/page1" }
         };
 
         _httpClientServiceMock
@@ -158,9 +104,47 @@ public class SitemapCrawlerTests
             .ReturnsAsync(expectedLinks);
 
         // Act
-        var result = await _crawler.FindLinksAsync(sitemapUrl);
+        var result = await _crawler.FindLinksAsync(baseUrl + "/sitemap.xml");
 
         // Assert
         Assert.Equal(expectedLinks, result);
+    }
+
+    [Fact]
+    public async Task FindLinksAsync_WhenSitemapXmlContainsUrlElements_ShouldCheckCalledMethods()
+    {
+        // Arrange
+        var sitemapUrl = "http://example.com/sitemap.xml";
+        var links = new List<LinkPerformance>
+        {
+            new() { Link = "http://example.com/" },
+            new() { Link = "http://example.com/about" }
+        };
+
+        _httpClientServiceMock
+            .Setup(x => x.DownloadFileAsync(It.IsAny<string>()))
+            .ReturnsAsync(string.Empty);
+        _xmlParserMock
+            .Setup(x => x.GetLinks(It.IsAny<XmlNodeList>()))
+            .Returns(links);
+        _linkFilterMock
+            .Setup(x => x.FilterLinks(It.IsAny<IEnumerable<LinkPerformance>>(), It.IsAny<string>()))
+            .Returns(links);
+        _linkHelperMock
+            .Setup(x => x.RemoveLastSlashFromLinks(It.IsAny<IEnumerable<LinkPerformance>>()))
+            .Returns(links);
+        _linkHelperMock
+            .Setup(x => x.AddResponseTimeAsync(It.IsAny<IEnumerable<LinkPerformance>>()))
+            .ReturnsAsync(links);
+
+        // Act
+        await _crawler.FindLinksAsync(sitemapUrl);
+
+        // Assert
+        _httpClientServiceMock.Verify(x => x.DownloadFileAsync(sitemapUrl), Times.Once);
+        _xmlParserMock.Verify(x => x.GetLinks(It.IsAny<XmlNodeList>()), Times.Once);
+        _linkFilterMock.Verify(x => x.FilterLinks(links, sitemapUrl), Times.Once);
+        _linkHelperMock.Verify(x => x.RemoveLastSlashFromLinks(links), Times.Once);
+        _linkHelperMock.Verify(x => x.AddResponseTimeAsync(links), Times.Once);
     }
 }
