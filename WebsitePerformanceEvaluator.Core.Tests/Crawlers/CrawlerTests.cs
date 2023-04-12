@@ -2,7 +2,6 @@ using Moq;
 using WebsitePerformanceEvaluator.Core.Crawlers;
 using WebsitePerformanceEvaluator.Core.Models;
 using WebsitePerformanceEvaluator.Core.Models.Enums;
-using WebsitePerformanceEvaluator.Core.Tests.Crawlers.Common;
 using Xunit;
 
 namespace WebsitePerformanceEvaluator.Core.Tests.Crawlers;
@@ -26,7 +25,7 @@ public class CrawlerTests
         // Arrange
         var url = "https://example.com";
         
-        var expectedLinks = CrawlersUtils.GetExpectedLinks(CrawlingLinkSource.Website, 3);
+        var expectedLinks = GetExpectedLinks(CrawlingLinkSource.Website, 3);
 
         _websiteCrawlerMock.Setup(x => x.FindLinksAsync(It.IsAny<string>()))
             .ReturnsAsync(expectedLinks);
@@ -47,7 +46,7 @@ public class CrawlerTests
         // Arrange
         var url = "https://example.com";
         
-        var expectedLinks = CrawlersUtils.GetExpectedLinks(CrawlingLinkSource.Website, 3);
+        var expectedLinks = GetExpectedLinks(CrawlingLinkSource.Website, 3);
 
         _websiteCrawlerMock.Setup(x => x.FindLinksAsync(It.IsAny<string>()))
             .ReturnsAsync(expectedLinks);
@@ -67,7 +66,7 @@ public class CrawlerTests
         // Arrange
         var url = "https://example.com";
 
-        var expectedLinks = CrawlersUtils.GetExpectedLinks(CrawlingLinkSource.Sitemap, 3);
+        var expectedLinks = GetExpectedLinks(CrawlingLinkSource.Sitemap, 3);
 
         _websiteCrawlerMock.Setup(x => x.FindLinksAsync(It.IsAny<string>()))
             .ReturnsAsync(Enumerable.Empty<LinkPerformance>());
@@ -79,5 +78,21 @@ public class CrawlerTests
 
         // Assert
         Assert.All(result, x => Assert.Equal(CrawlingLinkSource.Sitemap, x.CrawlingLinkSource));
+    }
+
+    private IEnumerable<LinkPerformance> GetExpectedLinks(CrawlingLinkSource source, int count)
+    {
+        var links = new List<LinkPerformance>();
+        for (var i = 0; i < count; i++)
+        {
+            links.Add(new LinkPerformance
+            {
+                CrawlingLinkSource = source,
+                Link = $"https://example.com/{i}",
+                TimeResponseMs = 100
+            });
+        }
+
+        return links;
     }
 }

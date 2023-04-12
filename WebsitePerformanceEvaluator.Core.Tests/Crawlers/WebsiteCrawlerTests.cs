@@ -1,4 +1,3 @@
-using System.Collections;
 using Moq;
 using WebsitePerformanceEvaluator.Core.Crawlers;
 using WebsitePerformanceEvaluator.Core.Filters;
@@ -6,7 +5,6 @@ using WebsitePerformanceEvaluator.Core.Helpers;
 using WebsitePerformanceEvaluator.Core.Models;
 using WebsitePerformanceEvaluator.Core.Models.Enums;
 using WebsitePerformanceEvaluator.Core.Parsers;
-using WebsitePerformanceEvaluator.Core.Tests.Crawlers.Common;
 using Xunit;
 
 namespace WebsitePerformanceEvaluator.Core.Tests.Crawlers;
@@ -33,8 +31,8 @@ public class WebsiteCrawlerTests
     {
         // Arrange
         var url = "https://www.google.com";
-        var linksWithResponseTime = CrawlersUtils.GetExpectedLinks(CrawlingLinkSource.Website, 2);
-        var linksWithoutResponseTime = CrawlersUtils.GetExpectedLinksWithoutTimeResponse(CrawlingLinkSource.Website, 2);
+        var linksWithResponseTime = GetExpectedLinks(CrawlingLinkSource.Website, 2);
+        var linksWithoutResponseTime = GetExpectedLinksWithoutTimeResponse(CrawlingLinkSource.Website, 2);
 
         var links = linksWithResponseTime.Concat(linksWithoutResponseTime);
 
@@ -103,5 +101,35 @@ public class WebsiteCrawlerTests
 
         // Assert
         Assert.Equal(2, result.Count());
+    }
+    private IEnumerable<LinkPerformance> GetExpectedLinks(CrawlingLinkSource source, int count)
+    {
+        var links = new List<LinkPerformance>();
+        for (var i = 0; i < count; i++)
+        {
+            links.Add(new LinkPerformance
+            {
+                CrawlingLinkSource = source,
+                Link = $"https://example.com/{i}",
+                TimeResponseMs = 100
+            });
+        }
+
+        return links;
+    }
+
+    private IEnumerable<LinkPerformance> GetExpectedLinksWithoutTimeResponse(CrawlingLinkSource source, int count)
+    {
+        var response = new List<LinkPerformance>();
+        for (var i = 0; i < count; i++)
+        {
+            response.Add(new LinkPerformance
+            {
+                CrawlingLinkSource = source,
+                Link = $"https://example.com/{i}"
+            });
+        }
+
+        return response;
     }
 }
