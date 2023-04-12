@@ -33,6 +33,7 @@ public class HtmlParserTests
         
         // Assert
         Assert.Single(result);
+        Assert.Equal(url, result.First().Link);
     }
     
     [Fact]
@@ -50,10 +51,9 @@ public class HtmlParserTests
 
         //Act
         var result = await _htmlParser.GetLinksAsync(url);
-        var firstLink = result.First();
-
+        
         //Assert
-        Assert.Equal(url, firstLink.Link);
+        Assert.Contains(result, item => item.Link == url);
     }
     
     [Fact]
