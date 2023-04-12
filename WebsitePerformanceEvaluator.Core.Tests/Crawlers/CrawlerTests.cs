@@ -21,7 +21,7 @@ public class CrawlerTests
     }
 
     [Fact]
-    public async Task CrawlWebsiteAndSitemapAsync_WhenCalled_ReturnsExpectedLinksFromBothSources()
+    public async Task CrawlWebsiteAndSitemapAsync_WhenBothWebsiteAndSitemapCrawlersHaveSameLinks_ReturnLinksWithoutCopingThem()
     {
         var url = "https://example.com";
         // Arrange
@@ -36,24 +36,45 @@ public class CrawlerTests
         var result = await _crawler.CrawlWebsiteAndSitemapAsync(url);
 
         // Assert
+        Assert.Equal(expectedLinks.Count(), result.Count());
         Assert.All(result, x => Assert.Equal(CrawlingLinkSource.WebsiteAndSitemap, x.CrawlingLinkSource));
     }
 
     [Fact]
-    public async Task CrawlWebsiteAndSitemapAsync_WhenCalled_ShouldCallWebsiteCrawlerAndSitemapCrawler()
+    public async Task CrawlWebsiteAndSitemapAsync_WhenCalled_ReturnsExpectedLinksFromWebsiteSource()
     {
-        // Arrange
         var url = "https://example.com";
+        // Arrange
+        var expectedLinks = CrawlersUtils.GetExpectedLinks(CrawlingLinkSource.Website, 3);
+
         _websiteCrawlerMock.Setup(x => x.FindLinksAsync(It.IsAny<string>()))
-            .ReturnsAsync(new List<LinkPerformance>());
+            .ReturnsAsync(expectedLinks);
         _sitemapCrawlerMock.Setup(x => x.FindLinksAsync(It.IsAny<string>()))
-            .ReturnsAsync(new List<LinkPerformance>());
+            .ReturnsAsync(Enumerable.Empty<LinkPerformance>());
 
         // Act
-        await _crawler.CrawlWebsiteAndSitemapAsync(url);
+        var result = await _crawler.CrawlWebsiteAndSitemapAsync(url);
 
         // Assert
-        _websiteCrawlerMock.Verify(x => x.FindLinksAsync(url), Times.Once);
-        _sitemapCrawlerMock.Verify(x => x.FindLinksAsync(url), Times.Once);
+        Assert.All(result, x => Assert.Equal(CrawlingLinkSource.Website, x.CrawlingLinkSource));
+    }
+
+    [Fact]
+    public async Task CrawlWebsiteAndSitemapAsync_WhenCalled_ReturnsExpectedLinksFromSitemapSource()
+    {
+        var url = "https://example.com";
+        // Arrange
+        var expectedLinks = CrawlersUtils.GetExpectedLinks(CrawlingLinkSource.Sitemap, 3);
+
+        _websiteCrawlerMock.Setup(x => x.FindLinksAsync(It.IsAny<string>()))
+            .ReturnsAsync(Enumerable.Empty<LinkPerformance>());
+        _sitemapCrawlerMock.Setup(x => x.FindLinksAsync(It.IsAny<string>()))
+            .ReturnsAsync(expectedLinks);
+
+        // Act
+        var result = await _crawler.CrawlWebsiteAndSitemapAsync(url);
+
+        // Assert
+        Assert.All(result, x => Assert.Equal(CrawlingLinkSource.Sitemap, x.CrawlingLinkSource));
     }
 }

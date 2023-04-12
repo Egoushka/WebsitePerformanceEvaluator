@@ -34,13 +34,13 @@ public class HtmlParserTests
         // Assert
         Assert.Single(result);
     }
-
+    
     [Fact]
-    public async Task GetLinksAsync_WhenHtmlDocumentContainsLinks_ShouldReturnExpectedNumberOfLinks()
+    public async Task GetLinkAsync_WhenLinksFound_ShouldReturnInputAsFirstItem()
     {
         //Arrange
         var url = "https://example.com";
-
+        
         var htmlDocument = new HtmlDocument();
         htmlDocument.LoadHtml(
             "<html><body><a href=\"https://example.com/1\">1</a><a href=\"https://example.com/2\">2</a></body></html>");
@@ -50,13 +50,14 @@ public class HtmlParserTests
 
         //Act
         var result = await _htmlParser.GetLinksAsync(url);
+        var firstLink = result.First();
 
         //Assert
-        Assert.Equal(3, result.Count());
+        Assert.Equal(url, firstLink.Link);
     }
-
+    
     [Fact]
-    public async Task GetLinkAsync_WhenGivenValidUrl_ShouldReturnAllLinksFromHtmlDocumentAndItself()
+    public async Task GetLinkAsync_WhenLinksFound_ShouldReturnAllLinksFromHtmlDocument()
     {
         //Arrange
         var url = "https://example.com";
@@ -77,32 +78,14 @@ public class HtmlParserTests
 
         //Act
         var result = await _htmlParser.GetLinksAsync(url);
-        var firstLink = result.First();
 
         //Assert
+        Assert.Equal(3, result.Count());
         Assert.All(result, link => Assert.Contains(link.Link, expectedLinks));
-        Assert.Equal(url, firstLink.Link);
     }
-    [Fact]
-    public async Task GetLinkAsync_WhenGivenValidUrlAndRetrieveUrls_FirstLinkShouldBeCaller()
-    {
-        //Arrange
-        var url = "https://example.com";
-
-        var htmlDocument = new HtmlDocument();
-        htmlDocument.LoadHtml(
-            "<html><body><a href=\"https://example.com/1\">1</a><a href=\"https://example.com/2\">2</a></body></html>");
-
-        _httpClientServiceMock.Setup(service => service.GetDocumentAsync(It.IsAny<LinkPerformance>()))
-            .ReturnsAsync(htmlDocument);
-
-        //Act
-        var result = await _htmlParser.GetLinksAsync(url);
-        var firstLink = result.First();
-
-        //Assert
-        Assert.Equal(url, firstLink.Link);
-    }
+    
+  
+    
     [Fact]
     public async Task GetLinkAsync_WhenLinksFound_AllShouldHaveWebsiteSource()
     {

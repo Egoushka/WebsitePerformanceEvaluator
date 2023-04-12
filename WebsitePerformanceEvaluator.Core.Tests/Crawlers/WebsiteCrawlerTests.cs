@@ -28,57 +28,14 @@ public class WebsiteCrawlerTests
     }
 
     [Fact]
-    public async Task FindLinksAsync_WhenNoLinksFound_ShouldReturnEmptyList()
-    {
-        // Arrange
-        var url = "https://www.google.com";
-        _htmlParserMock
-            .Setup(x => x.GetLinksAsync(url))
-            .ReturnsAsync(new List<LinkPerformance>());
-
-        // Act
-        var result = await _crawler.FindLinksAsync(url);
-
-        // Assert
-        Assert.Empty(result);
-    }
-
-    [Fact]
-    public async Task FindLinksAsync_WhenLinksFound_ShouldReturnLinks()
-    {
-        // Arrange
-        var url = "https://www.google.com";
-        var links = CrawlersUtils.GetExpectedLinks(CrawlingLinkSource.Website, 2);
-
-        _htmlParserMock
-            .Setup(x => x.GetLinksAsync(url))
-            .ReturnsAsync(links);
-
-        _linkFilterMock
-            .Setup(x => x.FilterLinks(links, url))
-            .Returns(links);
-
-        _linkHelperMock
-            .Setup(x => x.RemoveLastSlashFromLinks(links))
-            .Returns(links);
-
-        _linkHelperMock
-            .Setup(x => x.AddBaseUrl(links, url))
-            .Returns(links);
-
-        // Act
-        var result = await _crawler.FindLinksAsync(url);
-
-        // Assert
-        Assert.Equal(links, result);
-    }
-
-    [Fact]
     public async Task FindLinksAsync_WhenAvailable_ShouldReturnLinksWithResponseTime()
     {
         // Arrange
         var url = "https://www.google.com";
-        var links = CrawlersUtils.GetExpectedLinks(CrawlingLinkSource.Website, 2);
+        var linksWithResponseTime = CrawlersUtils.GetExpectedLinks(CrawlingLinkSource.Website, 2);
+        var linksWithoutResponseTime = CrawlersUtils.GetExpectedLinksWithoutTimeResponse(CrawlingLinkSource.Website, 2);
+
+        var links = linksWithResponseTime.Concat(linksWithoutResponseTime);
 
         _htmlParserMock
             .Setup(x => x.GetLinksAsync(url))
@@ -134,12 +91,15 @@ public class WebsiteCrawlerTests
         await _crawler.FindLinksAsync(url);
 
         // Assert
-        _htmlParserMock.Verify(x => x.GetLinksAsync(It.IsAny<string>()), Times.Exactly(3));
+        var expectedTimes = Times.Exactly(3);
+        
+        _htmlParserMock.Verify(x => x.GetLinksAsync(It.IsAny<string>()), 
+            expectedTimes);
         _linkFilterMock.Verify(x => x.FilterLinks(It.IsAny<IEnumerable<LinkPerformance>>(), It.IsAny<string>()),
-            Times.Exactly(3));
+            expectedTimes);
         _linkHelperMock.Verify(x => x.RemoveLastSlashFromLinks(It.IsAny<IEnumerable<LinkPerformance>>()),
-            Times.Exactly(3));
+            expectedTimes);
         _linkHelperMock.Verify(x => x.AddBaseUrl(It.IsAny<IEnumerable<LinkPerformance>>(), It.IsAny<string>()),
-            Times.Exactly(3));
+            expectedTimes);
     }
 }

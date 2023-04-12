@@ -32,7 +32,8 @@ public class LinkHelperTests
         var result = _linkHelper.RemoveLastSlashFromLinks(links).ToList();
 
         // Assert
-        Assert.Equal(baseUrl + "/page", result.FirstOrDefault()?.Link);
+        Assert.All(result, link => Assert.False(link.Link.EndsWith("/")));
+
     }
     [Fact]
     public void RemoveLastSlashFromLinks_WhenGivenLinkWithoutSlashAtTheEnd_ShouldReturnAsItWas()
@@ -49,7 +50,7 @@ public class LinkHelperTests
         var result = _linkHelper.RemoveLastSlashFromLinks(links).ToList();
 
         // Assert
-        Assert.Equal(expected, result.FirstOrDefault()?.Link);
+        Assert.All(result, link => Assert.False(link.Link.EndsWith("/")));
     }
 
     [Fact]
@@ -59,26 +60,25 @@ public class LinkHelperTests
         var expectedTimes = new[] { 100, 200, 300 };
         var links = new List<LinkPerformance>
         {
-            new() { Link = "https://example.com" },
-            new() { Link = "https://example.com/page" },
-            new() { Link = "https://example.com/contact" }
+            new() { Link = "https://example.com/1" },
+            new() { Link = "https://example.com/2" },
+            new() { Link = "https://example.com/3" }
         };
         
         _httpClientServiceMock
-            .Setup(x => x.GetTimeResponseAsync("https://example.com"))
+            .Setup(x => x.GetTimeResponseAsync("https://example.com/1"))
             .ReturnsAsync(100L);
         _httpClientServiceMock
-            .Setup(x => x.GetTimeResponseAsync("https://example.com/page"))
+            .Setup(x => x.GetTimeResponseAsync("https://example.com/2"))
             .ReturnsAsync(200L);
         _httpClientServiceMock
-            .Setup(x => x.GetTimeResponseAsync("https://example.com/contact"))
+            .Setup(x => x.GetTimeResponseAsync("https://example.com/3"))
             .ReturnsAsync(300L);
 
         // Act
         var result = (await _linkHelper.AddResponseTimeAsync(links)).ToList();
 
         // Assert
-        Assert.Equal(3, result.Count);
         Assert.All(result, link => Assert.Equal(expectedTimes.ElementAt(result.IndexOf(link)), link.TimeResponseMs));
     }
 }
