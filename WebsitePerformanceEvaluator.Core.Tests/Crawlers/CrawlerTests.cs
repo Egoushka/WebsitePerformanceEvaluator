@@ -23,8 +23,9 @@ public class CrawlerTests
     [Fact]
     public async Task CrawlWebsiteAndSitemapAsync_WhenBothWebsiteAndSitemapCrawlersHaveSameLinks_ReturnLinksWithoutCopingThem()
     {
-        var url = "https://example.com";
         // Arrange
+        var url = "https://example.com";
+        
         var expectedLinks = CrawlersUtils.GetExpectedLinks(CrawlingLinkSource.Website, 3);
 
         _websiteCrawlerMock.Setup(x => x.FindLinksAsync(It.IsAny<string>()))
@@ -43,8 +44,9 @@ public class CrawlerTests
     [Fact]
     public async Task CrawlWebsiteAndSitemapAsync_WhenCalled_ReturnsExpectedLinksFromWebsiteSource()
     {
-        var url = "https://example.com";
         // Arrange
+        var url = "https://example.com";
+        
         var expectedLinks = CrawlersUtils.GetExpectedLinks(CrawlingLinkSource.Website, 3);
 
         _websiteCrawlerMock.Setup(x => x.FindLinksAsync(It.IsAny<string>()))
@@ -62,8 +64,9 @@ public class CrawlerTests
     [Fact]
     public async Task CrawlWebsiteAndSitemapAsync_WhenCalled_ReturnsExpectedLinksFromSitemapSource()
     {
-        var url = "https://example.com";
         // Arrange
+        var url = "https://example.com";
+
         var expectedLinks = CrawlersUtils.GetExpectedLinks(CrawlingLinkSource.Sitemap, 3);
 
         _websiteCrawlerMock.Setup(x => x.FindLinksAsync(It.IsAny<string>()))
