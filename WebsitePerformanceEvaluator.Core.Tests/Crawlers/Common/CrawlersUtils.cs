@@ -17,4 +17,15 @@ public static class CrawlersUtils
             };
         }
     }
+    public static IEnumerable<LinkPerformance> GetExpectedLinksWithoutTimeResponse(CrawlingLinkSource source, int count)
+    {
+        for (var i = 0; i < count; i++)
+        {
+            yield return new LinkPerformance
+            {
+                CrawlingLinkSource = source,
+                Link = $"https://example.com/{i}"
+            };
+        }
+    }
 }
