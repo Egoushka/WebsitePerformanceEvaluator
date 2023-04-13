@@ -60,7 +60,7 @@ public class WebsiteCrawlerTests
     }
 
     [Fact]
-    public async Task FindLinksAsync_OnMultipleCrawlCalls_ReturnsExpectedLinkCount()
+    public async Task FindLinksAsync_OnMultipleCrawlCalls_CheckCountAndLinksItself()
     {
         // Arrange
         var url = "https://example.com";
@@ -93,6 +93,8 @@ public class WebsiteCrawlerTests
             },
         };
 
+        var expectedLinks = links.Union(linksAfterSecondCall);
+
         _htmlParserMock.Setup(x => x.GetLinksAsync("https://example.com"))
             .ReturnsAsync(links);
         _htmlParserMock.Setup(x => x.GetLinksAsync("https://example.com/1"))
@@ -124,6 +126,7 @@ public class WebsiteCrawlerTests
 
         // Assert
         Assert.Equal(3, result.Count());
+        Assert.Equal(expectedLinks, result);
     }
     
     private IEnumerable<LinkPerformance> GetExpectedLinks(CrawlingLinkSource source, int count)
