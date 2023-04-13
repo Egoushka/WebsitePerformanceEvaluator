@@ -1,5 +1,3 @@
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using WebsitePerformanceEvaluator.Core.Crawlers;
 using WebsitePerformanceEvaluator.Core.Filters;
@@ -7,7 +5,6 @@ using WebsitePerformanceEvaluator.Core.Helpers;
 using WebsitePerformanceEvaluator.Core.Parsers;
 using WebsitePerformanceEvaluator.Core.Service;
 using WebsitePerformanceEvaluator.Core.Validators;
-using WebsitePerformanceEvaluator.Data.Models;
 
 namespace WebsitePerformanceEvaluator.Core;
 

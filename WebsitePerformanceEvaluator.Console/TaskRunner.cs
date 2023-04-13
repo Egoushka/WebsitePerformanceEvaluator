@@ -3,7 +3,7 @@ using WebsitePerformanceEvaluator.Core.Crawlers;
 using WebsitePerformanceEvaluator.Data.Enums;
 using WebsitePerformanceEvaluator.Data.Models;
 
-namespace WebsitePerformanceEvaluator;
+namespace WebsitePerformanceEvaluator.Console;
 
 public class TaskRunner
 {

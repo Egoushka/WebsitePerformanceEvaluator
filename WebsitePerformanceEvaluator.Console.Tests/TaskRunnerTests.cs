@@ -4,7 +4,7 @@ using WebsitePerformanceEvaluator.Data.Enums;
 using WebsitePerformanceEvaluator.Data.Models;
 using Xunit;
 
-namespace WebsitePerformanceEvaluator.Tests;
+namespace WebsitePerformanceEvaluator.Console.Tests;
 
 public class TaskRunnerTests
 {

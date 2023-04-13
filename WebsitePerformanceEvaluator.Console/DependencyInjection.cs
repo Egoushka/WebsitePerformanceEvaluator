@@ -1,7 +1,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using WebsitePerformanceEvaluator.Core.Interfaces;
 
-namespace WebsitePerformanceEvaluator;
+namespace WebsitePerformanceEvaluator.Console;
 
 public static class DependencyInjection
 {

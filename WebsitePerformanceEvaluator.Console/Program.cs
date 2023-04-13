@@ -3,7 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using WebsitePerformanceEvaluator.Core;
 using WebsitePerformanceEvaluator.Data;
 
-namespace WebsitePerformanceEvaluator;
+namespace WebsitePerformanceEvaluator.Console;
 
 internal static class Program
 {

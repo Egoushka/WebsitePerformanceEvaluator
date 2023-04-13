@@ -1,11 +1,11 @@
 using WebsitePerformanceEvaluator.Core.Interfaces;
 
-namespace WebsitePerformanceEvaluator;
+namespace WebsitePerformanceEvaluator.Console;
 
 public class ConsoleLogger : ILogger
 {
     public void Error(string message)
     {
-        Console.WriteLine($"[ERROR] {message}");
+        System.Console.WriteLine($"[ERROR] {message}");
     }
 }

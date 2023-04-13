@@ -1,14 +1,14 @@
-namespace WebsitePerformanceEvaluator;
+namespace WebsitePerformanceEvaluator.Console;
 
 public class ConsoleWrapper
 {
     public virtual string ReadLine()
     {
-        return Console.ReadLine();
+        return System.Console.ReadLine();
     }
 
     public virtual void WriteLine(string message = "")
     {
-        Console.WriteLine(message);
+        System.Console.WriteLine(message);
     }
 }
