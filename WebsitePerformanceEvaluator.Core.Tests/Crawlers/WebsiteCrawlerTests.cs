@@ -60,7 +60,7 @@ public class WebsiteCrawlerTests
     }
 
     [Fact]
-    public async Task FindLinksAsync_WhenPassedLink_ShouldCheckIsMethodsCalled()
+    public async Task FindLinksAsync_OnMultipleCrawlCalls_ReturnsExpectedLinkCount()
     {
         // Arrange
         var url = "https://example.com";
@@ -78,30 +78,53 @@ public class WebsiteCrawlerTests
                 TimeResponseMs = 100,
             },
         };
+        var linksAfterSecondCall = new List<LinkPerformance>
+        {
+            new()
+            {
+                Link = "https://example.com/1",
+                TimeResponseMs = 100,
+            },
+            new()
+            {
+                Link = "https://example.com/2",
+                TimeResponseMs = 100,
+            },
+        };
 
         _htmlParserMock.Setup(x => x.GetLinksAsync("https://example.com"))
             .ReturnsAsync(links);
         _htmlParserMock.Setup(x => x.GetLinksAsync("https://example.com/1"))
-            .ReturnsAsync(Enumerable.Empty<LinkPerformance>());
+            .ReturnsAsync(linksAfterSecondCall);
         
         _linkFilterMock
             .Setup(x => x.FilterLinks(links, url))
             .Returns(links);
+        _linkFilterMock
+            .Setup(x => x.FilterLinks(linksAfterSecondCall, url))
+            .Returns(linksAfterSecondCall);
 
         _linkHelperMock
             .Setup(x => x.RemoveLastSlashFromLinks(links))
             .Returns(links);
+        _linkHelperMock
+            .Setup(x => x.RemoveLastSlashFromLinks(linksAfterSecondCall))
+            .Returns(linksAfterSecondCall);
 
         _linkHelperMock
             .Setup(x => x.AddBaseUrl(links, url))
             .Returns(links);
+        _linkHelperMock
+            .Setup(x => x.AddBaseUrl(linksAfterSecondCall, url))
+            .Returns(linksAfterSecondCall);
 
         // Act
         var result = await _crawler.FindLinksAsync(url);
 
         // Assert
-        Assert.Equal(2, result.Count());
+        Assert.Equal(3, result.Count());
     }
+    
     private IEnumerable<LinkPerformance> GetExpectedLinks(CrawlingLinkSource source, int count)
     {
         var links = new List<LinkPerformance>();
