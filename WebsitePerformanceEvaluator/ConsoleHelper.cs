@@ -4,7 +4,7 @@ namespace WebsitePerformanceEvaluator;
 
 public class ConsoleHelper
 {
-    public void PrintTable(IEnumerable<string> headers, IEnumerable<string> rows)
+    public virtual void PrintTable(IEnumerable<string> headers, IEnumerable<string> rows)
     {
         ConsoleTableBuilder
             .From(rows.ToList())
@@ -13,7 +13,7 @@ public class ConsoleHelper
             .ExportAndWriteLine();
     }
 
-    public void PrintTable(IEnumerable<string> headers, IEnumerable<Tuple<string, long?>> rows)
+    public virtual void PrintTable(IEnumerable<string> headers, IEnumerable<Tuple<string, long?>> rows)
     {
         ConsoleTableBuilder
             .From(rows.ToList())
