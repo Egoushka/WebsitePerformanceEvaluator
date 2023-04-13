@@ -22,9 +22,8 @@ public class TaskRunner
     {
         var watch = Stopwatch.StartNew();
 
-        //_consoleWrapper.WriteLine("Enter website url:");
-        //var url = _consoleWrapper.ReadLine();
-        var url = "https://ukad-group.com/";
+        _consoleWrapper.WriteLine("Enter website url:");
+        var url = _consoleWrapper.ReadLine();
 
         watch.Start();
 

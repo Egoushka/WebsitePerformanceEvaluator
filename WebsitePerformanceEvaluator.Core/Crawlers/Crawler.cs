@@ -14,7 +14,7 @@ public class Crawler
         _sitemapCrawler = sitemapCrawler;
     }
 
-    public async Task<IEnumerable<LinkPerformance>> CrawlWebsiteAndSitemapAsync(string url)
+    public virtual async Task<IEnumerable<LinkPerformance>> CrawlWebsiteAndSitemapAsync(string url)
     {
         var crawlingTask = Task.Run(() => _websiteCrawler.FindLinksAsync(url));
         var sitemapTask = Task.Run(() => _sitemapCrawler.FindLinksAsync(url));
