@@ -37,42 +37,6 @@ public class TaskRunnerTests
         _consoleWrapperMock.Verify(x => x.ReadLine(), Times.Once());
     }
     
-    [Fact]
-    public async Task Run_ValidUrl_CheckIsTableWithTimeResponsesPrintedInRightOrder()
-    {
-        // Arrange
-        var url = "https://ukad-group.com/";
-        
-        var expectedLinkPerformances = new List<LinkPerformance>
-        {
-            new()
-            {
-                CrawlingLinkSource = CrawlingLinkSource.Sitemap,
-                Link = "https://ukad-group.com/2",
-                TimeResponseMs = 200
-            },
-            new()
-            {
-                CrawlingLinkSource = CrawlingLinkSource.Website,
-                Link = "https://ukad-group.com/1",
-                TimeResponseMs = 100
-            }
-        };
-        
-        var expectedLinksWithTimeResponse = new List<Tuple<string, long?>>
-        {
-            new("https://ukad-group.com/1", 100),
-            new("https://ukad-group.com/2", 200),
-        };
-        
-        SetupMocks(url, expectedLinkPerformances);
-
-        // Act
-        await _taskRunner.Run();
-
-        // Assert
-        _consoleHelperMock.Verify(x => x.PrintTable(It.IsAny<IEnumerable<string>>(), expectedLinksWithTimeResponse), Times.Once);
-    }
 
     [Fact]
     public async Task Run_ValidUrl_CheckIsPrintedLinksCountBySourceType()
@@ -159,6 +123,43 @@ public class TaskRunnerTests
         // Assert
         _consoleWrapperMock.Verify(x => x.WriteLine("Links found after crawling website, but not in sitemap:"), Times.Once());
         _consoleHelperMock.Verify(x => x.PrintTable(It.IsAny<IEnumerable<string>>(), expectedLinksInString), Times.Once);
+    }
+    
+    [Fact]
+    public async Task Run_ValidUrl_CheckIsTableWithTimeResponsesPrintedInRightOrder()
+    {
+        // Arrange
+        var url = "https://ukad-group.com/";
+        
+        var expectedLinkPerformances = new List<LinkPerformance>
+        {
+            new()
+            {
+                CrawlingLinkSource = CrawlingLinkSource.Sitemap,
+                Link = "https://ukad-group.com/2",
+                TimeResponseMs = 200
+            },
+            new()
+            {
+                CrawlingLinkSource = CrawlingLinkSource.Website,
+                Link = "https://ukad-group.com/1",
+                TimeResponseMs = 100
+            }
+        };
+        
+        var expectedLinksWithTimeResponse = new List<Tuple<string, long?>>
+        {
+            new("https://ukad-group.com/1", 100),
+            new("https://ukad-group.com/2", 200),
+        };
+        
+        SetupMocks(url, expectedLinkPerformances);
+
+        // Act
+        await _taskRunner.Run();
+
+        // Assert
+        _consoleHelperMock.Verify(x => x.PrintTable(It.IsAny<IEnumerable<string>>(), expectedLinksWithTimeResponse), Times.Once);
     }
 
     private void SetupMocks()
