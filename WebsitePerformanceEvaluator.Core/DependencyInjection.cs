@@ -10,7 +10,7 @@ namespace WebsitePerformanceEvaluator.Core;
 
 public static class DependencyInjection
 {
-    public static void ConfigureCoreServices(this IServiceCollection services)
+    public static IServiceCollection ConfigureCoreServices(this IServiceCollection services)
     {
         services.AddTransient<Crawler>();
         services.AddTransient<WebsiteCrawler>();
@@ -21,5 +21,7 @@ public static class DependencyInjection
         services.AddTransient<LinkFilter>();
         services.AddTransient<LinkValidator>();
         services.AddTransient<LinkHelper>();
+        
+        return services;
     }
 }
