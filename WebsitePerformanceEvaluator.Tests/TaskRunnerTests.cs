@@ -29,7 +29,7 @@ public class TaskRunnerTests
     {
         // Arrange
         var url = "https://ukad-group.com/";
-        var expectedLinkPerformances = GetLinks();
+        var expectedLinkPerformances = GetDefaultExpectedLinks();
 
         _crawlerMock
             .Setup(x => x.CrawlWebsiteAndSitemapAsync(url))
@@ -53,7 +53,7 @@ public class TaskRunnerTests
     {
         // Arrange
         var url = "https://ukad-group.com/";
-        var expectedLinkPerformances = GetLinks();
+        var expectedLinkPerformances = GetDefaultExpectedLinks();
 
         _crawlerMock
             .Setup(x => x.CrawlWebsiteAndSitemapAsync(url))
@@ -77,7 +77,7 @@ public class TaskRunnerTests
     {
         // Arrange
         var url = "https://ukad-group.com/";
-        var expectedLinkPerformances = GetLinks();
+        var expectedLinkPerformances = GetDefaultExpectedLinks();
 
         _crawlerMock
             .Setup(x => x.CrawlWebsiteAndSitemapAsync(url))
@@ -104,7 +104,7 @@ public class TaskRunnerTests
     {
         // Arrange
         var url = "https://ukad-group.com/";
-        var expectedLinkPerformances = GetLinks();
+        var expectedLinkPerformances = GetDefaultExpectedLinks();
 
         _crawlerMock
             .Setup(x => x.CrawlWebsiteAndSitemapAsync(url))
@@ -196,7 +196,7 @@ public class TaskRunnerTests
     {
         // Arrange
         var url = "https://ukad-group.com/";
-        var expectedLinkPerformances = GetLinks();
+        var expectedLinkPerformances = GetDefaultExpectedLinks();
 
         _crawlerMock
             .Setup(x => x.CrawlWebsiteAndSitemapAsync(url))
@@ -214,7 +214,7 @@ public class TaskRunnerTests
         _consoleWrapperMock.Verify(x => x.WriteLine("Links with time response:"), Times.Once());
     }
 
-    private IEnumerable<LinkPerformance> GetLinks()
+    private IEnumerable<LinkPerformance> GetDefaultExpectedLinks()
     {
         var links = new List<LinkPerformance>
         {
