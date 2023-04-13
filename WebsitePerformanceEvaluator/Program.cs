@@ -1,5 +1,7 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using WebsitePerformanceEvaluator.Core;
+using WebsitePerformanceEvaluator.Data;
 
 namespace WebsitePerformanceEvaluator;
 
@@ -12,18 +14,24 @@ internal static class Program
     
     private static ServiceProvider CompositionRoot()
     {
-        var services = ConfigureServices();
-        var builder = services.BuildServiceProvider();
+        var configuration = new ConfigurationBuilder()
+            .AddJsonFile("Config/appsettings.json", false, true)
+            .Build();
+        
+        var services = ConfigureServices(configuration);
 
+        var builder = services.BuildServiceProvider();
+        
         return builder;
     }
-    
-    private static ServiceCollection ConfigureServices()
+
+    private static ServiceCollection ConfigureServices(IConfiguration configuration)
     {
         var services = new ServiceCollection();
-
+        
         services.ConfigureConsoleServices();
         services.ConfigureCoreServices();
+        services.ConfigureDataServices(configuration);
 
         return services;
     }
