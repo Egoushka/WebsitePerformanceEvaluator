@@ -106,6 +106,7 @@ public class TaskRunnerTests
     {
         // Arrange
         var url = "https://ukad-group.com/";
+        
         var expectedLinkPerformances = new List<LinkPerformance>
         {
             new()
@@ -114,10 +115,12 @@ public class TaskRunnerTests
                 Link = "https://ukad-group.com/contacts"
             }
         };
+        
         var expectedLinksInString = new List<string>
         {
             "https://ukad-group.com/contacts"
         };
+        
         SetupMocks(url, expectedLinkPerformances);
 
         // Act
@@ -133,6 +136,7 @@ public class TaskRunnerTests
     {
         // Arrange
         var url = "https://ukad-group.com/";
+        
         var expectedLinkPerformances = new List<LinkPerformance>
         {
             new()
@@ -141,10 +145,12 @@ public class TaskRunnerTests
                 Link = "https://ukad-group.com/contacts"
             }
         };
+        
         var expectedLinksInString = new List<string>
         {
             "https://ukad-group.com/contacts"
         };
+        
         SetupMocks(url, expectedLinkPerformances);
 
         // Act
@@ -153,7 +159,6 @@ public class TaskRunnerTests
         // Assert
         _consoleWrapperMock.Verify(x => x.WriteLine("Links found after crawling website, but not in sitemap:"), Times.Once());
         _consoleHelperMock.Verify(x => x.PrintTable(It.IsAny<IEnumerable<string>>(), expectedLinksInString), Times.Once);
-
     }
 
     private void SetupMocks()
@@ -169,9 +174,11 @@ public class TaskRunnerTests
         _crawlerMock
             .Setup(x => x.CrawlWebsiteAndSitemapAsync(url))
             .ReturnsAsync(expectedLinkPerformances);
+        
         _consoleWrapperMock
             .Setup(x => x.ReadLine())
             .Returns(url);
+        
         _consoleHelperMock
             .Setup(x => x.PrintTable(It.IsAny<IEnumerable<string>>(), It.IsAny<IEnumerable<string>>()));
         _consoleHelperMock
