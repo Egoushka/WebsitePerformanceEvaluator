@@ -6,7 +6,7 @@ public class LinkPerformanceRepository
 {
     private readonly WebsitePerformanceEvaluatorContext _repositoryContext;
 
-    protected LinkPerformanceRepository(WebsitePerformanceEvaluatorContext repositoryContext)
+    public LinkPerformanceRepository(WebsitePerformanceEvaluatorContext repositoryContext)
     {
         _repositoryContext = repositoryContext;
     }
