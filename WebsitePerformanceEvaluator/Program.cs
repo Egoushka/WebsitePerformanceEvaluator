@@ -1,48 +1,30 @@
-﻿using Autofac;
-using Autofac.Extensions.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection;
-using WebsitePerformanceEvaluator.Core.Crawlers;
-using WebsitePerformanceEvaluator.Core.Filters;
-using WebsitePerformanceEvaluator.Core.Helpers;
-using WebsitePerformanceEvaluator.Core.Interfaces;
-using WebsitePerformanceEvaluator.Core.Parsers;
-using WebsitePerformanceEvaluator.Core.Service;
-using WebsitePerformanceEvaluator.Core.Validators;
+﻿using Microsoft.Extensions.DependencyInjection;
+using WebsitePerformanceEvaluator.Core;
 
 namespace WebsitePerformanceEvaluator;
 
 internal static class Program
 {
-    private static IContainer CompositionRoot()
+    public static async Task Main()
+    {
+        await CompositionRoot().GetService<TaskRunner>().Run();
+    }
+    
+    private static ServiceProvider CompositionRoot()
+    {
+        var services = ConfigureServices();
+        var builder = services.BuildServiceProvider();
+
+        return builder;
+    }
+    
+    private static ServiceCollection ConfigureServices()
     {
         var services = new ServiceCollection();
 
-        services.AddOptions();
-        services.AddHttpClient();
+        services.ConfigureConsoleServices();
+        services.ConfigureCoreServices();
 
-        services.AddTransient<Crawler>();
-        services.AddTransient<WebsiteCrawler>();
-        services.AddTransient<SitemapCrawler>();
-        services.AddTransient<HttpClientService>();
-        services.AddTransient<HtmlParser>();
-        services.AddTransient<XmlParser>();
-        services.AddTransient<LinkFilter>();
-        services.AddTransient<LinkValidator>();
-        services.AddTransient<LinkHelper>();
-        services.AddTransient<TaskRunner>();
-        services.AddTransient<ConsoleWrapper>();
-        services.AddTransient<ConsoleHelper>();
-        services.AddTransient<ILogger, ConsoleLogger>();
-
-        var builder = new ContainerBuilder();
-
-        builder.Populate(services);
-
-        return builder.Build();
-    }
-
-    public static async Task Main()
-    {
-        await CompositionRoot().Resolve<TaskRunner>().Run();
+        return services;
     }
 }

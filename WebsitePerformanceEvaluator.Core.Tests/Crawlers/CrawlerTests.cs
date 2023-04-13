@@ -15,7 +15,7 @@ public class CrawlerTests
     public CrawlerTests()
     {
         _websiteCrawlerMock = new Mock<WebsiteCrawler>();
-        _sitemapCrawlerMock = new Mock<SitemapCrawler>();
+        _sitemapCrawlerMock = new Mock<SitemapCrawler>(null, null, null, null, null);
         _crawler = new Crawler(_websiteCrawlerMock.Object, _sitemapCrawlerMock.Object);
     }
 
