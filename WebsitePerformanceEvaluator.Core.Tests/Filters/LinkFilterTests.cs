@@ -85,6 +85,7 @@ public class LinkFilterTests
         // Assert
         Assert.Empty(result);
     }
+    
     [Fact]
     public void FilterLinks_WhenGivenOnlyExternalLinks_ShouldReturnEmptyList()
     {

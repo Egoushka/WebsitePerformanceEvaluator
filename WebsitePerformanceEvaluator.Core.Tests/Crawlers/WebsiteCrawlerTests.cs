@@ -78,6 +78,7 @@ public class WebsiteCrawlerTests
                 TimeResponseMs = 100,
             },
         };
+        
         var linksAfterSecondCall = new List<LinkPerformance>
         {
             new()
@@ -143,16 +144,16 @@ public class WebsiteCrawlerTests
 
     private IEnumerable<LinkPerformance> GetExpectedLinksWithoutTimeResponse(CrawlingLinkSource source, int count)
     {
-        var response = new List<LinkPerformance>();
+        var links = new List<LinkPerformance>();
         for (var i = 0; i < count; i++)
         {
-            response.Add(new LinkPerformance
+            links.Add(new LinkPerformance
             {
                 CrawlingLinkSource = source,
                 Link = $"https://example.com/{i}"
             });
         }
 
-        return response;
+        return links;
     }
 }

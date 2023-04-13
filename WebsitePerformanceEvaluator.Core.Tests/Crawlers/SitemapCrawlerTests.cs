@@ -113,6 +113,7 @@ public class SitemapCrawlerTests
         // Assert
         Assert.Equal(filteredLinks, result);
     }
+    
     [Fact]
     public async Task FindLinksAsync_WhenSitemapNotAvailable_ShouldReturnEmptyList()
     {

@@ -83,9 +83,7 @@ public class HtmlParserTests
         Assert.Equal(3, result.Count());
         Assert.All(result, link => Assert.Contains(link.Link, expectedLinks));
     }
-    
-  
-    
+
     [Fact]
     public async Task GetLinkAsync_WhenLinksFound_AllShouldHaveWebsiteSource()
     {

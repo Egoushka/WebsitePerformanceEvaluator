@@ -35,6 +35,7 @@ public class LinkHelperTests
         Assert.All(result, link => Assert.False(link.Link.EndsWith("/")));
 
     }
+    
     [Fact]
     public void RemoveLastSlashFromLinks_WhenGivenLinkWithoutSlashAtTheEnd_ShouldReturnAsItWas()
     {
