@@ -1,6 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 
-namespace WebsitePerformanceEvaluator.Core.Data.Models;
+namespace WebsitePerformanceEvaluator.Data.Models;
 
 public class WebsitePerformanceEvaluatorContext : DbContext
 {

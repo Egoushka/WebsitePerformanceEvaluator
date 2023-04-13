@@ -8,6 +8,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebsitePerformanceEvaluator
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebsitePerformanceEvaluator.Tests", "WebsitePerformanceEvaluator.Tests\WebsitePerformanceEvaluator.Tests.csproj", "{61C299E2-212E-421A-8604-9CE4FA4743BB}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebsitePerformanceEvaluator.Data", "WebsitePerformanceEvaluator.Data\WebsitePerformanceEvaluator.Data.csproj", "{98EB0FE6-DDBD-45A1-95AE-129FBF0DA005}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -30,5 +32,9 @@ Global
 		{61C299E2-212E-421A-8604-9CE4FA4743BB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{61C299E2-212E-421A-8604-9CE4FA4743BB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{61C299E2-212E-421A-8604-9CE4FA4743BB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{98EB0FE6-DDBD-45A1-95AE-129FBF0DA005}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{98EB0FE6-DDBD-45A1-95AE-129FBF0DA005}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{98EB0FE6-DDBD-45A1-95AE-129FBF0DA005}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{98EB0FE6-DDBD-45A1-95AE-129FBF0DA005}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

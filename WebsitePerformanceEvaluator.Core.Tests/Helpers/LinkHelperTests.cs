@@ -1,7 +1,7 @@
 using Moq;
-using WebsitePerformanceEvaluator.Core.Data.Models;
 using WebsitePerformanceEvaluator.Core.Helpers;
 using WebsitePerformanceEvaluator.Core.Service;
+using WebsitePerformanceEvaluator.Data.Models;
 using Xunit;
 
 namespace WebsitePerformanceEvaluator.Core.Tests.Helpers;

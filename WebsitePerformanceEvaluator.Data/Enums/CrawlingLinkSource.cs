@@ -1,4 +1,4 @@
-namespace WebsitePerformanceEvaluator.Core.Data.Enums;
+namespace WebsitePerformanceEvaluator.Data.Enums;
 
 public enum CrawlingLinkSource
 {
