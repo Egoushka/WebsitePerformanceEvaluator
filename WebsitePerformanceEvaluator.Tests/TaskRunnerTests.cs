@@ -8,16 +8,18 @@ namespace WebsitePerformanceEvaluator.Tests;
 
 public class TaskRunnerTests
 {
-    private readonly TaskRunner _taskRunner;
     private readonly Mock<Crawler> _crawlerMock;
     private readonly Mock<ConsoleWrapper> _consoleWrapperMock;
     private readonly Mock<ConsoleHelper> _consoleHelperMock;
+    
+    private readonly TaskRunner _taskRunner;
 
     public TaskRunnerTests()
     {
         _crawlerMock = new Mock<Crawler>(null, null);
         _consoleWrapperMock = new Mock<ConsoleWrapper>();
         _consoleHelperMock = new Mock<ConsoleHelper>();
+        
         _taskRunner = new TaskRunner(_crawlerMock.Object, _consoleWrapperMock.Object, _consoleHelperMock.Object);
     }
 
@@ -34,36 +36,42 @@ public class TaskRunnerTests
         _consoleWrapperMock.Verify(x => x.WriteLine("Enter website url:"), Times.Once());
         _consoleWrapperMock.Verify(x => x.ReadLine(), Times.Once());
     }
-
+    
     [Fact]
-    public async Task Run_ValidUrl_IsCalledCrawlingMethod()
+    public async Task Run_ValidUrl_CheckIsTableWithTimeResponsesPrintedInRightOrder()
     {
         // Arrange
-        SetupMocks();
+        var url = "https://ukad-group.com/";
+        
+        var expectedLinkPerformances = new List<LinkPerformance>
+        {
+            new()
+            {
+                CrawlingLinkSource = CrawlingLinkSource.Sitemap,
+                Link = "https://ukad-group.com/2",
+                TimeResponseMs = 200
+            },
+            new()
+            {
+                CrawlingLinkSource = CrawlingLinkSource.Website,
+                Link = "https://ukad-group.com/1",
+                TimeResponseMs = 100
+            }
+        };
+        
+        var expectedLinksWithTimeResponse = new List<Tuple<string, long?>>
+        {
+            new("https://ukad-group.com/1", 100),
+            new("https://ukad-group.com/2", 200),
+        };
+        
+        SetupMocks(url, expectedLinkPerformances);
 
         // Act
         await _taskRunner.Run();
 
         // Assert
-        _consoleWrapperMock.Verify(x => x.WriteLine("Links found after crawling website, but not in sitemap:"),
-            Times.Once());
-    }
-
-    [Fact]
-    public async Task Run_ValidUrl_CheckIsTablesPrintingCalled()
-    {
-        // Arrange
-        SetupMocks();
-
-        // Act
-        await _taskRunner.Run();
-
-        // Assert
-        _consoleHelperMock.Verify(x => x.PrintTable(It.IsAny<IEnumerable<string>>(), It.IsAny<IEnumerable<string>>()),
-            Times.Exactly(2));
-        _consoleHelperMock.Verify(
-            x => x.PrintTable(It.IsAny<IEnumerable<string>>(), It.IsAny<IEnumerable<Tuple<string, long?>>>()),
-            Times.Exactly(1));
+        _consoleHelperMock.Verify(x => x.PrintTable(It.IsAny<IEnumerable<string>>(), expectedLinksWithTimeResponse), Times.Once);
     }
 
     [Fact]
@@ -106,17 +114,18 @@ public class TaskRunnerTests
                 Link = "https://ukad-group.com/contacts"
             }
         };
+        var expectedLinksInString = new List<string>
+        {
+            "https://ukad-group.com/contacts"
+        };
         SetupMocks(url, expectedLinkPerformances);
 
         // Act
         await _taskRunner.Run();
 
         // Assert
-        _consoleWrapperMock.Verify(x => x.WriteLine("Links found after crawling website, but not in sitemap:"),
-            Times.Once());
-        _consoleWrapperMock.Verify(x => x.WriteLine("No links found"), Times.Once());
-        _consoleWrapperMock.Verify(x => x.WriteLine("Links in sitemap, that wasn't found after crawling:"),
-            Times.Once());
+        _consoleHelperMock.Verify(x => x.PrintTable(It.IsAny<IEnumerable<string>>(), expectedLinksInString), Times.Once);
+        _consoleWrapperMock.Verify(x => x.WriteLine("Links in sitemap, that wasn't found after crawling:"), Times.Once());
     }
 
     [Fact]
@@ -132,17 +141,18 @@ public class TaskRunnerTests
                 Link = "https://ukad-group.com/contacts"
             }
         };
+        var expectedLinksInString = new List<string>
+        {
+            "https://ukad-group.com/contacts"
+        };
         SetupMocks(url, expectedLinkPerformances);
 
         // Act
         await _taskRunner.Run();
 
         // Assert
-        _consoleWrapperMock.Verify(x => x.WriteLine("Links found after crawling website, but not in sitemap:"),
-            Times.Once());
-        _consoleWrapperMock.Verify(x => x.WriteLine("Links in sitemap, that wasn't found after crawling:"),
-            Times.Once());
-        _consoleWrapperMock.Verify(x => x.WriteLine("No links found"), Times.Once());
+        _consoleWrapperMock.Verify(x => x.WriteLine("Links found after crawling website, but not in sitemap:"), Times.Once());
+        _consoleHelperMock.Verify(x => x.PrintTable(It.IsAny<IEnumerable<string>>(), expectedLinksInString), Times.Once);
 
     }
 
