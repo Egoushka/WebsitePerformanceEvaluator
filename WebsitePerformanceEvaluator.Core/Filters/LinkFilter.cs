@@ -1,4 +1,4 @@
-using WebsitePerformanceEvaluator.Core.Models;
+using WebsitePerformanceEvaluator.Core.Data.Models;
 using WebsitePerformanceEvaluator.Core.Validators;
 
 namespace WebsitePerformanceEvaluator.Core.Filters;

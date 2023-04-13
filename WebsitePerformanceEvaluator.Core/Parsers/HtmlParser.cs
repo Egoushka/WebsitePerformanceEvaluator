@@ -1,5 +1,5 @@
-using WebsitePerformanceEvaluator.Core.Models;
-using WebsitePerformanceEvaluator.Core.Models.Enums;
+using WebsitePerformanceEvaluator.Core.Data.Enums;
+using WebsitePerformanceEvaluator.Core.Data.Models;
 using WebsitePerformanceEvaluator.Core.Service;
 
 namespace WebsitePerformanceEvaluator.Core.Parsers;

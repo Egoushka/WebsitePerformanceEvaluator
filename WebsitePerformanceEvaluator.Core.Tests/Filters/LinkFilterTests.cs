@@ -1,6 +1,6 @@
 using Moq;
+using WebsitePerformanceEvaluator.Core.Data.Models;
 using WebsitePerformanceEvaluator.Core.Filters;
-using WebsitePerformanceEvaluator.Core.Models;
 using WebsitePerformanceEvaluator.Core.Validators;
 using Xunit;
 

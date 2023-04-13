@@ -1,6 +1,6 @@
+using WebsitePerformanceEvaluator.Core.Data.Models;
 using WebsitePerformanceEvaluator.Core.Filters;
 using WebsitePerformanceEvaluator.Core.Helpers;
-using WebsitePerformanceEvaluator.Core.Models;
 using WebsitePerformanceEvaluator.Core.Parsers;
 
 namespace WebsitePerformanceEvaluator.Core.Crawlers;

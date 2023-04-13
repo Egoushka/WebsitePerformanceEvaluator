@@ -1,7 +1,7 @@
 using HtmlAgilityPack;
 using Moq;
-using WebsitePerformanceEvaluator.Core.Models;
-using WebsitePerformanceEvaluator.Core.Models.Enums;
+using WebsitePerformanceEvaluator.Core.Data.Enums;
+using WebsitePerformanceEvaluator.Core.Data.Models;
 using WebsitePerformanceEvaluator.Core.Parsers;
 using WebsitePerformanceEvaluator.Core.Service;
 using Xunit;
