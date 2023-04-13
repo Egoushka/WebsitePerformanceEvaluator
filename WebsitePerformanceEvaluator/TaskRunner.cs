@@ -18,7 +18,7 @@ public class TaskRunner
         _consoleHelper = consoleHelper;
     }
 
-    public async Task Run()
+    public async Task RunAsync()
     {
         var watch = Stopwatch.StartNew();
 

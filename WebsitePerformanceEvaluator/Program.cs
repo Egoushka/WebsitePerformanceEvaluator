@@ -7,7 +7,7 @@ internal static class Program
 {
     public static async Task Main()
     {
-        await CompositionRoot().GetService<TaskRunner>().Run();
+        await CompositionRoot().GetService<TaskRunner>().RunAsync();
     }
     
     private static ServiceProvider CompositionRoot()

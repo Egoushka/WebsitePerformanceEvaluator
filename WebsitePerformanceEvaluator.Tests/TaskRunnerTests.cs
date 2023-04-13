@@ -30,7 +30,7 @@ public class TaskRunnerTests
         SetupMocks();
 
         // Act
-        await _taskRunner.Run();
+        await _taskRunner.RunAsync();
 
         // Assert
         _consoleWrapperMock.Verify(x => x.WriteLine("Enter website url:"), Times.Once());
@@ -45,7 +45,7 @@ public class TaskRunnerTests
         SetupMocks();
 
         // Act
-        await _taskRunner.Run();
+        await _taskRunner.RunAsync();
 
         // Assert
         _consoleWrapperMock.Verify(x => x.WriteLine("Links in sitemap: 2"), Times.Once());
@@ -59,7 +59,7 @@ public class TaskRunnerTests
         SetupMocks();
 
         // Act
-        await _taskRunner.Run();
+        await _taskRunner.RunAsync();
 
         // Assert
         _consoleWrapperMock.Verify(x => x.WriteLine("Links with time response:"), Times.Once());
@@ -71,7 +71,7 @@ public class TaskRunnerTests
         SetupMocks();
 
         // Act
-        await _taskRunner.Run();
+        await _taskRunner.RunAsync();
 
         // Assert
         _consoleWrapperMock.Verify(x => x.WriteLine("Links in sitemap, that wasn't found after crawling:"), Times.Once());
@@ -83,7 +83,7 @@ public class TaskRunnerTests
         SetupMocks();
 
         // Act
-        await _taskRunner.Run();
+        await _taskRunner.RunAsync();
 
         // Assert
         _consoleWrapperMock.Verify(x => x.WriteLine("Links found after crawling website, but not in sitemap:"), Times.Once());
@@ -112,7 +112,7 @@ public class TaskRunnerTests
         SetupMocks(url, expectedLinkPerformances);
 
         // Act
-        await _taskRunner.Run();
+        await _taskRunner.RunAsync();
 
         // Assert
         _consoleHelperMock.Verify(x => x.PrintTable(It.IsAny<IEnumerable<string>>(), expectedLinksInString), Times.Once);
@@ -141,7 +141,7 @@ public class TaskRunnerTests
         SetupMocks(url, expectedLinkPerformances);
 
         // Act
-        await _taskRunner.Run();
+        await _taskRunner.RunAsync();
 
         // Assert
         _consoleHelperMock.Verify(x => x.PrintTable(It.IsAny<IEnumerable<string>>(), expectedLinksInString), Times.Once);
@@ -178,7 +178,7 @@ public class TaskRunnerTests
         SetupMocks(url, expectedLinkPerformances);
 
         // Act
-        await _taskRunner.Run();
+        await _taskRunner.RunAsync();
 
         // Assert
         _consoleHelperMock.Verify(x => x.PrintTable(It.IsAny<IEnumerable<string>>(), expectedLinksWithTimeResponse), Times.Once);
