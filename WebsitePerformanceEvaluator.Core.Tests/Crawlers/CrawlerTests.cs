@@ -2,6 +2,7 @@ using Moq;
 using WebsitePerformanceEvaluator.Core.Crawlers;
 using WebsitePerformanceEvaluator.Data.Enums;
 using WebsitePerformanceEvaluator.Data.Models;
+using WebsitePerformanceEvaluator.Data.Repository;
 using Xunit;
 
 namespace WebsitePerformanceEvaluator.Core.Tests.Crawlers;
@@ -11,12 +12,14 @@ public class CrawlerTests
     private readonly Crawler _crawler;
     private readonly Mock<SitemapCrawler> _sitemapCrawlerMock;
     private readonly Mock<WebsiteCrawler> _websiteCrawlerMock;
+    private readonly Mock<LinkPerformanceRepository> _linkPerformanceRepositoryMock;
 
     public CrawlerTests()
     {
         _websiteCrawlerMock = new Mock<WebsiteCrawler>();
         _sitemapCrawlerMock = new Mock<SitemapCrawler>(null, null, null, null, null);
-        _crawler = new Crawler(_websiteCrawlerMock.Object, _sitemapCrawlerMock.Object);
+        _linkPerformanceRepositoryMock = new Mock<LinkPerformanceRepository>(null);
+        _crawler = new Crawler(_websiteCrawlerMock.Object, _sitemapCrawlerMock.Object, _linkPerformanceRepositoryMock.Object);
     }
 
     [Fact]
@@ -30,6 +33,8 @@ public class CrawlerTests
         _websiteCrawlerMock.Setup(x => x.FindLinksAsync(It.IsAny<string>()))
             .ReturnsAsync(expectedLinks);
         _sitemapCrawlerMock.Setup(x => x.FindLinksAsync(It.IsAny<string>()))
+            .ReturnsAsync(expectedLinks);
+        _linkPerformanceRepositoryMock.Setup(x => x.AddRangeAsync(It.IsAny<IEnumerable<LinkPerformance>>()))
             .ReturnsAsync(expectedLinks);
 
         // Act
@@ -52,6 +57,8 @@ public class CrawlerTests
             .ReturnsAsync(expectedLinks);
         _sitemapCrawlerMock.Setup(x => x.FindLinksAsync(It.IsAny<string>()))
             .ReturnsAsync(Enumerable.Empty<LinkPerformance>());
+        _linkPerformanceRepositoryMock.Setup(x => x.AddRangeAsync(It.IsAny<IEnumerable<LinkPerformance>>()))
+            .ReturnsAsync(expectedLinks);
 
         // Act
         var result = await _crawler.CrawlWebsiteAndSitemapAsync(url);
@@ -71,6 +78,8 @@ public class CrawlerTests
         _websiteCrawlerMock.Setup(x => x.FindLinksAsync(It.IsAny<string>()))
             .ReturnsAsync(Enumerable.Empty<LinkPerformance>());
         _sitemapCrawlerMock.Setup(x => x.FindLinksAsync(It.IsAny<string>()))
+            .ReturnsAsync(expectedLinks);
+        _linkPerformanceRepositoryMock.Setup(x => x.AddRangeAsync(It.IsAny<IEnumerable<LinkPerformance>>()))
             .ReturnsAsync(expectedLinks);
 
         // Act
