@@ -128,7 +128,15 @@ public class TaskRunnerTests
     {
         // Arrange
         var url = "https://ukad-group.com/";
-        var expectedLinkPerformances = GetLinks();
+        var expectedLinkPerformances = new List<LinkPerformance>
+        {
+            new()
+            {
+                Link = "https://ukad-group.com/1",
+                CrawlingLinkSource = CrawlingLinkSource.Website,
+                TimeResponseMs = 100
+            },
+        };
 
         _crawlerMock
             .Setup(x => x.CrawlWebsiteAndSitemapAsync(url))
@@ -143,6 +151,8 @@ public class TaskRunnerTests
         await _taskRunner.Run();
 
         // Assert
+        _consoleWrapperMock.Verify(x => x.WriteLine("Links found after crawling website, but not in sitemap:"), Times.Once());
+        _consoleWrapperMock.Verify(x => x.WriteLine("No links found"), Times.Once());
         _consoleWrapperMock.Verify(x => x.WriteLine("Links in sitemap, that wasn't found after crawling:"),
             Times.Once());
     }
@@ -151,7 +161,15 @@ public class TaskRunnerTests
     {
         // Arrange
         var url = "https://ukad-group.com/";
-        var expectedLinkPerformances = GetLinks();
+        var expectedLinkPerformances = new List<LinkPerformance>
+        {
+            new()
+            {
+                Link = "https://ukad-group.com/1",
+                CrawlingLinkSource = CrawlingLinkSource.Sitemap,
+                TimeResponseMs = 100
+            },
+        };
 
         _crawlerMock
             .Setup(x => x.CrawlWebsiteAndSitemapAsync(url))
@@ -166,8 +184,11 @@ public class TaskRunnerTests
         await _taskRunner.Run();
 
         // Assert
-        _consoleWrapperMock.Verify(x => x.WriteLine("Links found after crawling website, but not in sitemap:"),
+        _consoleWrapperMock.Verify(x => x.WriteLine("Links found after crawling website, but not in sitemap:"), Times.Once());
+        _consoleWrapperMock.Verify(x => x.WriteLine("Links in sitemap, that wasn't found after crawling:"),
             Times.Once());
+        _consoleWrapperMock.Verify(x => x.WriteLine("No links found"), Times.Once());
+
     }
 
     [Fact]
