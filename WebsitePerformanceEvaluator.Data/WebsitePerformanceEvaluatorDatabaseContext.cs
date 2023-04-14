@@ -1,14 +1,26 @@
+using System.Reflection;
 using Microsoft.EntityFrameworkCore;
+using WebsitePerformanceEvaluator.Data.Configurations;
 using WebsitePerformanceEvaluator.Data.Models;
 
 namespace WebsitePerformanceEvaluator.Data;
 
 public class WebsitePerformanceEvaluatorDatabaseContext : DbContext
 {
-    public WebsitePerformanceEvaluatorDatabaseContext(DbContextOptions<WebsitePerformanceEvaluatorDatabaseContext> options) : base(options)
+    public WebsitePerformanceEvaluatorDatabaseContext(
+        DbContextOptions<WebsitePerformanceEvaluatorDatabaseContext> options) : base(options)
     {
     }
-    
+
     public DbSet<LinkPerformance> LinkPerformances { get; set; }
     public DbSet<Link> Links { get; set; }
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        base.OnModelCreating(modelBuilder);
+
+        modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly(),
+            t => t.GetInterfaces().Any(i =>
+                i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IEntityTypeConfiguration<>)));
+    }
 }
