@@ -9,8 +9,11 @@ public class LinkPerformanceConfiguration : IEntityTypeConfiguration<LinkPerform
     public void Configure(EntityTypeBuilder<LinkPerformance> builder)
     {
         builder.HasKey(x => x.Id);
+        
         builder.Property(x => x.Url).IsRequired();
+        
         builder.Property(x => x.TimeResponseMs).IsRequired();
+        
         builder.Property(x => x.CrawlingLinkSource).IsRequired();
     }
 }
