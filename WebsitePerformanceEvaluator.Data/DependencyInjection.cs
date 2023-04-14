@@ -14,6 +14,7 @@ public static class DependencyInjection
         services.AddDbContext<WebsitePerformanceEvaluatorDatabaseContext>(options => options.UseSqlServer(connectionString));
         
         services.AddScoped<ILinkPerformanceRepository, LinkPerformanceRepository>();
+        services.AddScoped<ILinkRepository, LinkRepository>();
 
         return services;
     }
