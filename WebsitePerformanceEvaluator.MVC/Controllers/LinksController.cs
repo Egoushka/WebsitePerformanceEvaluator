@@ -30,7 +30,7 @@ public class LinksController : Controller
 
         await _linkService.SaveLinksToDatabaseAsync(links, url);
             
-        return Index();
+        return RedirectToAction("Index");
     }
 
     public IActionResult LinkPerformance(int linkId, string url)
