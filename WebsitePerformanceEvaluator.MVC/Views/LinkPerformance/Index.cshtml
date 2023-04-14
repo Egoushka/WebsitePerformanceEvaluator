@@ -1,12 +1,6 @@
-@model IEnumerable<WebsitePerformanceEvaluator.Data.Models.Link>
+@model IEnumerable<WebsitePerformanceEvaluator.Data.Models.LinkPerformance>
 
 <h1>Links Performance</h1>
-
-<form method="post">
-    <label for="url">Enter a URL:</label>
-    <input type="text" name="url" id="url" required>
-    <button type="submit">Crawl</button>
-</form>
 
 @if (Model != null && Model.Any())
 {
@@ -14,7 +8,8 @@
         <thead>
         <tr>
             <th>URL</th>
-            <th></th>
+            <th>Source</th>
+            <th>Time (ms)</th>
         </tr>
         </thead>
         <tbody>
@@ -22,8 +17,8 @@
         {
             <tr>
                 <td>@link.Url</td>
-                <td><a href="@Url.Action("LinkPerformance", new { linkId = link.Id })">View Details</a></td>
-                
+                <td>@link.CrawlingLinkSource</td>
+                <td>@link.TimeResponseMs</td>
             </tr>
         }
         </tbody>
