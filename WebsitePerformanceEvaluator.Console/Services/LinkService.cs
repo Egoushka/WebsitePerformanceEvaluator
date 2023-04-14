@@ -1,7 +1,7 @@
 using WebsitePerformanceEvaluator.Core.Models;
 using WebsitePerformanceEvaluator.Data.Interfaces.Repositories;
 
-namespace WebsitePerformanceEvaluator.Console;
+namespace WebsitePerformanceEvaluator.Console.Services;
 
 public class LinkService
 {

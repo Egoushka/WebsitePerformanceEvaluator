@@ -1,6 +1,6 @@
 using ConsoleTableExt;
 
-namespace WebsitePerformanceEvaluator.Console;
+namespace WebsitePerformanceEvaluator.Console.Helpers;
 
 public class ConsoleHelper
 {

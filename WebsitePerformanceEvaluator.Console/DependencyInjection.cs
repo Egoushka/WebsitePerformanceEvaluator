@@ -1,4 +1,5 @@
 using Microsoft.Extensions.DependencyInjection;
+using WebsitePerformanceEvaluator.Console.Helpers;
 using WebsitePerformanceEvaluator.Core.Interfaces;
 
 namespace WebsitePerformanceEvaluator.Console;
