@@ -5,11 +5,11 @@ namespace WebsitePerformanceEvaluator.Data.Repository;
 
 public class LinkPerformanceRepository : ILinkPerformanceRepository
 {
-    private readonly WebsitePerformanceEvaluatorContext _repositoryContext;
+    private readonly WebsitePerformanceEvaluatorDatabaseContext _repositoryDatabaseContext;
 
-    public LinkPerformanceRepository(WebsitePerformanceEvaluatorContext repositoryContext)
+    public LinkPerformanceRepository(WebsitePerformanceEvaluatorDatabaseContext repositoryDatabaseContext)
     {
-        _repositoryContext = repositoryContext;
+        _repositoryDatabaseContext = repositoryDatabaseContext;
     }
 
     public virtual async Task<IEnumerable<LinkPerformance>> AddRangeAsync(IEnumerable<LinkPerformance> linkPerformance)
@@ -21,8 +21,8 @@ public class LinkPerformanceRepository : ILinkPerformanceRepository
 
         try
         {
-            await _repositoryContext.AddRangeAsync(linkPerformance);
-            await _repositoryContext.SaveChangesAsync();
+            await _repositoryDatabaseContext.AddRangeAsync(linkPerformance);
+            await _repositoryDatabaseContext.SaveChangesAsync();
 
             return linkPerformance;
         }
