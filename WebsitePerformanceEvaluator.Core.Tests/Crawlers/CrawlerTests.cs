@@ -1,7 +1,7 @@
 using Moq;
 using WebsitePerformanceEvaluator.Core.Crawlers;
-using WebsitePerformanceEvaluator.Data.Models;
-using WebsitePerformanceEvaluator.Data.Models.Enums;
+using WebsitePerformanceEvaluator.Core.Models;
+using WebsitePerformanceEvaluator.Core.Models.Enums;
 using WebsitePerformanceEvaluator.Data.Repository;
 using Xunit;
 
@@ -34,8 +34,6 @@ public class CrawlerTests
             .ReturnsAsync(expectedLinks);
         _sitemapCrawlerMock.Setup(x => x.FindLinksAsync(It.IsAny<string>()))
             .ReturnsAsync(expectedLinks);
-        _linkPerformanceRepositoryMock.Setup(x => x.AddRangeAsync(It.IsAny<IEnumerable<LinkPerformance>>()))
-            .ReturnsAsync(expectedLinks);
 
         // Act
         var result = await _crawler.CrawlWebsiteAndSitemapAsync(url);
@@ -57,8 +55,6 @@ public class CrawlerTests
             .ReturnsAsync(expectedLinks);
         _sitemapCrawlerMock.Setup(x => x.FindLinksAsync(It.IsAny<string>()))
             .ReturnsAsync(Enumerable.Empty<LinkPerformance>());
-        _linkPerformanceRepositoryMock.Setup(x => x.AddRangeAsync(It.IsAny<IEnumerable<LinkPerformance>>()))
-            .ReturnsAsync(expectedLinks);
 
         // Act
         var result = await _crawler.CrawlWebsiteAndSitemapAsync(url);
@@ -78,8 +74,6 @@ public class CrawlerTests
         _websiteCrawlerMock.Setup(x => x.FindLinksAsync(It.IsAny<string>()))
             .ReturnsAsync(Enumerable.Empty<LinkPerformance>());
         _sitemapCrawlerMock.Setup(x => x.FindLinksAsync(It.IsAny<string>()))
-            .ReturnsAsync(expectedLinks);
-        _linkPerformanceRepositoryMock.Setup(x => x.AddRangeAsync(It.IsAny<IEnumerable<LinkPerformance>>()))
             .ReturnsAsync(expectedLinks);
 
         // Act

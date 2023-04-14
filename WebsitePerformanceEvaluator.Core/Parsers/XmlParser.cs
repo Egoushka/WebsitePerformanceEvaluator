@@ -1,6 +1,6 @@
 using System.Xml;
-using WebsitePerformanceEvaluator.Data.Models;
-using WebsitePerformanceEvaluator.Data.Models.Enums;
+using WebsitePerformanceEvaluator.Core.Models;
+using WebsitePerformanceEvaluator.Core.Models.Enums;
 
 namespace WebsitePerformanceEvaluator.Core.Parsers;
 

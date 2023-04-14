@@ -1,5 +1,5 @@
+using WebsitePerformanceEvaluator.Core.Models;
 using WebsitePerformanceEvaluator.Core.Service;
-using WebsitePerformanceEvaluator.Data.Models;
 
 namespace WebsitePerformanceEvaluator.Core.Helpers;
 

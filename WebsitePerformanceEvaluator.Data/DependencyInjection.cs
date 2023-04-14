@@ -2,7 +2,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using WebsitePerformanceEvaluator.Data.Interfaces.Repositories;
-using WebsitePerformanceEvaluator.Data.Models;
 using WebsitePerformanceEvaluator.Data.Repository;
 
 namespace WebsitePerformanceEvaluator.Data;

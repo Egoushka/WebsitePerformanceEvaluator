@@ -1,7 +1,6 @@
+using WebsitePerformanceEvaluator.Core.Models;
+using WebsitePerformanceEvaluator.Core.Models.Enums;
 using WebsitePerformanceEvaluator.Data.Interfaces.Repositories;
-using WebsitePerformanceEvaluator.Data.Models;
-using WebsitePerformanceEvaluator.Data.Models.Enums;
-using WebsitePerformanceEvaluator.Data.Repository;
 
 namespace WebsitePerformanceEvaluator.Core.Crawlers;
 
@@ -37,7 +36,7 @@ public class Crawler
         var result = matches
             .Concat(crawlingResult.Except(sitemapResult))
             .Concat(sitemapResult.Except(crawlingResult));
-        
-        return await _linkPerformanceRepository.AddRangeAsync(result);
+
+        return result;
     }
 }
