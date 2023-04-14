@@ -12,13 +12,16 @@ public class TaskRunner
     private readonly ConsoleWrapper _consoleWrapper;
     private readonly Crawler _crawler;
     private readonly ILinkPerformanceRepository _linkPerformanceRepository;
+    private readonly ILinkRepository _linkRepository;
 
-    public TaskRunner(Crawler crawler, ConsoleWrapper consoleWrapper, ConsoleHelper consoleHelper, ILinkPerformanceRepository linkPerformanceRepository)
+    public TaskRunner(Crawler crawler, ConsoleWrapper consoleWrapper, ConsoleHelper consoleHelper,
+        ILinkPerformanceRepository linkPerformanceRepository, ILinkRepository linkRepository)
     {
         _crawler = crawler;
         _consoleWrapper = consoleWrapper;
         _consoleHelper = consoleHelper;
         _linkPerformanceRepository = linkPerformanceRepository;
+        _linkRepository = linkRepository;
     }
 
     public async Task RunAsync()
@@ -125,6 +128,7 @@ public class TaskRunner
             Link = link,
         });
         
+        await _linkRepository.AddAsync(link);
         await _linkPerformanceRepository.AddRangeAsync(linksData);
     }
 }
