@@ -2,6 +2,7 @@ using System.Diagnostics;
 using WebsitePerformanceEvaluator.Core.Crawlers;
 using WebsitePerformanceEvaluator.Core.Models;
 using WebsitePerformanceEvaluator.Core.Models.Enums;
+using WebsitePerformanceEvaluator.Data.Interfaces.Repositories;
 
 namespace WebsitePerformanceEvaluator.Console;
 
@@ -10,12 +11,14 @@ public class TaskRunner
     private readonly ConsoleHelper _consoleHelper;
     private readonly ConsoleWrapper _consoleWrapper;
     private readonly Crawler _crawler;
+    private readonly ILinkPerformanceRepository _linkPerformanceRepository;
 
-    public TaskRunner(Crawler crawler, ConsoleWrapper consoleWrapper, ConsoleHelper consoleHelper)
+    public TaskRunner(Crawler crawler, ConsoleWrapper consoleWrapper, ConsoleHelper consoleHelper, ILinkPerformanceRepository linkPerformanceRepository)
     {
         _crawler = crawler;
         _consoleWrapper = consoleWrapper;
         _consoleHelper = consoleHelper;
+        _linkPerformanceRepository = linkPerformanceRepository;
     }
 
     public async Task RunAsync()
@@ -28,6 +31,8 @@ public class TaskRunner
         watch.Start();
 
         var links = await _crawler.CrawlWebsiteAndSitemapAsync(url);
+        
+        await SaveLinksToDatabase(links, url);
 
         PrintLinksInCrawlingNotInSitemap(links);
         PrintLinksInSitemapNotInCrawling(links);
@@ -104,5 +109,22 @@ public class TaskRunner
         _consoleWrapper.WriteLine($"Links after crawling: {crawlingLinksCount}");
 
         _consoleWrapper.WriteLine();
+    }
+    private async Task SaveLinksToDatabase(IEnumerable<LinkPerformance> links, string url)
+    {
+        var link = new Data.Models.Link
+        {
+            Url = url,
+        };
+        
+        var linksData = links.Select(x => new WebsitePerformanceEvaluator.Data.Models.LinkPerformance
+        {
+            Link = x.Link,
+            TimeResponseMs = x.TimeResponseMs,
+            CrawlingLinkSource = (Data.Models.Enums.CrawlingLinkSource)x.CrawlingLinkSource,
+            LinkNavigation = link,
+        }).ToList();
+        
+        await _linkPerformanceRepository.AddRangeAsync(linksData);
     }
 }

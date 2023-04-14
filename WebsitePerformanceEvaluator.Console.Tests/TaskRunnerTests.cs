@@ -2,6 +2,7 @@ using Moq;
 using WebsitePerformanceEvaluator.Core.Crawlers;
 using WebsitePerformanceEvaluator.Core.Models;
 using WebsitePerformanceEvaluator.Core.Models.Enums;
+using WebsitePerformanceEvaluator.Data.Interfaces.Repositories;
 using Xunit;
 
 namespace WebsitePerformanceEvaluator.Console.Tests;
@@ -11,6 +12,7 @@ public class TaskRunnerTests
     private readonly Mock<Crawler> _crawlerMock;
     private readonly Mock<ConsoleWrapper> _consoleWrapperMock;
     private readonly Mock<ConsoleHelper> _consoleHelperMock;
+    private readonly Mock<ILinkPerformanceRepository> _linkPerformanceRepositoryMock;
     
     private readonly TaskRunner _taskRunner;
 
@@ -19,8 +21,9 @@ public class TaskRunnerTests
         _crawlerMock = new Mock<Crawler>(null, null);
         _consoleWrapperMock = new Mock<ConsoleWrapper>();
         _consoleHelperMock = new Mock<ConsoleHelper>();
+        _linkPerformanceRepositoryMock = new Mock<ILinkPerformanceRepository>();
         
-        _taskRunner = new TaskRunner(_crawlerMock.Object, _consoleWrapperMock.Object, _consoleHelperMock.Object);
+        _taskRunner = new TaskRunner(_crawlerMock.Object, _consoleWrapperMock.Object, _consoleHelperMock.Object, _linkPerformanceRepositoryMock.Object);
     }
 
     [Fact]
