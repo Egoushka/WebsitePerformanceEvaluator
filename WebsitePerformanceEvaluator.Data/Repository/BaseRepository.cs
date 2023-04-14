@@ -2,11 +2,11 @@ using WebsitePerformanceEvaluator.Data.Interfaces.Repositories;
 
 namespace WebsitePerformanceEvaluator.Data.Repository;
 
-public class Repository<TEntity> : IRepository<TEntity> where TEntity : class, new()
+public class BaseRepository<TEntity> : IRepository<TEntity> where TEntity : class, new()
 {
     private readonly WebsitePerformanceEvaluatorDatabaseContext _repositoryDatabaseContext;
 
-    protected Repository(WebsitePerformanceEvaluatorDatabaseContext repositoryDatabaseContext)
+    protected BaseRepository(WebsitePerformanceEvaluatorDatabaseContext repositoryDatabaseContext)
     {
         _repositoryDatabaseContext = repositoryDatabaseContext;
     }
