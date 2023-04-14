@@ -2,7 +2,7 @@ using WebsitePerformanceEvaluator.Data.Models;
 
 namespace WebsitePerformanceEvaluator.Data.Repository;
 
-public class LinkPerformanceRepository : IDisposable
+public class LinkPerformanceRepository
 {
     private readonly WebsitePerformanceEvaluatorContext _repositoryContext;
 
@@ -29,10 +29,5 @@ public class LinkPerformanceRepository : IDisposable
         {
             throw new Exception($"Links could not be saved: {ex.Message}");
         }
-    }
-
-    public void Dispose()
-    {
-        _repositoryContext.Dispose();
     }
 }
