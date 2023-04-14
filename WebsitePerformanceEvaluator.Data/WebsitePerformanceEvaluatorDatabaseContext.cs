@@ -5,10 +5,10 @@ namespace WebsitePerformanceEvaluator.Data;
 
 public class WebsitePerformanceEvaluatorDatabaseContext : DbContext
 {
-    public DbSet<LinkPerformance> LinkPerformances { get; set; }
-    
     public WebsitePerformanceEvaluatorDatabaseContext(DbContextOptions<WebsitePerformanceEvaluatorDatabaseContext> options) : base(options)
     {
-        Database.EnsureCreated();
     }
+    
+    public DbSet<LinkPerformance> LinkPerformances { get; set; }
+    public DbSet<Link> Links { get; set; }
 }
