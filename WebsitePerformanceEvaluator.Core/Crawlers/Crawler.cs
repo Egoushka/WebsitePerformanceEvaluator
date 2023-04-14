@@ -1,4 +1,5 @@
 using WebsitePerformanceEvaluator.Data.Enums;
+using WebsitePerformanceEvaluator.Data.Interfaces.Repositories;
 using WebsitePerformanceEvaluator.Data.Models;
 using WebsitePerformanceEvaluator.Data.Repository;
 
@@ -8,9 +9,9 @@ public class Crawler
 {
     private readonly SitemapCrawler _sitemapCrawler;
     private readonly WebsiteCrawler _websiteCrawler;
-    private readonly LinkPerformanceRepository _linkPerformanceRepository;
+    private readonly ILinkPerformanceRepository _linkPerformanceRepository;
 
-    public Crawler(WebsiteCrawler websiteCrawler, SitemapCrawler sitemapCrawler, LinkPerformanceRepository linkPerformanceRepository)
+    public Crawler(WebsiteCrawler websiteCrawler, SitemapCrawler sitemapCrawler, ILinkPerformanceRepository linkPerformanceRepository)
     {
         _websiteCrawler = websiteCrawler;
         _sitemapCrawler = sitemapCrawler;

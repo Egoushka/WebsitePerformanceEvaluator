@@ -1,8 +1,9 @@
+using WebsitePerformanceEvaluator.Data.Interfaces.Repositories;
 using WebsitePerformanceEvaluator.Data.Models;
 
 namespace WebsitePerformanceEvaluator.Data.Repository;
 
-public class LinkPerformanceRepository
+public class LinkPerformanceRepository : ILinkPerformanceRepository
 {
     private readonly WebsitePerformanceEvaluatorContext _repositoryContext;
 
