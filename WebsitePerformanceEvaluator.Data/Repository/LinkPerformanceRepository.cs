@@ -2,7 +2,7 @@ using WebsitePerformanceEvaluator.Data.Models;
 
 namespace WebsitePerformanceEvaluator.Data.Repository;
 
-public class LinkPerformanceRepository
+public class LinkPerformanceRepository : IDisposable
 {
     private readonly WebsitePerformanceEvaluatorContext _repositoryContext;
 
@@ -15,7 +15,7 @@ public class LinkPerformanceRepository
     {
         if (linkPerformance == null)
         {
-            throw new ArgumentNullException($"{nameof(AddRangeAsync)} entity must not be null");
+            throw new ArgumentNullException($"Entity must not be null");
         }
 
         try
@@ -27,7 +27,12 @@ public class LinkPerformanceRepository
         }
         catch (Exception ex)
         {
-            throw new Exception($"{nameof(linkPerformance)} could not be saved: {ex.Message}");
+            throw new Exception($"Links could not be saved: {ex.Message}");
         }
+    }
+
+    public void Dispose()
+    {
+        _repositoryContext.Dispose();
     }
 }
