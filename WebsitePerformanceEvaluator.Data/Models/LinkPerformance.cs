@@ -1,4 +1,4 @@
-using WebsitePerformanceEvaluator.Data.Enums;
+using WebsitePerformanceEvaluator.Data.Models.Enums;
 
 namespace WebsitePerformanceEvaluator.Data.Models;
 
