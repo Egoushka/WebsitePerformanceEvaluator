@@ -19,6 +19,6 @@ public class WebsitePerformanceEvaluatorDatabaseContext : DbContext
     {
         base.OnModelCreating(modelBuilder);
 
-        modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetAssembly(typeof(LinkPerformanceConfiguration)));
+        modelBuilder.ApplyConfigurationsFromAssembly(typeof(LinkConfiguration).Assembly);
     }
 }
