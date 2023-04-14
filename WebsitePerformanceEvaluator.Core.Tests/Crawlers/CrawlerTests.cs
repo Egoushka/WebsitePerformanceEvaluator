@@ -28,7 +28,7 @@ public class CrawlerTests
         // Arrange
         var url = "https://example.com";
         
-        var expectedLinks = GetExpectedLinks(CrawlingLinkSource.Website, 3);
+        var expectedLinks = GetExpectedLinks(CrawlingLinkSource.WebsiteAndSitemap, 3);
 
         _websiteCrawlerMock.Setup(x => x.FindLinksAsync(It.IsAny<string>()))
             .ReturnsAsync(expectedLinks);

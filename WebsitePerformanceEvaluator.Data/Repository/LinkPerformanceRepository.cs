@@ -11,7 +11,7 @@ public class LinkPerformanceRepository
         _repositoryContext = repositoryContext;
     }
 
-    public async Task<IEnumerable<LinkPerformance>> AddRangeAsync(IEnumerable<LinkPerformance> linkPerformance)
+    public virtual async Task<IEnumerable<LinkPerformance>> AddRangeAsync(IEnumerable<LinkPerformance> linkPerformance)
     {
         if (linkPerformance == null)
         {
