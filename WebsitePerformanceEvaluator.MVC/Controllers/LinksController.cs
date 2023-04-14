@@ -1,60 +1,40 @@
 using Microsoft.AspNetCore.Mvc;
 using WebsitePerformanceEvaluator.Core.Crawlers;
-using WebsitePerformanceEvaluator.Data.Interfaces.Repositories;
-using WebsitePerformanceEvaluator.Data.Models;
-using WebsitePerformanceEvaluator.Data.Models.Enums;
+using WebsitePerformanceEvaluator.MVC.Services;
 
-namespace WebsitePerformanceEvaluator.MVC.Controllers
+namespace WebsitePerformanceEvaluator.MVC.Controllers;
+
+public class LinksController : Controller
 {
-    public class LinksController : Controller
+    private readonly Crawler _crawler;
+    private readonly LinkService _linkService;
+
+    public LinksController(Crawler crawler, LinkService linkService)
     {
-        private readonly ILinkRepository _linkRepository;
-        private readonly ILinkPerformanceRepository _linkPerformanceRepository;
-        private readonly Crawler _crawler;
+        _crawler = crawler;
+        _linkService = linkService;
+    }
 
-        public LinksController(ILinkRepository linkRepository, ILinkPerformanceRepository linkPerformanceRepository,
-            Crawler crawler)
-        {
-            _linkRepository = linkRepository;
-            _linkPerformanceRepository = linkPerformanceRepository;
-            _crawler = crawler;
-        }
+    [HttpGet]
+    public IActionResult Index()
+    {
+        var links = _linkService.GetLinks();
 
-        [HttpGet]
-        public IActionResult Index()
-        {
-            var links = _linkRepository.GetAll();
+        return View(links);
+    }
 
-            return View(links);
-        }
+    [HttpPost]
+    public async Task<IActionResult> GetLinksFromUrl(string url)
+    {
+        var links = await _crawler.CrawlWebsiteAndSitemapAsync(url);
 
-        [HttpPost]
-        public async Task<IActionResult> GetLinksFromUrl(string url)
-        {
-            var links = await _crawler.CrawlWebsiteAndSitemapAsync(url);
+        await _linkService.SaveLinksToDatabaseAsync(links, url);
+            
+        return Index();
+    }
 
-            var link = new Link
-            {
-                Url = url
-            };
-
-            var linkPerformances = links.Select(x => new LinkPerformance
-            {
-                Url = x.Url,
-                CrawlingLinkSource = (CrawlingLinkSource)x.CrawlingLinkSource,
-                TimeResponseMs = x.TimeResponseMs,
-                Link = link,
-            });
-
-            await _linkRepository.AddAsync(link);
-            await _linkPerformanceRepository.AddRangeAsync(linkPerformances);
-
-            return Index();
-        }
-
-        public IActionResult LinkPerformance(int linkId)
-        {
-            return RedirectToAction("Index", "LinkPerformance", new {linkId});
-        }
+    public IActionResult LinkPerformance(int linkId)
+    {
+        return RedirectToAction("Index", "LinkPerformance", new {linkId});
     }
 }
