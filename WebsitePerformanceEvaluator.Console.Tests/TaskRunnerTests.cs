@@ -12,9 +12,8 @@ public class TaskRunnerTests
     private readonly Mock<Crawler> _crawlerMock;
     private readonly Mock<ConsoleWrapper> _consoleWrapperMock;
     private readonly Mock<ConsoleHelper> _consoleHelperMock;
-    private readonly Mock<ILinkPerformanceRepository> _linkPerformanceRepositoryMock;
-    private readonly Mock<ILinkRepository> _linkRepositoryMock;
-    
+    private readonly Mock<LinkService> _linkServiceMock;
+
     private readonly TaskRunner _taskRunner;
 
     public TaskRunnerTests()
@@ -22,11 +21,9 @@ public class TaskRunnerTests
         _crawlerMock = new Mock<Crawler>(null, null);
         _consoleWrapperMock = new Mock<ConsoleWrapper>();
         _consoleHelperMock = new Mock<ConsoleHelper>();
-        _linkPerformanceRepositoryMock = new Mock<ILinkPerformanceRepository>();
-        _linkRepositoryMock = new Mock<ILinkRepository>();
+        _linkServiceMock = new Mock<LinkService>(null, null);
 
-        _taskRunner = new TaskRunner(_crawlerMock.Object, _consoleWrapperMock.Object, _consoleHelperMock.Object,
-            _linkPerformanceRepositoryMock.Object, _linkRepositoryMock.Object);
+        _taskRunner = new TaskRunner(_crawlerMock.Object, _consoleWrapperMock.Object, _consoleHelperMock.Object, _linkServiceMock.Object);
     }
 
     [Fact]
