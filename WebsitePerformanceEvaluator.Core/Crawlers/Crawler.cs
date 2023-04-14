@@ -1,6 +1,5 @@
 using WebsitePerformanceEvaluator.Core.Models;
 using WebsitePerformanceEvaluator.Core.Models.Enums;
-using WebsitePerformanceEvaluator.Data.Interfaces.Repositories;
 
 namespace WebsitePerformanceEvaluator.Core.Crawlers;
 
@@ -8,13 +7,11 @@ public class Crawler
 {
     private readonly SitemapCrawler _sitemapCrawler;
     private readonly WebsiteCrawler _websiteCrawler;
-    private readonly ILinkPerformanceRepository _linkPerformanceRepository;
 
-    public Crawler(WebsiteCrawler websiteCrawler, SitemapCrawler sitemapCrawler, ILinkPerformanceRepository linkPerformanceRepository)
+    public Crawler(WebsiteCrawler websiteCrawler, SitemapCrawler sitemapCrawler)
     {
         _websiteCrawler = websiteCrawler;
         _sitemapCrawler = sitemapCrawler;
-        _linkPerformanceRepository = linkPerformanceRepository;
     }
 
     public virtual async Task<IEnumerable<LinkPerformance>> CrawlWebsiteAndSitemapAsync(string url)
