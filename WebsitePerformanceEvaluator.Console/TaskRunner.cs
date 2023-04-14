@@ -116,14 +116,14 @@ public class TaskRunner
         {
             Url = url,
         };
-        
+
         var linksData = links.Select(x => new WebsitePerformanceEvaluator.Data.Models.LinkPerformance
         {
             Url = x.Url,
             TimeResponseMs = x.TimeResponseMs,
             CrawlingLinkSource = (Data.Models.Enums.CrawlingLinkSource)x.CrawlingLinkSource,
             Link = link,
-        }).ToList();
+        });
         
         await _linkPerformanceRepository.AddRangeAsync(linksData);
     }
