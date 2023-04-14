@@ -2,6 +2,12 @@
 
 <h1>Links Performance</h1>
 
+<form method="post">
+    <label for="url">Enter a URL:</label>
+    <input type="text" name="url" id="url" required>
+    <button type="submit">Crawl</button>
+</form>
+
 @if (Model != null && Model.Any())
 {
     <table>
@@ -28,9 +34,3 @@ else
 {
     <p>No links found.</p>
 }
-
-<form method="post">
-    <label for="url">Enter a URL:</label>
-    <input type="text" name="url" id="url" required>
-    <button type="submit">Crawl</button>
-</form>
