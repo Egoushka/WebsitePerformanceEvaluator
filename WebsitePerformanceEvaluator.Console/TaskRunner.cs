@@ -32,7 +32,7 @@ public class TaskRunner
 
         var links = await _crawler.CrawlWebsiteAndSitemapAsync(url);
         
-        await SaveLinksToDatabase(links, url);
+        await SaveLinksToDatabaseAsync(links, url);
 
         PrintLinksInCrawlingNotInSitemap(links);
         PrintLinksInSitemapNotInCrawling(links);
@@ -110,7 +110,7 @@ public class TaskRunner
 
         _consoleWrapper.WriteLine();
     }
-    private async Task SaveLinksToDatabase(IEnumerable<LinkPerformance> links, string url)
+    private async Task SaveLinksToDatabaseAsync(IEnumerable<LinkPerformance> links, string url)
     {
         var link = new Data.Models.Link
         {
