@@ -45,7 +45,7 @@ public class HttpClientService
 
         if (contentType.MediaType != "text/html")
         {
-            return new HtmlDocument();
+            throw new ArgumentException("Invalid content type.");
         }
 
         var charset = contentType.CharSet ?? Encoding.UTF8.WebName;

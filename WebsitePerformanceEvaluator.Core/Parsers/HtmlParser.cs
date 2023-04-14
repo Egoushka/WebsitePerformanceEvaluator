@@ -1,3 +1,4 @@
+using HtmlAgilityPack;
 using WebsitePerformanceEvaluator.Core.Service;
 using WebsitePerformanceEvaluator.Data.Enums;
 using WebsitePerformanceEvaluator.Data.Models;
@@ -27,9 +28,17 @@ public class HtmlParser
                 CrawlingLinkSource = CrawlingLinkSource.Website
             }
         };
-
-        var doc = await _clientService.GetDocumentAsync(result.First());
-
+        var doc = new HtmlDocument();
+        
+        try
+        {
+            doc = await _clientService.GetDocumentAsync(result.First());
+        }
+        catch (ArgumentException)
+        {
+            return new List<LinkPerformance>();
+        }
+        
         var linkNodes = doc.DocumentNode.SelectNodes("//a[@href]");
 
         if (linkNodes != null)
