@@ -15,7 +15,7 @@ internal static class Program
     private static ServiceProvider CompositionRoot()
     {
         var configuration = new ConfigurationBuilder()
-            .AddJsonFile("Config/appsettings.json", false, true)
+            .AddJsonFile("appsettings.json", false, true)
             .Build();
         
         var services = ConfigureServices(configuration);
