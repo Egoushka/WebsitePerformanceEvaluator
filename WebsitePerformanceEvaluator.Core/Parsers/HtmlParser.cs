@@ -24,7 +24,7 @@ public class HtmlParser
         {
             new()
             {
-                Link = url,
+                Url = url,
                 CrawlingLinkSource = CrawlingLinkSource.Website
             }
         };
@@ -45,7 +45,7 @@ public class HtmlParser
         {
             var links = linkNodes.Select(linkNode => new LinkPerformance
             {
-                Link = linkNode.Attributes["href"].Value,
+                Url = linkNode.Attributes["href"].Value,
                 CrawlingLinkSource = CrawlingLinkSource.Website
             });
             result.AddRange(links);

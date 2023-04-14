@@ -26,7 +26,7 @@ public class HttpClientService
         var stopWatch = new Stopwatch();
 
         stopWatch.Start();
-        var doc = await GetDocumentAsync(link.Link);
+        var doc = await GetDocumentAsync(link.Url);
         stopWatch.Stop();
 
         var time = stopWatch.ElapsedMilliseconds;

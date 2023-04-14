@@ -16,7 +16,7 @@ public class XmlParser
 
             result.Add(new LinkPerformance
             {
-                Link = node["loc"].InnerText,
+                Url = node["loc"].InnerText,
                 CrawlingLinkSource = CrawlingLinkSource.Sitemap
             });
         }

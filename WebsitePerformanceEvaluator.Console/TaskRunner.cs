@@ -49,7 +49,7 @@ public class TaskRunner
     {
         var linksInCrawlingNotInSitemap = linkPerformances
             .Where(x => x.CrawlingLinkSource == CrawlingLinkSource.Website)
-            .Select(x => x.Link);
+            .Select(x => x.Url);
 
         _consoleWrapper.WriteLine("Links found after crawling website, but not in sitemap:");
 
@@ -69,7 +69,7 @@ public class TaskRunner
     {
         var linksInSitemapNotInCrawling = linkPerformances
             .Where(link => link.CrawlingLinkSource == CrawlingLinkSource.Sitemap)
-            .Select(link => link.Link);
+            .Select(link => link.Url);
 
         _consoleWrapper.WriteLine("Links in sitemap, that wasn't found after crawling:");
 
@@ -89,7 +89,7 @@ public class TaskRunner
     {
         var rowsList = linkPerformances
             .OrderBy(item => item.TimeResponseMs)
-            .Select(x => new Tuple<string, long?>(x.Link, x.TimeResponseMs));
+            .Select(x => new Tuple<string, long?>(x.Url, x.TimeResponseMs));
 
         _consoleWrapper.WriteLine("Links with time response:");
 
@@ -119,10 +119,10 @@ public class TaskRunner
         
         var linksData = links.Select(x => new WebsitePerformanceEvaluator.Data.Models.LinkPerformance
         {
-            Link = x.Link,
+            Url = x.Url,
             TimeResponseMs = x.TimeResponseMs,
             CrawlingLinkSource = (Data.Models.Enums.CrawlingLinkSource)x.CrawlingLinkSource,
-            LinkNavigation = link,
+            Link = link,
         }).ToList();
         
         await _linkPerformanceRepository.AddRangeAsync(linksData);

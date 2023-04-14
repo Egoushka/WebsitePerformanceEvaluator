@@ -88,7 +88,7 @@ public class CrawlerTests
             links.Add(new LinkPerformance
             {
                 CrawlingLinkSource = source,
-                Link = $"https://example.com/{i}",
+                Url = $"https://example.com/{i}",
                 TimeResponseMs = 100
             });
         }

@@ -25,14 +25,14 @@ public class LinkHelperTests
         
         var links = new List<LinkPerformance>
         {
-            new() { Link = baseUrl + "/page/" },
+            new() { Url = baseUrl + "/page/" },
         };
 
         // Act
         var result = _linkHelper.RemoveLastSlashFromLinks(links).ToList();
 
         // Assert
-        Assert.All(result, link => Assert.False(link.Link.EndsWith("/")));
+        Assert.All(result, link => Assert.False(link.Url.EndsWith("/")));
 
     }
     
@@ -44,14 +44,14 @@ public class LinkHelperTests
 
         var links = new List<LinkPerformance>
         {
-            new() { Link = expected },
+            new() { Url = expected },
         };
 
         // Act
         var result = _linkHelper.RemoveLastSlashFromLinks(links).ToList();
 
         // Assert
-        Assert.All(result, link => Assert.False(link.Link.EndsWith("/")));
+        Assert.All(result, link => Assert.False(link.Url.EndsWith("/")));
     }
 
     [Fact]
@@ -61,9 +61,9 @@ public class LinkHelperTests
         var expectedTimes = new[] { 100, 200, 300 };
         var links = new List<LinkPerformance>
         {
-            new() { Link = "https://example.com/1" },
-            new() { Link = "https://example.com/2" },
-            new() { Link = "https://example.com/3" }
+            new() { Url = "https://example.com/1" },
+            new() { Url = "https://example.com/2" },
+            new() { Url = "https://example.com/3" }
         };
         
         _httpClientServiceMock

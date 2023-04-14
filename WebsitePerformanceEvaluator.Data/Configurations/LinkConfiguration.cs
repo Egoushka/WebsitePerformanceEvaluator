@@ -11,7 +11,7 @@ public class LinkConfiguration : IEntityTypeConfiguration<Link>
         builder.HasKey(x => x.Id);
         builder.Property(x => x.Url).IsRequired();
         builder.HasMany(x => x.LinkPerformances)
-            .WithOne(x => x.LinkNavigation)
+            .WithOne(x => x.Link)
             .HasForeignKey(x => x.LinkId);
     }
 }

@@ -103,7 +103,7 @@ public class TaskRunnerTests
             new()
             {
                 CrawlingLinkSource = CrawlingLinkSource.Sitemap,
-                Link = "https://ukad-group.com/contacts"
+                Url = "https://ukad-group.com/contacts"
             }
         };
         
@@ -132,7 +132,7 @@ public class TaskRunnerTests
             new()
             {
                 CrawlingLinkSource = CrawlingLinkSource.Website,
-                Link = "https://ukad-group.com/contacts"
+                Url = "https://ukad-group.com/contacts"
             }
         };
         
@@ -161,13 +161,13 @@ public class TaskRunnerTests
             new()
             {
                 CrawlingLinkSource = CrawlingLinkSource.Sitemap,
-                Link = "https://ukad-group.com/2",
+                Url = "https://ukad-group.com/2",
                 TimeResponseMs = 200
             },
             new()
             {
                 CrawlingLinkSource = CrawlingLinkSource.Website,
-                Link = "https://ukad-group.com/1",
+                Url = "https://ukad-group.com/1",
                 TimeResponseMs = 100
             }
         };
@@ -217,19 +217,19 @@ public class TaskRunnerTests
         {
             new()
             {
-                Link = "https://ukad-group.com/1",
+                Url = "https://ukad-group.com/1",
                 CrawlingLinkSource = CrawlingLinkSource.Website,
                 TimeResponseMs = 100
             },
             new()
             {
-                Link = "https://ukad-group.com/2",
+                Url = "https://ukad-group.com/2",
                 CrawlingLinkSource = CrawlingLinkSource.Sitemap,
                 TimeResponseMs = 100
             },
             new()
             {
-                Link = "https://ukad-group.com/3",
+                Url = "https://ukad-group.com/3",
                 CrawlingLinkSource = CrawlingLinkSource.WebsiteAndSitemap,
                 TimeResponseMs = 100
             }

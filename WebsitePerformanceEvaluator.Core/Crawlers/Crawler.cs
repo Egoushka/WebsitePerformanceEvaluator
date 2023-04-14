@@ -25,7 +25,7 @@ public class Crawler
         var matches = crawlingResult.Intersect(sitemapResult)
             .Select(item => new LinkPerformance
             {
-                Link = item.Link,
+                Url = item.Url,
                 CrawlingLinkSource = CrawlingLinkSource.WebsiteAndSitemap,
                 TimeResponseMs = item.TimeResponseMs
             });

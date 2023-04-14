@@ -20,7 +20,7 @@ public class LinkHelper
     {
         foreach (var link in links)
         {
-            link.Link = AddBaseUrl(link.Link, baseUrl);
+            link.Url = AddBaseUrl(link.Url, baseUrl);
         }
 
         return links;
@@ -30,7 +30,7 @@ public class LinkHelper
     {
         foreach (var link in links)
         {
-            link.Link = RemoveLastSlashFromLink(link.Link);
+            link.Url = RemoveLastSlashFromLink(link.Url);
         }
 
         return links;
@@ -50,7 +50,7 @@ public class LinkHelper
     {
         foreach (var link in links)
         {
-            var time = await _clientService.GetTimeResponseAsync(link.Link);
+            var time = await _clientService.GetTimeResponseAsync(link.Url);
 
             link.TimeResponseMs = (int)time;
         }

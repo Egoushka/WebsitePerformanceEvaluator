@@ -4,17 +4,17 @@ namespace WebsitePerformanceEvaluator.Core.Models;
 
 public class LinkPerformance
 {
-    public string Link { get; set; }
+    public string Url { get; set; }
     public int? TimeResponseMs { get; set; }
     public CrawlingLinkSource CrawlingLinkSource { get; set; }
     
     public override int GetHashCode()
     {
-        return Link.GetHashCode();
+        return Url.GetHashCode();
     }
 
     public override bool Equals(object? obj)
     {
-        return obj is LinkPerformance link && link.Link == Link;
+        return obj is LinkPerformance link && link.Url == Url;
     }
 }

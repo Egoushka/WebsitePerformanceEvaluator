@@ -45,12 +45,12 @@ public class SitemapCrawlerTests
 
         var links = new List<LinkPerformance>
         {
-            new() { Link = $"{baseUrl}/page1" },
-            new() { Link = $"{baseUrl}/page2" }
+            new() { Url = $"{baseUrl}/page1" },
+            new() { Url = $"{baseUrl}/page2" }
         };
         var expectedLinks = new List<LinkPerformance>
         {
-            new() { Link = $"{baseUrl}/page1" }
+            new() { Url = $"{baseUrl}/page1" }
         };
 
         _httpClientServiceMock
@@ -83,12 +83,12 @@ public class SitemapCrawlerTests
         var sitemapUrl = "http://example.com/sitemap.xml";
         var links = new List<LinkPerformance>
         {
-            new() { Link = "http://example.com/" },
-            new() { Link = "http://example.com/about" }
+            new() { Url = "http://example.com/" },
+            new() { Url = "http://example.com/about" }
         };
         var filteredLinks = new List<LinkPerformance>
         {
-            new() { Link = "http://example.com/" }
+            new() { Url = "http://example.com/" }
         };
 
         _httpClientServiceMock

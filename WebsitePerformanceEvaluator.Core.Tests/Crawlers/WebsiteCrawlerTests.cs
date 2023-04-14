@@ -69,12 +69,12 @@ public class WebsiteCrawlerTests
         {
             new()
             {
-                Link = "https://example.com",
+                Url = "https://example.com",
                 TimeResponseMs = 100,
             },
             new()
             {
-                Link = "https://example.com/1",
+                Url = "https://example.com/1",
                 TimeResponseMs = 100,
             },
         };
@@ -83,12 +83,12 @@ public class WebsiteCrawlerTests
         {
             new()
             {
-                Link = "https://example.com/1",
+                Url = "https://example.com/1",
                 TimeResponseMs = 100,
             },
             new()
             {
-                Link = "https://example.com/2",
+                Url = "https://example.com/2",
                 TimeResponseMs = 100,
             },
         };
@@ -137,7 +137,7 @@ public class WebsiteCrawlerTests
             links.Add(new LinkPerformance
             {
                 CrawlingLinkSource = source,
-                Link = $"https://example.com/{i}",
+                Url = $"https://example.com/{i}",
                 TimeResponseMs = 100
             });
         }
@@ -153,7 +153,7 @@ public class WebsiteCrawlerTests
             links.Add(new LinkPerformance
             {
                 CrawlingLinkSource = source,
-                Link = $"https://example.com/{i}"
+                Url = $"https://example.com/{i}"
             });
         }
 

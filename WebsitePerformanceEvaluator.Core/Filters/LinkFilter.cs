@@ -28,17 +28,17 @@ public class LinkFilter
 
     private IEnumerable<LinkPerformance> RemoveInvalidLinks(IEnumerable<LinkPerformance> links)
     {
-        return links.Where(link => _validator.IsValidLink(link.Link));
+        return links.Where(link => _validator.IsValidLink(link.Url));
     }
 
     private IEnumerable<LinkPerformance> RemoveExternalLinks(IEnumerable<LinkPerformance> links, string baseUrl)
     {
-        return links.Where(link => CompareHosts(link.Link, baseUrl) != string.Empty);
+        return links.Where(link => CompareHosts(link.Url, baseUrl) != string.Empty);
     }
 
     private IEnumerable<LinkPerformance> RemoveUnsupportedSchemes(IEnumerable<LinkPerformance> links)
     {
-        return links.Where(link => link.Link.StartsWith(Uri.UriSchemeHttp) || link.Link.StartsWith(Uri.UriSchemeHttps));
+        return links.Where(link => link.Url.StartsWith(Uri.UriSchemeHttp) || link.Url.StartsWith(Uri.UriSchemeHttps));
     }
 
     private string CompareHosts(string url, string baseUrl)

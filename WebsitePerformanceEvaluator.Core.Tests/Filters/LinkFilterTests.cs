@@ -25,9 +25,9 @@ public class LinkFilterTests
         var baseUrl = "https://example.com/";
         var links = new List<LinkPerformance>
         {
-            new() { Link = "https://example.com/1" },
-            new() { Link = "https://example.com/2" },
-            new() { Link = "https://example.com/3" }
+            new() { Url = "https://example.com/1" },
+            new() { Url = "https://example.com/2" },
+            new() { Url = "https://example.com/3" }
         };
 
         _validatorMock
@@ -48,9 +48,9 @@ public class LinkFilterTests
         var baseUrl = "https://example.com/";
         var links = new List<LinkPerformance>
         {
-            new() { Link = "ftp://example.com" },
-            new() { Link = "mailto:me@example.com" },
-            new() { Link = "javascript:alert('hello world')" }
+            new() { Url = "ftp://example.com" },
+            new() { Url = "mailto:me@example.com" },
+            new() { Url = "javascript:alert('hello world')" }
         };
 
         _validatorMock
@@ -72,7 +72,7 @@ public class LinkFilterTests
 
         var links = new List<LinkPerformance>
         {
-            new() { Link = "https://example.com/#anchor" }
+            new() { Url = "https://example.com/#anchor" }
         };
         
         _validatorMock
@@ -94,7 +94,7 @@ public class LinkFilterTests
 
         var links = new List<LinkPerformance>
         {
-            new() { Link = "https://external.com/" },
+            new() { Url = "https://external.com/" },
         };
 
         _validatorMock

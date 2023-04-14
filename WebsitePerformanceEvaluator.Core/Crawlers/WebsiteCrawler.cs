@@ -37,7 +37,7 @@ public class WebsiteCrawler
 
             links.UnionWith(linksWithResponseTime);
 
-            var linksToAddToQueue = normalizedLinks.Select(item => item.Link).Except(visitedLinks);
+            var linksToAddToQueue = normalizedLinks.Select(item => item.Url).Except(visitedLinks);
 
             foreach (var link in linksToAddToQueue)
             {
@@ -72,7 +72,7 @@ public class WebsiteCrawler
 
     private IEnumerable<LinkPerformance> NormalizeLinks(IEnumerable<LinkPerformance> links, string url)
     {
-        links = links.Where(link => !string.IsNullOrEmpty(link.Link));
+        links = links.Where(link => !string.IsNullOrEmpty(link.Url));
 
         links = _linkHelper.RemoveLastSlashFromLinks(links);
 
