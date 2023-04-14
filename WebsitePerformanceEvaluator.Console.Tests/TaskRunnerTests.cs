@@ -16,7 +16,7 @@ public class TaskRunnerTests
 
     public TaskRunnerTests()
     {
-        _crawlerMock = new Mock<Crawler>(null, null, null);
+        _crawlerMock = new Mock<Crawler>(null, null);
         _consoleWrapperMock = new Mock<ConsoleWrapper>();
         _consoleHelperMock = new Mock<ConsoleHelper>();
         
