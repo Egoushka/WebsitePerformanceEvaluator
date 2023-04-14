@@ -1,6 +1,6 @@
 @model IEnumerable<WebsitePerformanceEvaluator.Data.Models.Link>
 
-<h1>Links Performance</h1>
+<h1>Links</h1>
 
 <form method="post" action="@Url.Action("GetLinksFromUrl")">
     <label for="url">Enter a URL:</label>
@@ -14,6 +14,7 @@
         <thead>
         <tr>
             <th>URL</th>
+            <th>Date</th>
             <th></th>
         </tr>
         </thead>
@@ -22,6 +23,7 @@
         {
             <tr>
                 <td>@link.Url</td>
+                <td>@link.CreatedAt</td>
                 <td><a href="@Url.Action("LinkPerformance", new { linkId = link.Id, url = link.Url })">View Details</a></td>
                 
             </tr>
