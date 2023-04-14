@@ -4,7 +4,7 @@ namespace WebsitePerformanceEvaluator.Data.Repository;
 
 public class BaseRepository<TEntity> : IRepository<TEntity> where TEntity : class, new()
 {
-    private readonly WebsitePerformanceEvaluatorDatabaseContext _repositoryDatabaseContext;
+    protected readonly WebsitePerformanceEvaluatorDatabaseContext _repositoryDatabaseContext;
 
     protected BaseRepository(WebsitePerformanceEvaluatorDatabaseContext repositoryDatabaseContext)
     {
@@ -49,5 +49,10 @@ public class BaseRepository<TEntity> : IRepository<TEntity> where TEntity : clas
         {
             throw new Exception($"{nameof(entities)} could not be saved: {ex.Message}");
         }
+    }
+
+    public virtual IEnumerable<TEntity> GetAll()
+    {
+        return _repositoryDatabaseContext.Set<TEntity>();
     }
 }

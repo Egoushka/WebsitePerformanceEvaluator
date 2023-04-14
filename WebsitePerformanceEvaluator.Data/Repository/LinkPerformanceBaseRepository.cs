@@ -8,4 +8,10 @@ public class LinkPerformanceBaseRepository : BaseRepository<LinkPerformance>, IL
     public LinkPerformanceBaseRepository(WebsitePerformanceEvaluatorDatabaseContext repositoryDatabaseContext) : base(repositoryDatabaseContext)
     {
     }
+
+
+    public IEnumerable<LinkPerformance> GetByLinkId(int linkId)
+    {
+        return _repositoryDatabaseContext.LinkPerformances.Where(x => x.LinkId == linkId);
+    }
 }
