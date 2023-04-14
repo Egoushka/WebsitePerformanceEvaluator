@@ -33,8 +33,8 @@ public class LinksController : Controller
         return Index();
     }
 
-    public IActionResult LinkPerformance(int linkId)
+    public IActionResult LinkPerformance(int linkId, string url)
     {
-        return RedirectToAction("Index", "LinkPerformance", new {linkId});
+        return RedirectToAction("Index", "LinkPerformance", new {linkId, url});
     }
 }

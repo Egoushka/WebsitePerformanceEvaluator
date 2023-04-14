@@ -1,9 +1,11 @@
-@model IEnumerable<WebsitePerformanceEvaluator.Data.Models.LinkPerformance>
+@using WebsitePerformanceEvaluator.Data.Models.Enums
+@model WebsitePerformanceEvaluator.MVC.ViewModels.LinkPerformanceViewModel
 
-<h1>Links Performance</h1>
-
-@if (Model != null && Model.Any())
+@if (Model.LinkPerformances.Any())
 {
+    <h1m>@Model.Link.Url</h1m>
+    <h1>Performance</h1>
+
     <table class="table-bordered">
         <thead>
         <tr>
@@ -13,12 +15,48 @@
         </tr>
         </thead>
         <tbody>
-        @foreach (var link in Model)
+        @foreach (var link in Model.LinkPerformances)
         {
             <tr>
                 <td>@link.Url</td>
                 <td>@link.CrawlingLinkSource</td>
                 <td>@link.TimeResponseMs</td>
+            </tr>
+        }
+        </tbody>
+    </table>
+    
+    <h1>Url not found at website</h1>
+    
+    <table class="table-bordered">
+        <thead>
+        <tr>
+            <th>URL</th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var link in Model.LinkPerformances.Where(link => link.CrawlingLinkSource == CrawlingLinkSource.Sitemap))
+        {
+            <tr>
+                <td>@link.Url</td>
+            </tr>
+        }
+        </tbody>
+    </table>
+    
+    <h1>Url not found in sitemap</h1>
+
+    <table class="table-bordered">
+        <thead>
+        <tr>
+            <th>URL</th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var link in Model.LinkPerformances.Where(link => link.CrawlingLinkSource == CrawlingLinkSource.Website))
+        {
+            <tr>
+                <td>@link.Url</td>
             </tr>
         }
         </tbody>

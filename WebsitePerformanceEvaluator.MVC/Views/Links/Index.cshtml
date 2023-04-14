@@ -2,7 +2,7 @@
 
 <h1>Links Performance</h1>
 
-<form method="post">
+<form method="post" action="@Url.Action("GetLinksFromUrl")">
     <label for="url">Enter a URL:</label>
     <input type="text" name="url" id="url" required>
     <button type="submit">Crawl</button>
@@ -22,7 +22,7 @@
         {
             <tr>
                 <td>@link.Url</td>
-                <td><a href="@Url.Action("LinkPerformance", new { linkId = link.Id })">View Details</a></td>
+                <td><a href="@Url.Action("LinkPerformance", new { linkId = link.Id, url = link.Url })">View Details</a></td>
                 
             </tr>
         }
