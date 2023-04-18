@@ -4,7 +4,6 @@ using WebsitePerformanceEvaluator.Console.Services;
 using WebsitePerformanceEvaluator.Core.Crawlers;
 using WebsitePerformanceEvaluator.Core.Models;
 using WebsitePerformanceEvaluator.Core.Models.Enums;
-using WebsitePerformanceEvaluator.Data.Interfaces.Repositories;
 using Xunit;
 
 namespace WebsitePerformanceEvaluator.Console.Tests;
