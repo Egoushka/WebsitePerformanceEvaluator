@@ -1,11 +1,13 @@
 using WebsitePerformanceEvaluator.Data.Interfaces.Repositories;
 using WebsitePerformanceEvaluator.Data.Models;
+using WebsitePerformanceEvaluator.Infrastructure.Interfaces;
 
 namespace WebsitePerformanceEvaluator.Data.Repository;
 
 public class LinkPerformanceBaseRepository : BaseRepository<LinkPerformance>, ILinkPerformanceRepository
 {
-    public LinkPerformanceBaseRepository(WebsitePerformanceEvaluatorDatabaseContext repositoryDatabaseContext) : base(repositoryDatabaseContext)
+    public LinkPerformanceBaseRepository(WebsitePerformanceEvaluatorDatabaseContext repositoryDatabaseContext, ILogger logger)
+        : base(repositoryDatabaseContext, logger)
     {
     }
 
