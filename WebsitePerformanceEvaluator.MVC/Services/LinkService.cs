@@ -17,16 +17,18 @@ public class LinkService
     }
     public LinkViewModel GetLinks(int page, int pageSize)
     {
-        var links = _linkRepository.GetAll()
-            .Skip((page - 1) * pageSize)
-            .Take(pageSize);
+        var links = _linkRepository.GetAll();
         
         var linksCount = links.Count();
         var totalPages = (int)Math.Ceiling(linksCount / (double)pageSize);
 
+        var linksToShow = links.Skip((page - 1) * pageSize)
+            .Take(pageSize)
+            .ToList();
+
         var viewModel = new LinkViewModel
         {
-            Links = links,
+            Links = linksToShow,
             Page = page,
             PageSize = pageSize,
             TotalPages = totalPages,
