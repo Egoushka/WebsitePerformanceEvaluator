@@ -51,7 +51,7 @@ public class BaseRepository<TEntity> : IRepository<TEntity> where TEntity : clas
         }
     }
 
-    public virtual IEnumerable<TEntity> GetAll()
+    public virtual IQueryable<TEntity> GetAll()
     {
         return _repositoryDatabaseContext.Set<TEntity>();
     }
