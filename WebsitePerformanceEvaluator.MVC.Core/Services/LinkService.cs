@@ -47,33 +47,26 @@ public class LinkService
 
         return viewModel;
     }
-    
+
     public async Task<Result<bool>> GetLinksFromUrlAsync(string url)
     {
         var validationResult = _urlValidator.Validate(url);
-        
+
         if (!validationResult)
         {
             var validationException = new ValidationException("Invalid url");
-            
+
             return new Result<bool>(validationException);
         }
 
-        try
-        {
-            var links = await _crawler.CrawlWebsiteAndSitemapAsync(url);
+        var links = await _crawler.CrawlWebsiteAndSitemapAsync(url);
 
-            await SaveLinksToDatabaseAsync(links, url);
-        }
-        catch (Exception e)
-        {
-            return new Result<bool>(e);
-        }
-
-        return new Result<bool>(true);
+        await SaveLinksToDatabaseAsync(links, url);
+        
+        return true;
     }
 
-    private async Task<Result<bool>> SaveLinksToDatabaseAsync(IEnumerable<LinkPerformance> links, string url)
+    private async Task SaveLinksToDatabaseAsync(IEnumerable<LinkPerformance> links, string url)
     {
         var link = new Link
         {
@@ -87,17 +80,8 @@ public class LinkService
             CrawlingLinkSource = (CrawlingLinkSource)x.CrawlingLinkSource,
             Link = link,
         });
-        
-        try
-        {
-            await _linkRepository.AddAsync(link);
-            await _linkPerformanceRepository.AddRangeAsync(linksData);
-        }
-        catch (Exception e)
-        {
-            return new Result<bool>(e);
-        }
-        
-        return new Result<bool>(true);
+
+        await _linkRepository.AddAsync(link);
+        await _linkPerformanceRepository.AddRangeAsync(linksData);
     }
 }
