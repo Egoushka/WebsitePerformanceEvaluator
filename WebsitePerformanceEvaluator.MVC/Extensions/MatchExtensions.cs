@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations;
 using LanguageExt.Common;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
@@ -19,9 +20,9 @@ public static class MatchExtensions
             },
             Fail: error =>
             {
-                dataDictionary["Error"] = error.Message;
+                dataDictionary["Error"] = GetErrorMessage(error);
                     
-                return new RedirectToActionResult("Index", "Error", null);
+                return new RedirectToActionResult(redirectActionName, redirectControllerName, null);
             });
     }
     
@@ -44,10 +45,23 @@ public static class MatchExtensions
             },
             Fail: error =>
             {
-                dataDictionary["Error"] = error.Message;
+                dataDictionary["Error"] = GetErrorMessage(error);
 
-                return new RedirectToActionResult("Index", "Error", null);
+                return new ViewResult
+                {
+                    ViewName = viewName,
+                    ViewData = viewDataDictionary,
+                };
             });
+    }
+    private static string GetErrorMessage(Exception e)
+    {
+        if(e is ValidationException validationException)
+        {
+            return "Validation error: " + validationException.Message;
+        }
+        
+        return e.Message;
     }
 }
 
