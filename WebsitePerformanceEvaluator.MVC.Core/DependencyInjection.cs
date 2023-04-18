@@ -1,5 +1,4 @@
 using Microsoft.Extensions.DependencyInjection;
-using WebsitePerformanceEvaluator.Infrustructure.Interfaces;
 using WebsitePerformanceEvaluator.MVC.Core.Services;
 using WebsitePerformanceEvaluator.MVC.Core.Validators;
 

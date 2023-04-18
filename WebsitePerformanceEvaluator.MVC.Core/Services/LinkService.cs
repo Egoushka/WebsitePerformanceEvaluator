@@ -51,6 +51,7 @@ public class LinkService
     public async Task<Result<bool>> GetLinksFromUrlAsync(string url)
     {
         var validationResult = _urlValidator.Validate(url);
+        
         if (!validationResult)
         {
             var validationException = new ValidationException("Invalid url");
@@ -68,8 +69,7 @@ public class LinkService
         {
             return new Result<bool>(e);
         }
-      
-        
+
         return new Result<bool>(true);
     }
 
@@ -87,6 +87,7 @@ public class LinkService
             CrawlingLinkSource = (CrawlingLinkSource)x.CrawlingLinkSource,
             Link = link,
         });
+        
         try
         {
             await _linkRepository.AddAsync(link);

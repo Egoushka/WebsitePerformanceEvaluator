@@ -8,6 +8,7 @@ public class Logger : Infrustructure.Interfaces.ILogger
     {
         _logFilePath = logFilePath;
     }
+    
     public void Error(string message)
     {
         var logMessage = $"[{DateTime.Now:yyyy-MM-dd HH:mm:ss}] [ERROR] {message}";
