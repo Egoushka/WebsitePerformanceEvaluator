@@ -5,7 +5,11 @@
     <form method="post" action="@Url.Action("GetLinksFromUrl")">
         <div class="form-group">
             <label for="url">Enter a URL:</label>
-            <input type="text" class="form-control" name="url" id="url" required>
+            <input type="text" class="form-control" name="url" id="url" value="@TempData["Url"]" required />
+            @if(TempData["Error"] != null)
+            {
+                <span class="text-danger">@TempData["Error"]</span>
+            }
         </div>
         <button type="submit" class="btn btn-primary">Crawl</button>
     </form>

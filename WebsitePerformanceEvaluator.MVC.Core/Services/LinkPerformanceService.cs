@@ -1,14 +1,14 @@
+using WebsitePerformanceEvaluator.Data.Interfaces.Repositories;
 using WebsitePerformanceEvaluator.Data.Models;
-using WebsitePerformanceEvaluator.Data.Repository;
 using WebsitePerformanceEvaluator.MVC.Core.ViewModels;
 
 namespace WebsitePerformanceEvaluator.MVC.Core.Services;
 
 public class LinkPerformanceService
 {
-    private readonly LinkPerformanceRepository _linkPerformanceRepository;
+    private readonly ILinkPerformanceRepository _linkPerformanceRepository;
 
-    public LinkPerformanceService(LinkPerformanceRepository linkPerformanceRepository)
+    public LinkPerformanceService(ILinkPerformanceRepository linkPerformanceRepository)
     {
         _linkPerformanceRepository = linkPerformanceRepository;
     }

@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using WebsitePerformanceEvaluator.MVC.Core.Services;
+using WebsitePerformanceEvaluator.MVC.Extensions;
 
 namespace WebsitePerformanceEvaluator.MVC.Controllers;
 
@@ -23,9 +24,11 @@ public class LinkController : Controller
     [HttpPost]
     public async Task<IActionResult> GetLinksFromUrl(string url)
     {
-        await _linkService.GetLinksFromUrlAsync(url);
+        var result = await _linkService.GetLinksFromUrlAsync(url);
         
-        return RedirectToAction("Index");
+        TempData["Url"] = url;
+        
+        return result.ToOkOrRedirectResult(TempData, x => x, "Index", "Link");
     }
 }
 
