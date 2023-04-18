@@ -1,6 +1,7 @@
 using WebsitePerformanceEvaluator.Core;
 using WebsitePerformanceEvaluator.Data;
 using WebsitePerformanceEvaluator.MVC;
+using WebsitePerformanceEvaluator.MVC.Core;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -8,6 +9,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 
 builder.Services.ConfigureMVCServices();
+builder.Services.ConfigureMVCCoreServices();
 builder.Services.ConfigureDataServices(builder.Configuration);
 builder.Services.ConfigureCoreServices();
 
