@@ -33,5 +33,10 @@ public class LinkPerformanceController : Controller
 
         return View(viewModel);
     }
+    [HttpGet]
+    public IActionResult BackToLinks()
+    {
+        return RedirectToAction("Index", "Links");
+    }
     
 }
