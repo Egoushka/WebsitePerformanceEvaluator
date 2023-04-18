@@ -28,16 +28,7 @@ public class LinkService
 
     public async Task<Result<LinkViewModel>> GetLinksAsync(int page, int pageSize)
     {
-        IQueryable<Link> links;
-        
-        try
-        {
-            links = _linkRepository.GetAll();
-        }
-        catch (Exception e)
-        {
-            return new Result<LinkViewModel>(e);
-        }
+        var links = _linkRepository.GetAll();
         
         var linksCount = await links.CountAsync();
         var totalPages = (int)Math.Ceiling(linksCount / (double)pageSize);
@@ -55,28 +46,21 @@ public class LinkService
         };
     }
 
-    public async Task<Result<bool>> GetLinksFromUrlAsync(string url)
+    public async Task<Result<bool>> CrawlUrlAsync(string url)
     {
-        var validationResult = _urlValidator.Validate(url);
+        var isLinkValid = _urlValidator.Validate(url);
 
-        if (!validationResult)
+        if (!isLinkValid)
         {
             var validationException = new ValidationException("Invalid url");
 
             return new Result<bool>(validationException);
         }
 
-        try
-        {
-            var links = await _crawler.CrawlWebsiteAndSitemapAsync(url);
-            
-            await SaveLinksToDatabaseAsync(links, url);
-        }
-        catch (Exception e)
-        {
-            return new Result<bool>(e);
-        }
-        
+        var links = await _crawler.CrawlWebsiteAndSitemapAsync(url);
+
+        await SaveLinksToDatabaseAsync(links, url);
+
         return new Result<bool>(true);
     }
 

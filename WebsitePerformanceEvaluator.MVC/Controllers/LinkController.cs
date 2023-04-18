@@ -23,9 +23,9 @@ public class LinkController : Controller
     }
 
     [HttpPost]
-    public async Task<IActionResult> GetLinksFromUrl(string url)
+    public async Task<IActionResult> CrawlUrl(string url)
     {
-        var result = await _linkService.GetLinksFromUrlAsync(url);
+        var result = await _linkService.CrawlUrlAsync(url);
         
         TempData["Url"] = url;
         

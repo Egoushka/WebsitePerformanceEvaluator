@@ -22,19 +22,12 @@ public class LinkPerformanceService
             Url = url,
         };
 
-        try
+        var linkPerformances = await _linkPerformanceRepository.GetByLinkIdAsync(linkId);
+
+        return new LinkPerformanceViewModel
         {
-            var linkPerformances = await _linkPerformanceRepository.GetByLinkIdAsync(linkId);
-            
-            return new LinkPerformanceViewModel
-            {
-                Link = link,
-                LinkPerformances = linkPerformances,
-            };
-        }
-        catch (Exception e)
-        {
-            return new Result<LinkPerformanceViewModel>(e);
-        }
+            Link = link,
+            LinkPerformances = linkPerformances,
+        };
     }
 }
