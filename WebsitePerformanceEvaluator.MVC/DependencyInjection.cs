@@ -8,7 +8,7 @@ public static class DependencyInjection
     public static IServiceCollection ConfigureMVCServices(this IServiceCollection services)
     {
         services.AddHttpClient();
-        services.AddSingleton<ILogger, Logger>();
+        services.AddSingleton<ILogger>(new Logger("log.txt"));
         services.AddTransient<LinkService>();
 
         return services;
