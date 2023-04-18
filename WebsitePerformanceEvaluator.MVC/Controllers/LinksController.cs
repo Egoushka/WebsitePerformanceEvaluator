@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using WebsitePerformanceEvaluator.Core.Crawlers;
 using WebsitePerformanceEvaluator.MVC.Services;
+using WebsitePerformanceEvaluator.MVC.ViewModels;
 
 namespace WebsitePerformanceEvaluator.MVC.Controllers;
 
@@ -16,11 +17,25 @@ public class LinksController : Controller
     }
 
     [HttpGet]
-    public IActionResult Index()
+    public IActionResult Index(int page = 1, int pageSize = 7)
     {
-        var links = _linkService.GetLinks();
+        var links = _linkService.GetLinks()
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize);
+        
+        var totalLinks = _linkService.GetLinks().Count();
+        var totalPage = (int)Math.Ceiling((double)totalLinks / pageSize);
+        
+        var viewModel = new LinkViewModel
+        {
+            Links = links,
+            Page = page,
+            PageSize = pageSize,
+            TotalPages = totalPage,
+        };
 
-        return View(links);
+
+        return View(viewModel);
     }
 
     [HttpPost]
