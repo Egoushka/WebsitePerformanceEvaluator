@@ -9,7 +9,6 @@ public class LinkPerformanceBaseRepository : BaseRepository<LinkPerformance>, IL
     {
     }
 
-
     public IEnumerable<LinkPerformance> GetByLinkId(int linkId)
     {
         return _repositoryDatabaseContext.LinkPerformances.Where(x => x.LinkId == linkId);

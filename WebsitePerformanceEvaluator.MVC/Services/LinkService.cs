@@ -21,7 +21,7 @@ public class LinkService
 
     public async Task SaveLinksToDatabaseAsync(IEnumerable<LinkPerformance> links, string url)
     {
-        var link = new Data.Models.Link
+        var link = new Link
         {
             Url = url,
         };

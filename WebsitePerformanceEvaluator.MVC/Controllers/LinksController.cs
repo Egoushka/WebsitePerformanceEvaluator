@@ -38,3 +38,4 @@ public class LinksController : Controller
         return RedirectToAction("Index", "LinkPerformance", new {linkId, url});
     }
 }
+
