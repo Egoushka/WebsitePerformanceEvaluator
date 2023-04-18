@@ -48,7 +48,8 @@ public class LinksController : Controller
         return RedirectToAction("Index");
     }
 
-    public IActionResult LinkPerformance(int linkId, string url)
+    [HttpGet]
+    public IActionResult LinkPerformanceRedirect(int linkId, string url)
     {
         return RedirectToAction("Index", "LinkPerformance", new {linkId, url});
     }
