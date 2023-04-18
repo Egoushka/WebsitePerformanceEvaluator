@@ -33,11 +33,5 @@ public class LinkController : Controller
             
         return RedirectToAction("Index");
     }
-
-    [HttpGet]
-    public IActionResult LinkPerformanceRedirect(int linkId, string url)
-    {
-        return RedirectToAction("Index", "LinkPerformance", new {linkId, url});
-    }
 }
 

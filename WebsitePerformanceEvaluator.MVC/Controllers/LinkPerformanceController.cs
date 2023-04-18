@@ -33,10 +33,4 @@ public class LinkPerformanceController : Controller
 
         return View(viewModel);
     }
-    
-    [HttpGet]
-    public IActionResult LinksRedirect()
-    {
-        return RedirectToAction("Index", "Link");
-    }
 }

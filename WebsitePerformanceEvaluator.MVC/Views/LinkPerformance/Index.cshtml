@@ -1,19 +1,10 @@
 @using WebsitePerformanceEvaluator.Data.Models.Enums
 @model WebsitePerformanceEvaluator.MVC.ViewModels.LinkPerformanceViewModel
 
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Link Performance</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" />
-</head>
-<body>
 <div class="container">
     <div class="header">
         <h1>Link Performance</h1>
-        <a href="@Url.Action("LinksRedirect")" class="btn btn-primary">Back to Links</a>
+        <a href="@Url.Action("Index", "Link")" class="btn btn-primary">Back to Links</a>
     </div>
 
     <div class="link-url">
@@ -112,4 +103,3 @@
         </div>
     }
 </div>
-</body>
