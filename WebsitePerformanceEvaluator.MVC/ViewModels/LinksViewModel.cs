@@ -2,7 +2,7 @@ using WebsitePerformanceEvaluator.Data.Models;
 
 namespace WebsitePerformanceEvaluator.MVC.ViewModels;
 
-public class LinkViewModel
+public class LinksViewModel
 {
     public IEnumerable<Link> Links { get; set; }
     public int Page { get; set; }
