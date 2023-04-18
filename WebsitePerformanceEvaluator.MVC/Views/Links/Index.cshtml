@@ -1,37 +1,50 @@
-@model IEnumerable<WebsitePerformanceEvaluator.Data.Models.Link>
+@model WebsitePerformanceEvaluator.MVC.ViewModels.LinkViewModel
 
-<h1>Links</h1>
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Links</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" />
+</head>
+<body>
+    <div class="container">
+        <h1>Links</h1>
+        <form method="post" action="@Url.Action("GetLinksFromUrl")">
+            <div class="form-group">
+                <label for="url">Enter a URL:</label>
+                <input type="text" class="form-control" name="url" id="url" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Crawl</button>
+        </form>
 
-<form method="post" action="@Url.Action("GetLinksFromUrl")">
-    <label for="url">Enter a URL:</label>
-    <input type="text" name="url" id="url" required>
-    <button type="submit">Crawl</button>
-</form>
-
-@if (Model != null && Model.Any())
-{
-    <table class="table-bordered">
-        <thead>
-        <tr>
-            <th>URL</th>
-            <th>Date</th>
-            <th></th>
-        </tr>
-        </thead>
-        <tbody>
-        @foreach (var link in Model)
+        @if (Model != null && Model.Links.Any())
         {
-            <tr>
-                <td>@link.Url</td>
-                <td>@link.CreatedAt</td>
-                <td><a href="@Url.Action("LinkPerformance", new { linkId = link.Id, url = link.Url })">View Details</a></td>
-                
-            </tr>
+            <table class="table">
+                <thead>
+                <tr>
+                    <th>URL</th>
+                    <th>Date</th>
+                    <th></th>
+                </tr>
+                </thead>
+                <tbody>
+                @foreach (var link in Model.Links)
+                {
+                    <tr>
+                        <td>@link.Url</td>
+                        <td>@link.CreatedAt</td>
+                        <td><a href="@Url.Action("LinkPerformance", new { linkId = link.Id, url = link.Url })" class="btn btn-secondary">View Details</a></td>
+                    </tr>
+                }
+                </tbody>
+            </table>
         }
-        </tbody>
-    </table>
-}
-else
-{
-    <p>No links found.</p>
-}
+        else
+        {
+            <p>No links found.</p>
+        }
+    </div>
+</body>
+</html>
