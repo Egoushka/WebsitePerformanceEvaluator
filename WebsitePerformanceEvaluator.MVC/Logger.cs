@@ -1,8 +1,8 @@
-using ILogger = WebsitePerformanceEvaluator.Infrastructure.Interfaces.ILogger;
+using ILogger = WebsitePerformanceEvaluator.Infrustructure.Interfaces.ILogger;
 
 namespace WebsitePerformanceEvaluator.MVC;
 
-public class Logger : ILogger
+public class Logger : Infrustructure.Interfaces.ILogger
 {
     private readonly string _logFilePath;
 

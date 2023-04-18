@@ -1,6 +1,6 @@
 using WebsitePerformanceEvaluator.Data.Interfaces.Repositories;
 using WebsitePerformanceEvaluator.Data.Models;
-using WebsitePerformanceEvaluator.Infrastructure.Interfaces;
+using WebsitePerformanceEvaluator.Infrustructure.Interfaces;
 
 namespace WebsitePerformanceEvaluator.Data.Repository;
 

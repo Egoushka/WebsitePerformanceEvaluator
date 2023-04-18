@@ -8,6 +8,7 @@ public static class DependencyInjection
     public static IServiceCollection ConfigureMVCCoreServices(this IServiceCollection services)
     {
         services.AddScoped<LinkService>();
+        
         return services;
     }
 }

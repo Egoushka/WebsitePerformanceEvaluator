@@ -7,7 +7,6 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\WebsitePerformanceEvaluator.Core\WebsitePerformanceEvaluator.Core.csproj" />
       <ProjectReference Include="..\WebsitePerformanceEvaluator.Data\WebsitePerformanceEvaluator.Data.csproj" />
       <ProjectReference Include="..\WebsitePerformanceEvaluator.Infrastructure\WebsitePerformanceEvaluator.Infrastructure.csproj" />
       <ProjectReference Include="..\WebsitePerformanceEvaluator.MVC.Core\WebsitePerformanceEvaluator.MVC.Core.csproj" />
@@ -20,10 +19,6 @@
         <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       </PackageReference>
       <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="7.0.6" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <Folder Include="Services\" />
     </ItemGroup>
 
 </Project>

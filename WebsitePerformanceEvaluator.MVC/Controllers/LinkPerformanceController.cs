@@ -1,35 +1,21 @@
 using Microsoft.AspNetCore.Mvc;
-using WebsitePerformanceEvaluator.Data.Interfaces.Repositories;
-using WebsitePerformanceEvaluator.Data.Models;
-using WebsitePerformanceEvaluator.MVC.ViewModels;
+using WebsitePerformanceEvaluator.MVC.Core.Services;
 
 namespace WebsitePerformanceEvaluator.MVC.Controllers;
 
 public class LinkPerformanceController : Controller
 {
-    private readonly ILinkPerformanceRepository _linkPerformanceRepository;
+    private readonly LinkPerformanceService _linkPerformanceService;
 
-    public LinkPerformanceController(ILinkPerformanceRepository linkPerformanceRepository)
+    public LinkPerformanceController(LinkPerformanceService linkPerformanceService)
     {
-        _linkPerformanceRepository = linkPerformanceRepository;
+        _linkPerformanceService = linkPerformanceService;
     }
     
     [HttpGet]
     public IActionResult Index(int linkId, string url)
     {
-        var link = new Link
-        {
-            Id = linkId,
-            Url = url,
-        };
-        
-        var linkPerformances = _linkPerformanceRepository.GetByLinkId(linkId);
-        
-        var viewModel = new LinkPerformanceViewModel
-        {
-            Link = link,
-            LinkPerformances = linkPerformances,
-        };
+        var viewModel = _linkPerformanceService.GetLinkPerformances(linkId, url);
 
         return View(viewModel);
     }

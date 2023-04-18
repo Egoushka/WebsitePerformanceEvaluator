@@ -1,7 +1,9 @@
+using Microsoft.EntityFrameworkCore;
+using WebsitePerformanceEvaluator.Core.Crawlers;
 using WebsitePerformanceEvaluator.Data.Interfaces.Repositories;
 using WebsitePerformanceEvaluator.Data.Models;
 using WebsitePerformanceEvaluator.Data.Models.Enums;
-using WebsitePerformanceEvaluator.MVC.ViewModels;
+using WebsitePerformanceEvaluator.MVC.Core.ViewModels;
 using LinkPerformance = WebsitePerformanceEvaluator.Core.Models.LinkPerformance;
 
 namespace WebsitePerformanceEvaluator.MVC.Core.Services;
@@ -10,27 +12,30 @@ public class LinkService
 {
     private readonly ILinkPerformanceRepository _linkPerformanceRepository;
     private readonly ILinkRepository _linkRepository;
+    private readonly Crawler _crawler;
     
-    public LinkService(ILinkPerformanceRepository linkPerformanceRepository, ILinkRepository linkRepository)
+    public LinkService(ILinkPerformanceRepository linkPerformanceRepository, ILinkRepository linkRepository, Crawler crawler)
     {
         _linkPerformanceRepository = linkPerformanceRepository;
         _linkRepository = linkRepository;
+        _crawler = crawler;
     }
-    public LinkViewModel GetLinks(int page, int pageSize)
+
+    public async Task<LinkViewModel> GetLinksAsync(int page, int pageSize)
     {
         var links = _linkRepository.GetAll();
         
-        var linksCount = links.Count();
+        var linksCount = await links.CountAsync();
         var totalPages = (int)Math.Ceiling(linksCount / (double)pageSize);
 
-        var linksToShow = links.Skip((page - 1) * pageSize)
+        var linksToShow = await links.Skip((page - 1) * pageSize)
             .Take(pageSize)
-            .ToList();
+            .ToListAsync();
 
         var viewModel = new LinkViewModel
         {
             Links = linksToShow,
-            Page = page,
+            CurrentPageIndex = page,
             PageSize = pageSize,
             TotalPages = totalPages,
         };
@@ -38,7 +43,14 @@ public class LinkService
         return viewModel;
     }
     
-    public async Task SaveLinksToDatabaseAsync(IEnumerable<LinkPerformance> links, string url)
+    public async Task GetLinksFromUrlAsync(string url)
+    {
+        var links = await _crawler.CrawlWebsiteAndSitemapAsync(url);
+
+        await SaveLinksToDatabaseAsync(links, url);
+    }
+
+    private async Task SaveLinksToDatabaseAsync(IEnumerable<LinkPerformance> links, string url)
     {
         var link = new Link
         {

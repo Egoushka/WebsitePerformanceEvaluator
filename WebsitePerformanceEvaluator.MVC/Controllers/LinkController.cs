@@ -1,24 +1,21 @@
 using Microsoft.AspNetCore.Mvc;
-using WebsitePerformanceEvaluator.Core.Crawlers;
 using WebsitePerformanceEvaluator.MVC.Core.Services;
 
 namespace WebsitePerformanceEvaluator.MVC.Controllers;
 
 public class LinkController : Controller
 {
-    private readonly Crawler _crawler;
     private readonly LinkService _linkService;
 
-    public LinkController(Crawler crawler, LinkService linkService)
+    public LinkController(LinkService linkService)
     {
-        _crawler = crawler;
         _linkService = linkService;
     }
 
     [HttpGet]
-    public IActionResult Index(int page = 1, int pageSize = 7)
+    public async Task<IActionResult> Index(int page = 1, int pageSize = 7)
     {
-        var viewModel = _linkService.GetLinks(page, pageSize);
+        var viewModel = await _linkService.GetLinksAsync(page, pageSize);
         
         return View(viewModel);
     }
@@ -26,10 +23,8 @@ public class LinkController : Controller
     [HttpPost]
     public async Task<IActionResult> GetLinksFromUrl(string url)
     {
-        var links = await _crawler.CrawlWebsiteAndSitemapAsync(url);
-
-        await _linkService.SaveLinksToDatabaseAsync(links, url);
-            
+        await _linkService.GetLinksFromUrlAsync(url);
+        
         return RedirectToAction("Index");
     }
 }

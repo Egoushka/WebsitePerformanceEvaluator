@@ -1,4 +1,4 @@
-using WebsitePerformanceEvaluator.Infrastructure.Interfaces;
+using WebsitePerformanceEvaluator.Infrustructure.Interfaces;
 
 namespace WebsitePerformanceEvaluator.Console;
 

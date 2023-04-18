@@ -1,4 +1,4 @@
-namespace WebsitePerformanceEvaluator.Infrastructure.Interfaces;
+namespace WebsitePerformanceEvaluator.Infrustructure.Interfaces;
 
 public interface ILogger
 {
