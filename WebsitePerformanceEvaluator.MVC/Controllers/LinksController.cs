@@ -19,22 +19,8 @@ public class LinksController : Controller
     [HttpGet]
     public IActionResult Index(int page = 1, int pageSize = 7)
     {
-        var links = _linkService.GetLinks()
-            .Skip((page - 1) * pageSize)
-            .Take(pageSize);
+        var viewModel = _linkService.GetLinks(page, pageSize);
         
-        var totalLinks = _linkService.GetLinks().Count();
-        var totalPage = (int)Math.Ceiling((double)totalLinks / pageSize);
-        
-        var viewModel = new LinkViewModel
-        {
-            Links = links,
-            Page = page,
-            PageSize = pageSize,
-            TotalPages = totalPage,
-        };
-
-
         return View(viewModel);
     }
 
