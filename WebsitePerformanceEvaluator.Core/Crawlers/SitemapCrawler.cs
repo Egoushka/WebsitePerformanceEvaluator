@@ -1,10 +1,10 @@
 using System.Xml;
 using WebsitePerformanceEvaluator.Core.Filters;
 using WebsitePerformanceEvaluator.Core.Helpers;
-using WebsitePerformanceEvaluator.Core.Interfaces;
 using WebsitePerformanceEvaluator.Core.Models;
 using WebsitePerformanceEvaluator.Core.Parsers;
 using WebsitePerformanceEvaluator.Core.Service;
+using WebsitePerformanceEvaluator.Infrustructure.Interfaces;
 
 namespace WebsitePerformanceEvaluator.Core.Crawlers;
 

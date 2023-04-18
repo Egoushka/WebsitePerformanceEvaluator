@@ -1,16 +1,19 @@
 using WebsitePerformanceEvaluator.Data.Interfaces.Repositories;
+using WebsitePerformanceEvaluator.Infrustructure.Interfaces;
 
 namespace WebsitePerformanceEvaluator.Data.Repository;
 
 public class BaseRepository<TEntity> : IRepository<TEntity> where TEntity : class, new()
 {
-    private readonly WebsitePerformanceEvaluatorDatabaseContext _repositoryDatabaseContext;
+    protected readonly WebsitePerformanceEvaluatorDatabaseContext _repositoryDatabaseContext;
+    private readonly ILogger _logger;
 
-    protected BaseRepository(WebsitePerformanceEvaluatorDatabaseContext repositoryDatabaseContext)
+    protected BaseRepository(WebsitePerformanceEvaluatorDatabaseContext repositoryDatabaseContext, ILogger logger)
     {
         _repositoryDatabaseContext = repositoryDatabaseContext;
-    }
-
+        _logger = logger;
+    } 
+    
     public async Task<TEntity> AddAsync(TEntity entity)
     {
         if (entity == null)
@@ -27,7 +30,7 @@ public class BaseRepository<TEntity> : IRepository<TEntity> where TEntity : clas
         }
         catch (Exception ex)
         {
-            Console.WriteLine(ex.InnerException?.Message);
+            _logger.Error($"{nameof(entity)} could not be saved: {ex.Message}");
             throw new Exception($"{nameof(entity)} could not be saved: {ex.Message}");
         }
     }
@@ -47,7 +50,13 @@ public class BaseRepository<TEntity> : IRepository<TEntity> where TEntity : clas
         }
         catch (Exception ex)
         {
+            _logger.Error($"{nameof(entities)} could not be saved: {ex.Message}");
             throw new Exception($"{nameof(entities)} could not be saved: {ex.Message}");
         }
+    }
+
+    public virtual IQueryable<TEntity> GetAll()
+    {
+        return _repositoryDatabaseContext.Set<TEntity>();
     }
 }

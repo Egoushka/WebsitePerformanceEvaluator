@@ -13,7 +13,7 @@ public static class DependencyInjection
         var connectionString = configuration.GetConnectionString("DefaultConnection");
         services.AddDbContext<WebsitePerformanceEvaluatorDatabaseContext>(options => options.UseSqlServer(connectionString));
         
-        services.AddScoped<ILinkPerformanceRepository, LinkPerformanceBaseRepository>();
+        services.AddScoped<ILinkPerformanceRepository, LinkPerformanceRepository>();
         services.AddScoped<ILinkRepository, LinkBaseRepository>();
 
         return services;
