@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore;
 using WebsitePerformanceEvaluator.Data.Interfaces.Repositories;
 using WebsitePerformanceEvaluator.Data.Models;
 using WebsitePerformanceEvaluator.Infrustructure.Interfaces;
@@ -11,8 +12,10 @@ public class LinkPerformanceRepository : BaseRepository<LinkPerformance>, ILinkP
     {
     }
 
-    public IEnumerable<LinkPerformance> GetByLinkId(int linkId)
+    public Task<List<LinkPerformance>> GetByLinkIdAsync(int linkId)
     {
-        return _repositoryDatabaseContext.LinkPerformances.Where(x => x.LinkId == linkId);
+        return _repositoryDatabaseContext.LinkPerformances
+            .Where(x => x.LinkId == linkId)
+            .ToListAsync();
     }
 }

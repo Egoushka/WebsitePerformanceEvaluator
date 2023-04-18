@@ -1,3 +1,4 @@
+using LanguageExt.Common;
 using WebsitePerformanceEvaluator.Data.Interfaces.Repositories;
 using WebsitePerformanceEvaluator.Data.Models;
 using WebsitePerformanceEvaluator.MVC.Core.ViewModels;
@@ -13,22 +14,27 @@ public class LinkPerformanceService
         _linkPerformanceRepository = linkPerformanceRepository;
     }
 
-    public LinkPerformanceViewModel GetLinkPerformances(int linkId, string url)
+    public async Task<Result<LinkPerformanceViewModel>> GetLinkPerformancesAsync(int linkId, string url)
     {
         var link = new Link
         {
             Id = linkId,
             Url = url,
         };
-        
-        var linkPerformances = _linkPerformanceRepository.GetByLinkId(linkId);
-        
-        var viewModel = new LinkPerformanceViewModel
+
+        try
         {
-            Link = link,
-            LinkPerformances = linkPerformances,
-        };
-        
-        return viewModel;
+            var linkPerformances = await _linkPerformanceRepository.GetByLinkIdAsync(linkId);
+            
+            return new LinkPerformanceViewModel
+            {
+                Link = link,
+                LinkPerformances = linkPerformances,
+            };
+        }
+        catch (Exception e)
+        {
+            return new Result<LinkPerformanceViewModel>(e);
+        }
     }
 }

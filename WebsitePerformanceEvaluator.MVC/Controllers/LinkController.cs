@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using WebsitePerformanceEvaluator.MVC.Core.Services;
 using WebsitePerformanceEvaluator.MVC.Extensions;
 
@@ -16,9 +17,9 @@ public class LinkController : Controller
     [HttpGet]
     public async Task<IActionResult> Index(int page = 1, int pageSize = 7)
     {
-        var viewModel = await _linkService.GetLinksAsync(page, pageSize);
+        var result = await _linkService.GetLinksAsync(page, pageSize);
         
-        return View(viewModel);
+        return result.ToViewResult(TempData, ViewData ,"Index");
     }
 
     [HttpPost]
@@ -28,7 +29,7 @@ public class LinkController : Controller
         
         TempData["Url"] = url;
         
-        return result.ToOkOrRedirectResult(TempData, x => x, "Index", "Link");
+        return result.ToRedirectResult(TempData, "Index", "Link");
     }
 }
 

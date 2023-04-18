@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using WebsitePerformanceEvaluator.MVC.Core.Services;
+using WebsitePerformanceEvaluator.MVC.Extensions;
 
 namespace WebsitePerformanceEvaluator.MVC.Controllers;
 
@@ -13,10 +14,10 @@ public class LinkPerformanceController : Controller
     }
     
     [HttpGet]
-    public IActionResult Index(int linkId, string url)
+    public async Task<IActionResult> Index(int linkId, string url)
     {
-        var viewModel = _linkPerformanceService.GetLinkPerformances(linkId, url);
+        var result = await _linkPerformanceService.GetLinkPerformancesAsync(linkId, url);
 
-        return View(viewModel);
+        return result.ToViewResult(TempData, ViewData,"Index");
     }
 }

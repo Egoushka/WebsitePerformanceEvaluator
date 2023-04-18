@@ -13,11 +13,6 @@ builder.Services.ConfigureMVCCoreServices();
 builder.Services.ConfigureDataServices(builder.Configuration);
 builder.Services.ConfigureCoreServices();
 
-builder.Services.AddControllersWithViews(options =>
-{
-    options.Filters.Add(typeof(GlobalExceptionFilter));
-});
-
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

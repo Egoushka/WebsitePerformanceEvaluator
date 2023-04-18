@@ -26,9 +26,18 @@ public class LinkService
         _urlValidator = urlValidator;
     }
 
-    public async Task<LinkViewModel> GetLinksAsync(int page, int pageSize)
+    public async Task<Result<LinkViewModel>> GetLinksAsync(int page, int pageSize)
     {
-        var links = _linkRepository.GetAll();
+        IQueryable<Link> links;
+        
+        try
+        {
+            links = _linkRepository.GetAll();
+        }
+        catch (Exception e)
+        {
+            return new Result<LinkViewModel>(e);
+        }
         
         var linksCount = await links.CountAsync();
         var totalPages = (int)Math.Ceiling(linksCount / (double)pageSize);
@@ -37,15 +46,13 @@ public class LinkService
             .Take(pageSize)
             .ToListAsync();
 
-        var viewModel = new LinkViewModel
+        return new LinkViewModel
         {
             Links = linksToShow,
             CurrentPageIndex = page,
             PageSize = pageSize,
             TotalPages = totalPages,
         };
-
-        return viewModel;
     }
 
     public async Task<Result<bool>> GetLinksFromUrlAsync(string url)
@@ -59,11 +66,18 @@ public class LinkService
             return new Result<bool>(validationException);
         }
 
-        var links = await _crawler.CrawlWebsiteAndSitemapAsync(url);
-
-        await SaveLinksToDatabaseAsync(links, url);
+        try
+        {
+            var links = await _crawler.CrawlWebsiteAndSitemapAsync(url);
+            
+            await SaveLinksToDatabaseAsync(links, url);
+        }
+        catch (Exception e)
+        {
+            return new Result<bool>(e);
+        }
         
-        return true;
+        return new Result<bool>(true);
     }
 
     private async Task SaveLinksToDatabaseAsync(IEnumerable<LinkPerformance> links, string url)
