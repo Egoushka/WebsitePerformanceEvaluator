@@ -1,4 +1,4 @@
-using ILogger = WebsitePerformanceEvaluator.Core.Interfaces.ILogger;
+using ILogger = WebsitePerformanceEvaluator.Infrastructure.Interfaces.ILogger;
 
 namespace WebsitePerformanceEvaluator.MVC;
 

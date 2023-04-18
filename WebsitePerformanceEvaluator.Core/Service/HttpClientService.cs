@@ -1,7 +1,7 @@
 using System.Diagnostics;
 using System.Text;
 using HtmlAgilityPack;
-using WebsitePerformanceEvaluator.Core.Interfaces;
+using WebsitePerformanceEvaluator.Infrastructure.Interfaces;
 using WebsitePerformanceEvaluator.Core.Models;
 
 namespace WebsitePerformanceEvaluator.Core.Service;
