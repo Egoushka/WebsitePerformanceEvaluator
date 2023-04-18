@@ -14,7 +14,7 @@ public class LinkConfiguration : IEntityTypeConfiguration<Link>
             .IsRequired();
         builder.Property(x => x.CreatedAt)
             .IsRequired()
-            .HasDefaultValueSql("getdate()");
+            .HasDefaultValueSql("GETUTCDATE()");
 
         builder.HasMany(x => x.LinkPerformances)
             .WithOne(x => x.Link)
