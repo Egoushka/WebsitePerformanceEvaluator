@@ -1,9 +1,10 @@
 using WebsitePerformanceEvaluator.Data.Interfaces.Repositories;
 using WebsitePerformanceEvaluator.Data.Models;
+using WebsitePerformanceEvaluator.Data.Models.Enums;
 using WebsitePerformanceEvaluator.MVC.ViewModels;
 using LinkPerformance = WebsitePerformanceEvaluator.Core.Models.LinkPerformance;
 
-namespace WebsitePerformanceEvaluator.MVC.Services;
+namespace WebsitePerformanceEvaluator.MVC.Core.Services;
 
 public class LinkService
 {
@@ -44,11 +45,11 @@ public class LinkService
             Url = url,
         };
 
-        var linksData = links.Select(x => new WebsitePerformanceEvaluator.Data.Models.LinkPerformance
+        var linksData = links.Select(x => new Data.Models.LinkPerformance
         {
             Url = x.Url,
             TimeResponseMs = x.TimeResponseMs,
-            CrawlingLinkSource = (Data.Models.Enums.CrawlingLinkSource)x.CrawlingLinkSource,
+            CrawlingLinkSource = (CrawlingLinkSource)x.CrawlingLinkSource,
             Link = link,
         });
         

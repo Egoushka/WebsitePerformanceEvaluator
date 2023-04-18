@@ -1,7 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using WebsitePerformanceEvaluator.Core.Crawlers;
-using WebsitePerformanceEvaluator.MVC.Services;
-using WebsitePerformanceEvaluator.MVC.ViewModels;
+using WebsitePerformanceEvaluator.MVC.Core.Services;
 
 namespace WebsitePerformanceEvaluator.MVC.Controllers;
 
