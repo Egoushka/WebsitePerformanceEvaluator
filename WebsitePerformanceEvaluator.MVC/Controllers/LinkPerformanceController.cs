@@ -37,6 +37,6 @@ public class LinkPerformanceController : Controller
     [HttpGet]
     public IActionResult LinksRedirect()
     {
-        return RedirectToAction("Index", "Links");
+        return RedirectToAction("Index", "Link");
     }
 }

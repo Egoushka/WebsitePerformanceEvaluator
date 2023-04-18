@@ -15,7 +15,7 @@ public class LinkService
         _linkPerformanceRepository = linkPerformanceRepository;
         _linkRepository = linkRepository;
     }
-    public LinksViewModel GetLinks(int page, int pageSize)
+    public LinkViewModel GetLinks(int page, int pageSize)
     {
         var links = _linkRepository.GetAll()
             .Skip((page - 1) * pageSize)
@@ -24,7 +24,7 @@ public class LinkService
         var linksCount = links.Count();
         var totalPages = (int)Math.Ceiling(linksCount / (double)pageSize);
 
-        var viewModel = new LinksViewModel
+        var viewModel = new LinkViewModel
         {
             Links = links,
             Page = page,

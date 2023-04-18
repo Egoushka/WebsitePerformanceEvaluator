@@ -5,12 +5,12 @@ using WebsitePerformanceEvaluator.MVC.ViewModels;
 
 namespace WebsitePerformanceEvaluator.MVC.Controllers;
 
-public class LinksController : Controller
+public class LinkController : Controller
 {
     private readonly Crawler _crawler;
     private readonly LinkService _linkService;
 
-    public LinksController(Crawler crawler, LinkService linkService)
+    public LinkController(Crawler crawler, LinkService linkService)
     {
         _crawler = crawler;
         _linkService = linkService;
