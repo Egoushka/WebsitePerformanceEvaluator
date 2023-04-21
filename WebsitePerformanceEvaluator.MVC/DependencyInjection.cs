@@ -1,6 +1,3 @@
-using WebsitePerformanceEvaluator.MVC.Core;
-using ILogger = WebsitePerformanceEvaluator.Infrustructure.Interfaces.ILogger;
-
 namespace WebsitePerformanceEvaluator.MVC;
 
 public static class DependencyInjection
@@ -8,8 +5,10 @@ public static class DependencyInjection
     public static IServiceCollection ConfigureMVCServices(this IServiceCollection services)
     {
         services.AddHttpClient();
-        services.AddSingleton<ILogger>(new Logger("../logs/log.txt"));
-
+        services.AddSingleton(sp => 
+            sp.GetRequiredService<ILoggerFactory>()
+            .CreateLogger("DefaultLogger"));
+        
         return services;
     }
 }

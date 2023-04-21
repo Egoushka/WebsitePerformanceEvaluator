@@ -1,5 +1,5 @@
+using Microsoft.Extensions.Logging;
 using WebsitePerformanceEvaluator.Data.Interfaces.Repositories;
-using WebsitePerformanceEvaluator.Infrustructure.Interfaces;
 
 namespace WebsitePerformanceEvaluator.Data.Repository;
 
@@ -30,7 +30,7 @@ public class BaseRepository<TEntity> : IRepository<TEntity> where TEntity : clas
         }
         catch (Exception ex)
         {
-            _logger.Error($"{nameof(entity)} could not be saved: {ex.Message}");
+            _logger.LogError($"{nameof(entity)} could not be saved: {ex.Message}");
             throw new Exception($"{nameof(entity)} could not be saved: {ex.Message}");
         }
     }
@@ -50,7 +50,7 @@ public class BaseRepository<TEntity> : IRepository<TEntity> where TEntity : clas
         }
         catch (Exception ex)
         {
-            _logger.Error($"{nameof(entities)} could not be saved: {ex.Message}");
+            _logger.LogError($"{nameof(entities)} could not be saved: {ex.Message}");
             throw new Exception($"{nameof(entities)} could not be saved: {ex.Message}");
         }
     }

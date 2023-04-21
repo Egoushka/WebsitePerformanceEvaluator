@@ -17,8 +17,4 @@
       <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.0-preview.3.23174.8" />
     </ItemGroup>
 
-    <ItemGroup>
-      <ProjectReference Include="..\WebsitePerformanceEvaluator.Infrastructure\WebsitePerformanceEvaluator.Infrastructure.csproj" />
-    </ItemGroup>
-
 </Project>

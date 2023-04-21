@@ -1,5 +1,4 @@
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using WebsitePerformanceEvaluator.MVC.Core.Services;
 using WebsitePerformanceEvaluator.MVC.Extensions;
 
@@ -9,9 +8,10 @@ public class LinkController : Controller
 {
     private readonly LinkService _linkService;
 
-    public LinkController(LinkService linkService)
+    public LinkController(LinkService linkService, ILogger logger)
     {
         _linkService = linkService;
+        logger.Log(LogLevel.Information, "LinkController created");
     }
 
     [HttpGet]

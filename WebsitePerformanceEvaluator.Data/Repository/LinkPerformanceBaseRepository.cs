@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using WebsitePerformanceEvaluator.Data.Interfaces.Repositories;
 using WebsitePerformanceEvaluator.Data.Models;
-using WebsitePerformanceEvaluator.Infrustructure.Interfaces;
 
 namespace WebsitePerformanceEvaluator.Data.Repository;
 

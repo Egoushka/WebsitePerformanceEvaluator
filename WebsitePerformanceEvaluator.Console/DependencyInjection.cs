@@ -1,6 +1,6 @@
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using WebsitePerformanceEvaluator.Console.Helpers;
-using WebsitePerformanceEvaluator.Infrustructure.Interfaces;
 
 namespace WebsitePerformanceEvaluator.Console;
 
@@ -12,8 +12,13 @@ public static class DependencyInjection
         services.AddTransient<TaskRunner>();
         services.AddTransient<ConsoleWrapper>();
         services.AddTransient<ConsoleHelper>();
-        services.AddTransient<ILogger, ConsoleLogger>();
-        
+        services.AddLogging(builder => builder.AddSimpleConsole(options =>
+        {
+            options.IncludeScopes = true;
+            options.SingleLine = true;
+            options.TimestampFormat = "HH:mm:ss ";
+        }));
+          
         return services;
     }
 }
