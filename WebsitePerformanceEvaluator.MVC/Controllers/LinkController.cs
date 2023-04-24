@@ -11,7 +11,6 @@ public class LinkController : Controller
     public LinkController(LinkService linkService, ILogger logger)
     {
         _linkService = linkService;
-        logger.Log(LogLevel.Information, "LinkController created");
     }
 
     [HttpGet]
