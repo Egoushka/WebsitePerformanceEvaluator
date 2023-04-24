@@ -19,6 +19,6 @@ public class LinkConfiguration : IEntityTypeConfiguration<Link>
         builder.HasMany(x => x.LinkPerformances)
             .WithOne(x => x.Link)
             .HasForeignKey(x => x.LinkId)
-            .OnDelete(DeleteBehavior.Cascade);
+            .OnDelete(DeleteBehavior.NoAction);
     }
 }
