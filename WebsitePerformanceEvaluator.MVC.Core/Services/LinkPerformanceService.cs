@@ -1,5 +1,6 @@
 using LanguageExt.Common;
-using WebsitePerformanceEvaluator.Data.Interfaces.Repositories;
+using Microsoft.EntityFrameworkCore;
+using WebsitePerformanceEvaluator.Data;
 using WebsitePerformanceEvaluator.Data.Models;
 using WebsitePerformanceEvaluator.MVC.Core.ViewModels;
 
@@ -7,11 +8,11 @@ namespace WebsitePerformanceEvaluator.MVC.Core.Services;
 
 public class LinkPerformanceService
 {
-    private readonly ILinkPerformanceRepository _linkPerformanceRepository;
+    private readonly WebsitePerformanceEvaluatorDatabaseContext _context;
 
-    public LinkPerformanceService(ILinkPerformanceRepository linkPerformanceRepository)
+    public LinkPerformanceService(WebsitePerformanceEvaluatorDatabaseContext context)
     {
-        _linkPerformanceRepository = linkPerformanceRepository;
+        _context = context;
     }
 
     public async Task<Result<LinkPerformanceViewModel>> GetLinkPerformancesAsync(int linkId, string url)
@@ -22,8 +23,10 @@ public class LinkPerformanceService
             Url = url,
         };
 
-        var linkPerformances = await _linkPerformanceRepository.GetByLinkIdAsync(linkId);
-
+        var linkPerformances = await _context.LinkPerformances
+            .Where(item => item.LinkId == linkId)
+            .ToListAsync();
+        
         return new LinkPerformanceViewModel
         {
             Link = link,

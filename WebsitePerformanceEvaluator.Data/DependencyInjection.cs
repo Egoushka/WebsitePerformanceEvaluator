@@ -1,8 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using WebsitePerformanceEvaluator.Data.Interfaces.Repositories;
-using WebsitePerformanceEvaluator.Data.Repository;
 
 namespace WebsitePerformanceEvaluator.Data;
 
@@ -13,9 +11,6 @@ public static class DependencyInjection
         var connectionString = configuration.GetConnectionString("DefaultConnection");
         services.AddDbContext<WebsitePerformanceEvaluatorDatabaseContext>(options => options.UseSqlServer(connectionString));
         
-        services.AddScoped<ILinkPerformanceRepository, LinkPerformanceRepository>();
-        services.AddScoped<ILinkRepository, LinkBaseRepository>();
-
         return services;
     }
 }

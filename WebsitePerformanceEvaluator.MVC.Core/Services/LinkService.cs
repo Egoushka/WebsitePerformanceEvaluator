@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 using LanguageExt.Common;
 using Microsoft.EntityFrameworkCore;
 using WebsitePerformanceEvaluator.Core.Crawlers;
-using WebsitePerformanceEvaluator.Data.Interfaces.Repositories;
+using WebsitePerformanceEvaluator.Data;
 using WebsitePerformanceEvaluator.Data.Models;
 using WebsitePerformanceEvaluator.Data.Models.Enums;
 using WebsitePerformanceEvaluator.MVC.Core.Validators;
@@ -13,22 +13,20 @@ namespace WebsitePerformanceEvaluator.MVC.Core.Services;
 
 public class LinkService
 {
-    private readonly ILinkPerformanceRepository _linkPerformanceRepository;
-    private readonly ILinkRepository _linkRepository;
     private readonly Crawler _crawler;
     private readonly UrlValidator _urlValidator;
+    private readonly WebsitePerformanceEvaluatorDatabaseContext _context;
     
-    public LinkService(ILinkPerformanceRepository linkPerformanceRepository, ILinkRepository linkRepository, Crawler crawler, UrlValidator urlValidator)
+    public LinkService(WebsitePerformanceEvaluatorDatabaseContext context, Crawler crawler, UrlValidator urlValidator)
     {
-        _linkPerformanceRepository = linkPerformanceRepository;
-        _linkRepository = linkRepository;
+        _context = context;
         _crawler = crawler;
         _urlValidator = urlValidator;
     }
 
     public async Task<Result<LinkViewModel>> GetLinksAsync(int page, int pageSize)
     {
-        var links = _linkRepository.GetAll();
+        var links = _context.Links.AsQueryable();
         
         var linksCount = await links.CountAsync();
         var totalPages = (int)Math.Ceiling(linksCount / (double)pageSize);
@@ -79,7 +77,7 @@ public class LinkService
             Link = link,
         });
 
-        await _linkRepository.AddAsync(link);
-        await _linkPerformanceRepository.AddRangeAsync(linksData);
+        await _context.AddAsync(link);
+        await _context.AddRangeAsync(linksData);
     }
 }
