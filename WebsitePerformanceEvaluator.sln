@@ -12,7 +12,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebsitePerformanceEvaluator
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebsitePerformanceEvaluator.MVC", "WebsitePerformanceEvaluator.MVC\WebsitePerformanceEvaluator.MVC.csproj", "{492617A0-84C7-44ED-A1C6-45EF335694BB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebsitePerformanceEvaluator.MVC.Core", "WebsitePerformanceEvaluator.MVC.Core\WebsitePerformanceEvaluator.MVC.Core.csproj", "{8FBE301F-E148-4F88-84FB-B8E98BB2C298}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebsitePerformanceEvaluator.Web.Core", "WebsitePerformanceEvaluator.Web.Core\WebsitePerformanceEvaluator.Web.Core.csproj", "{8FBE301F-E148-4F88-84FB-B8E98BB2C298}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebsitePerformanceEvaluator.API", "WebsitePerformanceEvaluator.API\WebsitePerformanceEvaluator.API.csproj", "{6F51330C-CBFA-4A79-B85E-1B677F08C350}"
 EndProject
