@@ -14,9 +14,9 @@ public class LinkPerformanceController : Controller
     }
     
     [HttpGet]
-    public async Task<IActionResult> Index(int linkId, string url)
+    public async Task<IActionResult> Index(int linkId)
     {
-        var result = await _linkPerformanceService.GetLinkPerformancesAsync(linkId, url);
+        var result = await _linkPerformanceService.GetLinkPerformancesAsync(linkId);
 
         return result.ToViewResult(TempData, ViewData,"Index");
     }

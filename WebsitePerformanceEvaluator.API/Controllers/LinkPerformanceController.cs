@@ -20,14 +20,13 @@ public class LinkPerformanceController : Controller
     /// Get a list of link performances by link id.
     /// </summary>
     /// <param name="linkId">The link id.</param>
-    /// <param name="url">The link url.</param>
     /// <returns> List of link performances.</returns>
     [HttpGet]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(LinkPerformanceViewModel))]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ValidationProblemDetails))]
-    public async Task<IActionResult> LinkPerformances(int linkId, string url)
+    public async Task<IActionResult> LinkPerformances(int linkId)
     {
-        var result = await _linkPerformanceService.GetLinkPerformancesAsync(linkId, url);
+        var result = await _linkPerformanceService.GetLinkPerformancesAsync(linkId);
 
         return result.ToOkResult();
     }
