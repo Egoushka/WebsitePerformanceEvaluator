@@ -9,8 +9,10 @@ public static class DependencyInjection
     public static IServiceCollection ConfigureDataServices(this IServiceCollection services, IConfiguration configuration)
     {
         var connectionString = configuration.GetConnectionString("DefaultConnection");
-        services.AddDbContext<WebsitePerformanceEvaluatorDatabaseContext>(options => options.UseSqlServer(connectionString));
-        
+        services.AddDbContext<WebsitePerformanceEvaluatorDatabaseContext>(options => options
+            .UseLazyLoadingProxies()
+            .UseSqlServer(connectionString));
+
         return services;
     }
 }
