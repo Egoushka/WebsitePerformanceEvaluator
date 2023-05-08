@@ -8,11 +8,12 @@
 
     <ItemGroup>
         <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="7.0.5" />
-        <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
+        <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Controllers\" />
+      <ProjectReference Include="..\WebsitePerformanceEvaluator.API.Core\WebsitePerformanceEvaluator.API.Core.csproj" />
+      <ProjectReference Include="..\WebsitePerformanceEvaluator.Core\WebsitePerformanceEvaluator.Core.csproj" />
     </ItemGroup>
 
 </Project>
