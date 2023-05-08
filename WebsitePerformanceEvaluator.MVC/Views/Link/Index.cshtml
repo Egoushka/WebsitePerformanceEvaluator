@@ -1,0 +1,64 @@
+@model WebsitePerformanceEvaluator.MVC.Core.ViewModels.LinkViewModel
+
+<div class="container">
+    <h1>Links</h1>
+    <form method="post" action="@Url.Action("CrawlUrl")">
+        <div class="form-group">
+            <label for="url">Enter a URL:</label>
+            <input type="text" class="form-control" name="url" id="url" value="@TempData["Url"]" required />
+            @if(TempData["Error"] != null)
+            {
+                <span class="text-danger">@TempData["Error"]</span>
+            }
+        </div>
+        <button type="submit" class="btn btn-primary">Crawl</button>
+    </form>
+    @if (Model != null && Model.Links.Any())
+    {
+        <table class="table">
+            <thead>
+            <tr>
+                <th>URL</th>
+                <th>Date</th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            @foreach (var link in Model.Links)
+            {
+                <tr>
+                    <td>@link.Url</td>
+                    <td>@link.CreatedAt</td>
+                    <td><a href="@Url.Action("Index", "LinkPerformance",new { linkId = link.Id, url = link.Url })" class="btn btn-secondary">View Details</a></td>
+                </tr>
+            }
+            </tbody>
+        </table>
+        <nav aria-label="Page navigation">
+            <ul class="pagination">
+                @if (Model.CurrentPageIndex > 1)
+                {
+                    <li class="page-item">
+                        <a class="page-link" href="@Url.Action("Index", new { page = Model.CurrentPageIndex - 1, pageSize = Model.PageSize })">Previous</a>
+                    </li>
+                }
+                @for (var i = 1; i <= Model.TotalPages; i++)
+                {
+                    <li class="page-item @(i == Model.CurrentPageIndex ? "active" : "")">
+                        <a class="page-link" href="@Url.Action("Index", new { page = i, pageSize = Model.PageSize })">@i</a>
+                    </li>
+                }
+                @if (Model.CurrentPageIndex < Model.TotalPages)
+                {
+                    <li class="page-item">
+                        <a class="page-link" href="@Url.Action("Index", new { page = Model.CurrentPageIndex + 1, pageSize = Model.PageSize })">Next</a>
+                    </li>
+                }
+            </ul>
+        </nav>
+    }
+    @if(Model == null || !Model.Links.Any())
+    {
+        <p>No links found.</p>
+    }
+</div>

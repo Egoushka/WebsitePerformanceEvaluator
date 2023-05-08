@@ -1,17 +1,14 @@
 using WebsitePerformanceEvaluator.Core.Models;
-using WebsitePerformanceEvaluator.Data.Interfaces.Repositories;
+using WebsitePerformanceEvaluator.Data;
 
 namespace WebsitePerformanceEvaluator.Console.Services;
 
 public class LinkService
 {
-    private readonly ILinkPerformanceRepository _linkPerformanceRepository;
-    private readonly ILinkRepository _linkRepository;
-    
-    public LinkService(ILinkPerformanceRepository linkPerformanceRepository, ILinkRepository linkRepository)
+    private readonly WebsitePerformanceEvaluatorDatabaseContext _context;
+    public LinkService(WebsitePerformanceEvaluatorDatabaseContext context)
     {
-        _linkPerformanceRepository = linkPerformanceRepository;
-        _linkRepository = linkRepository;
+        _context = context;
     }
 
     public async Task SaveLinksToDatabaseAsync(IEnumerable<LinkPerformance> links, string url)
@@ -29,7 +26,8 @@ public class LinkService
             Link = link,
         });
         
-        await _linkRepository.AddAsync(link);
-        await _linkPerformanceRepository.AddRangeAsync(linksData);
+        await _context.AddAsync(link);
+        await _context.AddRangeAsync(linksData);
+        await _context.SaveChangesAsync();
     }
 }

@@ -1,7 +1,7 @@
 using System.Diagnostics;
 using System.Text;
 using HtmlAgilityPack;
-using WebsitePerformanceEvaluator.Core.Interfaces;
+using Microsoft.Extensions.Logging;
 using WebsitePerformanceEvaluator.Core.Models;
 
 namespace WebsitePerformanceEvaluator.Core.Service;
@@ -76,7 +76,7 @@ public class HttpClientService
         }
         catch (Exception)
         {
-            _logger.Error("Error while downloading file");
+            _logger.LogError("Error while downloading file");
             return string.Empty;
         }
     }

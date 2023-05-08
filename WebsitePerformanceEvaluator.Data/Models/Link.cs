@@ -8,6 +8,7 @@ public class Link
     }
 
     public int Id { get; set; }
+    public DateTime CreatedAt { get; set; }
     public string Url { get; set; }
     public virtual ICollection<LinkPerformance> LinkPerformances { get; set; }
 }

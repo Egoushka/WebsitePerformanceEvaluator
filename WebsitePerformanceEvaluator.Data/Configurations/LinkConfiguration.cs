@@ -9,12 +9,16 @@ public class LinkConfiguration : IEntityTypeConfiguration<Link>
     public void Configure(EntityTypeBuilder<Link> builder)
     {
         builder.HasKey(x => x.Id);
-        
-        builder.Property(x => x.Url).IsRequired();
-        
+
+        builder.Property(x => x.Url)
+            .IsRequired();
+        builder.Property(x => x.CreatedAt)
+            .IsRequired()
+            .HasDefaultValueSql("GETUTCDATE()");
+
         builder.HasMany(x => x.LinkPerformances)
             .WithOne(x => x.Link)
             .HasForeignKey(x => x.LinkId)
-            .OnDelete(DeleteBehavior.Cascade);
+            .OnDelete(DeleteBehavior.NoAction);
     }
 }

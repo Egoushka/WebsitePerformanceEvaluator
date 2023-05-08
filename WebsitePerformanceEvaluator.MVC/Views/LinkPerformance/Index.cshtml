@@ -1,0 +1,105 @@
+@using WebsitePerformanceEvaluator.Data.Models.Enums
+@model WebsitePerformanceEvaluator.MVC.Core.ViewModels.LinkPerformanceViewModel
+
+<div class="container">
+    <div class="header">
+        <h1>Link Performance</h1>
+        <a href="@Url.Action("Index", "Link")" class="btn btn-primary">Back to Links</a>
+    </div>
+
+    <div class="link-url">
+        <h3>@Model.Link.Url</h3>
+    </div>
+
+    @if (Model.LinkPerformances.Any())
+    {
+        <div class="performance">
+            <h3>Performance</h3>
+            <table class="table">
+                <thead>
+                <tr>
+                    <th>URL</th>
+                    <th>Source</th>
+                    <th>Time (ms)</th>
+                </tr>
+                </thead>
+                <tbody>
+                @foreach (var link in Model.LinkPerformances)
+                {
+                    <tr>
+                        <td>@link.Url</td>
+                        <td><span class="source">@link.CrawlingLinkSource</span></td>
+                        <td>@link.TimeResponseMs</td>
+                    </tr>
+                }
+                </tbody>
+            </table>
+        </div>
+
+        @if (Model.LinkPerformances.Any(link => link.CrawlingLinkSource == CrawlingLinkSource.Sitemap))
+        {
+            <div class="sitemap">
+                <h3>URL not found at website</h3>
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th>URL</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    @foreach (var link in Model.LinkPerformances.Where(link => link.CrawlingLinkSource == CrawlingLinkSource.Sitemap))
+                    {
+                        <tr>
+                            <td>@link.Url</td>
+                        </tr>
+                    }
+                    </tbody>
+                </table>
+            </div>
+        }
+        @if (Model.LinkPerformances.Any(performance => performance.CrawlingLinkSource == CrawlingLinkSource.Website))
+        {
+            <div class="website">
+                <h3>URL not found in sitemap</h3>
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th>URL</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    @foreach (var link in Model.LinkPerformances.Where(link => link.CrawlingLinkSource == CrawlingLinkSource.Website))
+                    {
+                        <tr>
+                            <td>@link.Url</td>
+                        </tr>
+                    }
+                    </tbody>
+                </table>
+            </div>
+        }
+            
+    } 
+    @if(!Model.LinkPerformances.Any())
+    {
+        <div class="not-found">
+            <h1>Link not found</h1>
+            <table class="table">
+                <thead>
+                <tr>
+                    <th>URL</th>
+                    <th>Source</th>
+                    <th>Time (ms)</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>@Model.Link.Url</td>
+                    <td><span class="source">@CrawlingLinkSource.Sitemap</span></td>
+                    <td>0</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    }
+</div>

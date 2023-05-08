@@ -1,7 +1,7 @@
 using System.Xml;
+using Microsoft.Extensions.Logging;
 using WebsitePerformanceEvaluator.Core.Filters;
 using WebsitePerformanceEvaluator.Core.Helpers;
-using WebsitePerformanceEvaluator.Core.Interfaces;
 using WebsitePerformanceEvaluator.Core.Models;
 using WebsitePerformanceEvaluator.Core.Parsers;
 using WebsitePerformanceEvaluator.Core.Service;
@@ -72,7 +72,7 @@ public class SitemapCrawler
         }
         catch (Exception)
         {
-            _logger.Error("Error while parsing sitemap, sitemap will be ignored");
+            _logger.LogError("Error while parsing sitemap, sitemap will be ignored");
             return new XmlDocument();
         }
 

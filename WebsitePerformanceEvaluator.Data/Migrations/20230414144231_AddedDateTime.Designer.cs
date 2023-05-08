@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WebsitePerformanceEvaluator.Data;
 
@@ -11,9 +12,11 @@ using WebsitePerformanceEvaluator.Data;
 namespace WebsitePerformanceEvaluator.Data.Migrations
 {
     [DbContext(typeof(WebsitePerformanceEvaluatorDatabaseContext))]
-    partial class WebsitePerformanceEvaluatorDatabaseContextModelSnapshot : ModelSnapshot
+    [Migration("20230414144231_AddedDateTime")]
+    partial class AddedDateTime
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -33,7 +36,7 @@ namespace WebsitePerformanceEvaluator.Data.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValueSql("GETUTCDATE()");
+                        .HasDefaultValueSql("getdate()");
 
                     b.Property<string>("Url")
                         .IsRequired()
@@ -78,7 +81,7 @@ namespace WebsitePerformanceEvaluator.Data.Migrations
                     b.HasOne("WebsitePerformanceEvaluator.Data.Models.Link", "Link")
                         .WithMany("LinkPerformances")
                         .HasForeignKey("LinkId")
-                        .OnDelete(DeleteBehavior.NoAction)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Link");
