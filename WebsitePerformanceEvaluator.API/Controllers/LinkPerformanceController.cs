@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
-using WebsitePerformanceEvaluator.API.Core.Dto.LinkPerformance;
-using WebsitePerformanceEvaluator.API.Core.Services;
 using WebsitePerformanceEvaluator.API.Extensions;
+using WebsitePerformanceEvaluator.Web.Core.Services;
+using WebsitePerformanceEvaluator.Web.Core.ViewModels;
 
 namespace WebsitePerformanceEvaluator.API.Controllers;
 
@@ -23,11 +23,11 @@ public class LinkPerformanceController : Controller
     /// <param name="url">The link url.</param>
     /// <returns> List of link performances.</returns>
     [HttpGet]
-    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<GetLinkPerformanceDto>))]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(LinkPerformanceViewModel))]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ValidationProblemDetails))]
-    public async Task<IActionResult> LinkPerformances(int linkId)
+    public async Task<IActionResult> LinkPerformances(int linkId, string url)
     {
-        var result = await _linkPerformanceService.GetLinkPerformancesAsync(linkId);
+        var result = await _linkPerformanceService.GetLinkPerformancesAsync(linkId, url);
 
         return result.ToOkResult();
     }

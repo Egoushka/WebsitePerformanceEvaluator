@@ -2,9 +2,9 @@ using LanguageExt.Common;
 using Microsoft.EntityFrameworkCore;
 using WebsitePerformanceEvaluator.Data;
 using WebsitePerformanceEvaluator.Data.Models;
-using WebsitePerformanceEvaluator.MVC.Core.ViewModels;
+using WebsitePerformanceEvaluator.Web.Core.ViewModels;
 
-namespace WebsitePerformanceEvaluator.MVC.Core.Services;
+namespace WebsitePerformanceEvaluator.Web.Core.Services;
 
 public class LinkPerformanceService
 {

@@ -1,4 +1,4 @@
-namespace WebsitePerformanceEvaluator.MVC.Core.Validators;
+namespace WebsitePerformanceEvaluator.Web.Core.Validators;
 
 public class UrlValidator
 {

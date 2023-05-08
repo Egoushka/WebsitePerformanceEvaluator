@@ -1,5 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
-using WebsitePerformanceEvaluator.MVC.Core.Services;
+using WebsitePerformanceEvaluator.Web.Core.Services;
 using WebsitePerformanceEvaluator.MVC.Extensions;
 
 namespace WebsitePerformanceEvaluator.MVC.Controllers;

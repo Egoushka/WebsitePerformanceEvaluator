@@ -12,8 +12,8 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\WebsitePerformanceEvaluator.API.Core\WebsitePerformanceEvaluator.API.Core.csproj" />
       <ProjectReference Include="..\WebsitePerformanceEvaluator.Core\WebsitePerformanceEvaluator.Core.csproj" />
+      <ProjectReference Include="..\WebsitePerformanceEvaluator.Web.Core\WebsitePerformanceEvaluator.Web.Core.csproj" />
     </ItemGroup>
 
 </Project>

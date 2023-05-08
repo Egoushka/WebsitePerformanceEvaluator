@@ -1,7 +1,7 @@
 using WebsitePerformanceEvaluator.API;
-using WebsitePerformanceEvaluator.API.Core;
 using WebsitePerformanceEvaluator.Core;
 using WebsitePerformanceEvaluator.Data;
+using WebsitePerformanceEvaluator.Web.Core;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,7 +11,7 @@ builder.Services.AddControllers();
 builder.Services.ConfigureAPIServices();
 builder.Services.ConfigureDataServices(builder.Configuration);
 builder.Services.ConfigureCoreServices();
-builder.Services.ConfigureAPICoreServices();
+builder.Services.ConfigureWebCoreServices();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();

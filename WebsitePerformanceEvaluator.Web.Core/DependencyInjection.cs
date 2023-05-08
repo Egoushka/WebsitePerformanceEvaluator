@@ -1,12 +1,12 @@
 using Microsoft.Extensions.DependencyInjection;
-using WebsitePerformanceEvaluator.MVC.Core.Services;
-using WebsitePerformanceEvaluator.MVC.Core.Validators;
+using WebsitePerformanceEvaluator.Web.Core.Services;
+using WebsitePerformanceEvaluator.Web.Core.Validators;
 
-namespace WebsitePerformanceEvaluator.MVC.Core;
+namespace WebsitePerformanceEvaluator.Web.Core;
 
 public static class DependencyInjection
 {
-    public static IServiceCollection ConfigureMVCCoreServices(this IServiceCollection services)
+    public static IServiceCollection ConfigureWebCoreServices(this IServiceCollection services)
     {
         services.AddScoped<LinkService>();
         services.AddScoped<LinkPerformanceService>();

@@ -5,11 +5,11 @@ using WebsitePerformanceEvaluator.Core.Crawlers;
 using WebsitePerformanceEvaluator.Data;
 using WebsitePerformanceEvaluator.Data.Models;
 using WebsitePerformanceEvaluator.Data.Models.Enums;
-using WebsitePerformanceEvaluator.MVC.Core.Validators;
-using WebsitePerformanceEvaluator.MVC.Core.ViewModels;
+using WebsitePerformanceEvaluator.Web.Core.Validators;
+using WebsitePerformanceEvaluator.Web.Core.ViewModels;
 using LinkPerformance = WebsitePerformanceEvaluator.Core.Models.LinkPerformance;
 
-namespace WebsitePerformanceEvaluator.MVC.Core.Services;
+namespace WebsitePerformanceEvaluator.Web.Core.Services;
 
 public class LinkService
 {
