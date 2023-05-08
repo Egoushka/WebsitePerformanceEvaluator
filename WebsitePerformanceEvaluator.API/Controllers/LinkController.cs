@@ -7,7 +7,6 @@ namespace WebsitePerformanceEvaluator.API.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-[Produces("application/json")]
 public class LinkController : Controller
 {
     private readonly LinkService _linkService;
