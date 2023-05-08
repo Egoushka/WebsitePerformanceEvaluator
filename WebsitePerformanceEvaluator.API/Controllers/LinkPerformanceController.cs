@@ -17,7 +17,7 @@ public class LinkPerformanceController : Controller
     }
 
     /// <summary>
-    /// Get a paginated list of link performances.
+    /// Get a list of link performances by link id.
     /// </summary>
     /// <param name="linkId">The link id.</param>
     /// <param name="url">The link url.</param>

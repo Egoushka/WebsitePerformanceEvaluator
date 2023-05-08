@@ -2,8 +2,6 @@ using LanguageExt.Common;
 using Microsoft.EntityFrameworkCore;
 using WebsitePerformanceEvaluator.API.Core.Dto.LinkPerformance;
 using WebsitePerformanceEvaluator.Data;
-using WebsitePerformanceEvaluator.Data.Models;
-using WebsitePerformanceEvaluator.MVC.Core.ViewModels;
 
 namespace WebsitePerformanceEvaluator.API.Core.Services;
 

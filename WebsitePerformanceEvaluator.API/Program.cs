@@ -12,6 +12,7 @@ builder.Services.ConfigureAPIServices();
 builder.Services.ConfigureDataServices(builder.Configuration);
 builder.Services.ConfigureCoreServices();
 builder.Services.ConfigureAPICoreServices();
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();

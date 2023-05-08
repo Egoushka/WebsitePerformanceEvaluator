@@ -8,7 +8,6 @@ using WebsitePerformanceEvaluator.Core.Crawlers;
 using WebsitePerformanceEvaluator.Data;
 using WebsitePerformanceEvaluator.Data.Models;
 using WebsitePerformanceEvaluator.Data.Models.Enums;
-using WebsitePerformanceEvaluator.MVC.Core.ViewModels;
 using LinkPerformance = WebsitePerformanceEvaluator.Core.Models.LinkPerformance;
 
 namespace WebsitePerformanceEvaluator.API.Core.Services;
@@ -74,7 +73,7 @@ public class LinkService
                 Url = item.Url,
                 TimeResponseMs = item.TimeResponseMs,
                 CrawlingLinkSource = (int)item.CrawlingLinkSource,
-            }).ToList(),
+            }),
         };
     }
 

@@ -35,7 +35,7 @@ public class LinkController : Controller
     }
     
     /// <summary>
-    /// Get a link by id.
+    /// Crawl website and get links performances from it.
     /// </summary>
     /// <param name="url">The link url.</param>
     /// <returns>Link with list of link performances.</returns>
