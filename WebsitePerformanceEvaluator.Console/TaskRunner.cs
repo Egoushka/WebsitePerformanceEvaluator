@@ -9,107 +9,120 @@ namespace WebsitePerformanceEvaluator.Console;
 
 public class TaskRunner
 {
-    private readonly ConsoleHelper _consoleHelper;
-    private readonly ConsoleWrapper _consoleWrapper;
-    private readonly Crawler _crawler;
-    private readonly LinkService _linkService;
-  
+	private readonly ConsoleHelper _consoleHelper;
+	private readonly ConsoleWrapper _consoleWrapper;
+	private readonly Crawler _crawler;
+	private readonly LinkService _linkService;
 
-    public TaskRunner(Crawler crawler, ConsoleWrapper consoleWrapper, ConsoleHelper consoleHelper, LinkService linkService)
-    {
-        _crawler = crawler;
-        _consoleWrapper = consoleWrapper;
-        _consoleHelper = consoleHelper;
-        _linkService = linkService;
-    }
 
-    public async Task RunAsync()
-    {
-        var watch = Stopwatch.StartNew();
+	public TaskRunner(Crawler crawler, ConsoleWrapper consoleWrapper, ConsoleHelper consoleHelper, LinkService linkService)
+	{
+		_crawler = crawler;
+		_consoleWrapper = consoleWrapper;
+		_consoleHelper = consoleHelper;
+		_linkService = linkService;
+	}
 
-        _consoleWrapper.WriteLine("Enter website url:");
-        var url = _consoleWrapper.ReadLine();
+	public async Task RunAsync()
+	{
+		var watch = Stopwatch.StartNew();
 
-        watch.Start();
+		_consoleWrapper.WriteLine("Enter website url:");
+		var url = _consoleWrapper.ReadLine();
 
-        var links = await _crawler.CrawlWebsiteAndSitemapAsync(url);
-        
-        await _linkService.SaveLinksToDatabaseAsync(links, url);
+		watch.Start();
 
-        PrintLinksInCrawlingNotInSitemap(links);
-        PrintLinksInSitemapNotInCrawling(links);
+		var links = await _crawler.CrawlWebsiteAndSitemapAsync(url);
 
-        PrintLinksWithTimeResponse(links);
+		await _linkService.SaveLinksToDatabaseAsync(links, url);
 
-        PrintAmountOfFoundLinks(links);
+		PrintLinksInCrawlingNotInSitemap(links);
+		PrintLinksInSitemapNotInCrawling(links);
 
-        watch.Stop();
-        _consoleWrapper.WriteLine($"Time elapsed: {watch.ElapsedMilliseconds / 1000} s");
-    }
+		PrintLinksWithTimeResponse(links);
 
-    private void PrintLinksInCrawlingNotInSitemap(IEnumerable<LinkPerformance> linkPerformances)
-    {
-        var linksInCrawlingNotInSitemap = linkPerformances
-            .Where(x => x.CrawlingLinkSource == CrawlingLinkSource.Website)
-            .Select(x => x.Url);
+		PrintAmountOfFoundLinks(links);
 
-        _consoleWrapper.WriteLine("Links found after crawling website, but not in sitemap:");
+		watch.Stop();
+		_consoleWrapper.WriteLine($"Time elapsed: {watch.ElapsedMilliseconds / 1000} s");
+	}
 
-        if (linksInCrawlingNotInSitemap.Any())
-        {
-            _consoleHelper.PrintTable(new List<string> { "Link" }, linksInCrawlingNotInSitemap);
-        }
-        else
-        {
-            _consoleWrapper.WriteLine("No links found");
-        }
+	private void PrintLinksInCrawlingNotInSitemap(IEnumerable<LinkPerformance> linkPerformances)
+	{
+		var linksInCrawlingNotInSitemap = linkPerformances
+			.Where(x => x.CrawlingLinkSource == CrawlingLinkSource.Website)
+			.Select(x => x.Url);
 
-        _consoleWrapper.WriteLine();
-    }
+		_consoleWrapper.WriteLine("Links found after crawling website, but not in sitemap:");
 
-    private void PrintLinksInSitemapNotInCrawling(IEnumerable<LinkPerformance> linkPerformances)
-    {
-        var linksInSitemapNotInCrawling = linkPerformances
-            .Where(link => link.CrawlingLinkSource == CrawlingLinkSource.Sitemap)
-            .Select(link => link.Url);
+		if (linksInCrawlingNotInSitemap.Any())
+		{
+			_consoleHelper.PrintTable(new List<string>
+				{
+					"Link"
+				},
+				linksInCrawlingNotInSitemap);
+		}
+		else
+		{
+			_consoleWrapper.WriteLine("No links found");
+		}
 
-        _consoleWrapper.WriteLine("Links in sitemap, that wasn't found after crawling:");
+		_consoleWrapper.WriteLine();
+	}
 
-        if (linksInSitemapNotInCrawling.Any())
-        {
-            _consoleHelper.PrintTable(new List<string> { "Link" }, linksInSitemapNotInCrawling);
-        }
-        else
-        {
-            _consoleWrapper.WriteLine("No links found");
-        }
+	private void PrintLinksInSitemapNotInCrawling(IEnumerable<LinkPerformance> linkPerformances)
+	{
+		var linksInSitemapNotInCrawling = linkPerformances
+			.Where(link => link.CrawlingLinkSource == CrawlingLinkSource.Sitemap)
+			.Select(link => link.Url);
 
-        _consoleWrapper.WriteLine();
-    }
+		_consoleWrapper.WriteLine("Links in sitemap, that wasn't found after crawling:");
 
-    private void PrintLinksWithTimeResponse(IEnumerable<LinkPerformance> linkPerformances)
-    {
-        var rowsList = linkPerformances
-            .OrderBy(item => item.TimeResponseMs)
-            .Select(x => new Tuple<string, long?>(x.Url, x.TimeResponseMs));
+		if (linksInSitemapNotInCrawling.Any())
+		{
+			_consoleHelper.PrintTable(new List<string>
+				{
+					"Link"
+				},
+				linksInSitemapNotInCrawling);
+		}
+		else
+		{
+			_consoleWrapper.WriteLine("No links found");
+		}
 
-        _consoleWrapper.WriteLine("Links with time response:");
+		_consoleWrapper.WriteLine();
+	}
 
-        _consoleHelper.PrintTable(new List<string> { "Link", "Time(ms)" }, rowsList);
+	private void PrintLinksWithTimeResponse(IEnumerable<LinkPerformance> linkPerformances)
+	{
+		var rowsList = linkPerformances
+			.OrderBy(item => item.TimeResponseMs)
+			.Select(x => new Tuple<string, long?>(x.Url, x.TimeResponseMs));
 
-        _consoleWrapper.WriteLine();
-    }
+		_consoleWrapper.WriteLine("Links with time response:");
 
-    private void PrintAmountOfFoundLinks(IEnumerable<LinkPerformance> links)
-    {
-        var countInBoth = links.Count(l => l.CrawlingLinkSource == CrawlingLinkSource.WebsiteAndSitemap);
+		_consoleHelper.PrintTable(new List<string>
+			{
+				"Link",
+				"Time(ms)"
+			},
+			rowsList);
 
-        var sitemapLinksCount = countInBoth + links.Count(l => l.CrawlingLinkSource == CrawlingLinkSource.Sitemap);
-        var crawlingLinksCount = countInBoth + links.Count(l => l.CrawlingLinkSource == CrawlingLinkSource.Website);
+		_consoleWrapper.WriteLine();
+	}
 
-        _consoleWrapper.WriteLine($"Links in sitemap: {sitemapLinksCount}");
-        _consoleWrapper.WriteLine($"Links after crawling: {crawlingLinksCount}");
+	private void PrintAmountOfFoundLinks(IEnumerable<LinkPerformance> links)
+	{
+		var countInBoth = links.Count(l => l.CrawlingLinkSource == CrawlingLinkSource.WebsiteAndSitemap);
 
-        _consoleWrapper.WriteLine();
-    }
+		var sitemapLinksCount = countInBoth + links.Count(l => l.CrawlingLinkSource == CrawlingLinkSource.Sitemap);
+		var crawlingLinksCount = countInBoth + links.Count(l => l.CrawlingLinkSource == CrawlingLinkSource.Website);
+
+		_consoleWrapper.WriteLine($"Links in sitemap: {sitemapLinksCount}");
+		_consoleWrapper.WriteLine($"Links after crawling: {crawlingLinksCount}");
+
+		_consoleWrapper.WriteLine();
+	}
 }
