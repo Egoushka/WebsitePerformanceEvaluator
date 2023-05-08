@@ -7,7 +7,7 @@ public class WebsitePerformanceEvaluatorDatabaseContextFactory : IDesignTimeDbCo
 {
     public WebsitePerformanceEvaluatorDatabaseContext CreateDbContext(string[] args)
     {
-        var connectionString = "Server=localhost;Database=db;User ID=id;Password=****;TrustServerCertificate=True;";
+        var connectionString = "Server=localhost;Database=WebsitePerformanceEvaluator;User ID=SA;Password=MyPass@word;TrustServerCertificate=True;";
         
         var optionsBuilder = new DbContextOptionsBuilder<WebsitePerformanceEvaluatorDatabaseContext>();
         optionsBuilder.UseSqlServer(connectionString);
