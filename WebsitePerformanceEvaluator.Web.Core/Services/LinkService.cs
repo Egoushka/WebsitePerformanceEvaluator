@@ -44,7 +44,7 @@ public class LinkService
         };
     }
 
-    public async Task<Result<bool>> CrawlUrlAsync(string url)
+    public async Task<Result<CrawlLinkViewModel>> CrawlUrlAsync(string url)
     {
         var isLinkValid = _urlValidator.Validate(url);
 
@@ -52,14 +52,18 @@ public class LinkService
         {
             var validationException = new ValidationException("Invalid url");
 
-            return new Result<bool>(validationException);
+            return new Result<CrawlLinkViewModel>(validationException);
         }
 
         var links = await _crawler.CrawlWebsiteAndSitemapAsync(url);
 
         await SaveLinksToDatabaseAsync(links, url);
 
-        return new Result<bool>(true);
+        return new CrawlLinkViewModel
+        {
+            Url = url,
+            Urls = links,
+        };
     }
 
     private async Task SaveLinksToDatabaseAsync(IEnumerable<LinkPerformance> links, string url)

@@ -7,13 +7,15 @@ namespace WebsitePerformanceEvaluator.API.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-public class LinkController : Controller
+public class CrawlerController : Controller
 {
     private readonly LinkService _linkService;
+    private readonly LinkPerformanceService _linkPerformanceService;
     
-    public LinkController(LinkService linkService)
+    public CrawlerController(LinkService linkService, LinkPerformanceService linkPerformanceService)
     {
         _linkService = linkService;
+        _linkPerformanceService = linkPerformanceService;
     }
     
     /// <summary>
@@ -23,7 +25,7 @@ public class LinkController : Controller
     /// <param name="page">The page number to retrieve (default: 1).</param>
     /// <param name="pageSize">The number of links per page (default: 7).</param>
     /// <returns>A paginated list of links.</returns>
-    [HttpGet]
+    [HttpGet("links&page={page}&pageSize={pageSize}")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(LinkViewModel))]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ValidationProblemDetails))]
     public async Task<IActionResult> Links(int page = 1, int pageSize = 7)
@@ -34,14 +36,29 @@ public class LinkController : Controller
     }
     
     /// <summary>
+    /// Get a list of link performances by link id.
+    /// </summary>
+    /// <param name="linkId">The link id.</param>
+    /// <returns> List of link performances.</returns>
+    [HttpGet("links/{linkId}/performance")]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(LinkPerformanceViewModel))]
+    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ValidationProblemDetails))]
+    public async Task<IActionResult> LinkPerformances(int linkId)
+    {
+        var result = await _linkPerformanceService.GetLinkPerformancesAsync(linkId);
+
+        return result.ToOkResult();
+    }
+    
+    /// <summary>
     /// Crawl website and get links performances from it.
     /// </summary>
     /// <param name="url">The link url.</param>
     /// <returns>Link with list of link performances.</returns>
-    [HttpPost]
-    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(bool))]
+    [HttpPost("{url}")]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(CrawlLinkViewModel))]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ValidationProblemDetails))]
-    public async Task<IActionResult> CrawlUrl(string url)
+    public async Task<IActionResult> CrawlAndRetrieveLink(string url)
     {
         var result = await _linkService.CrawlUrlAsync(url);
         
