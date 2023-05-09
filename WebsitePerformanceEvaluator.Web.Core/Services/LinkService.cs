@@ -83,5 +83,6 @@ public class LinkService
 
         await _context.AddAsync(link);
         await _context.AddRangeAsync(linksData);
+        await _context.SaveChangesAsync();
     }
 }
