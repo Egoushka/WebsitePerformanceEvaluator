@@ -125,6 +125,7 @@ export default defineComponent({
     formatDate(date: string) {
       return new Date(date).toLocaleString()
     }
-  }
+  },
+
 });
 </script>
