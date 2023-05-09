@@ -2,10 +2,12 @@
   <div class="container">
     <div class="header">
       <h1>Link Performance</h1>
-      <router-link :to="{ name: 'Links' }">Back to Links</router-link>
+       <router-link :to="{ name: 'Links' }" class="btn btn-primary">Back to Links</router-link>
     </div>
 
     <div class="link-url">
+
+      <h3>{{ url }}</h3>
 
     </div>
 
@@ -19,7 +21,7 @@
         </tr>
         </thead>
         <tbody>
-          <tr v-for="link in linkPerformances.value" :key="link.url">
+          <tr v-for="link in linkPerformances" :key="link.url">
             <td>{{ link.url }}</td>
             <td>{{ link.crawlingLinkSource }}</td>
             <td>{{ link.timeResponseMs }}</td>
@@ -30,7 +32,7 @@
       </table>
     </div>
 
-    <div v-if="linkPerformances.value.some(link => link.crawlingLinkSource === CrawlingLinkSource.SiteMap)">
+    <div v-if="linkPerformances.some(link => link.crawlingLinkSource === CrawlingLinkSource.SiteMap)">
       <h3>URL not found at website</h3>
       <table class="table">
         <thead>
@@ -39,7 +41,7 @@
         </tr>
         </thead>
         <tbody>
-        <tr v-for="link in linkPerformances.value.filter(link => link.crawlingLinkSource === CrawlingLinkSource.SiteMap)"
+        <tr v-for="link in linkPerformances.filter(link => link.crawlingLinkSource === CrawlingLinkSource.SiteMap)"
             :key="link.url">
           <td>{{ link.url }}</td>
         </tr>
@@ -47,7 +49,7 @@
       </table>
     </div>
 
-    <div v-if="linkPerformances.value.some(link => link.crawlingLinkSource === CrawlingLinkSource.Website)">
+    <div v-if="linkPerformances.some(link => link.crawlingLinkSource === CrawlingLinkSource.Website)">
       <h3>URL found at website</h3>
       <table class="table">
         <thead>
@@ -56,7 +58,7 @@
         </tr>
         </thead>
         <tbody>
-        <tr v-for="link in linkPerformances.value.filter(link => link.crawlingLinkSource === CrawlingLinkSource.Website)"
+        <tr v-for="link in linkPerformances.filter(link => link.crawlingLinkSource === CrawlingLinkSource.Website)"
             :key="link.url">
           <td>{{ link.url }}</td>
         </tr>
@@ -82,13 +84,13 @@ export default defineComponent({
   data() {
     const baseUrl = import.meta.env.VITE_APP_BASEURL + '/Crawler';
     const linkPerformances = ref<LinkPerformance[]>([]);
-    const isMakingRequest = ref(false);
+    const url = ref('');
     const error = ref('');
 
     return {
       linkPerformances,
-      isMakingRequest,
       baseUrl,
+      url,
       error,
     };
   },
@@ -97,8 +99,7 @@ export default defineComponent({
   },
   methods: {
      async getLinkPerformances() {
-       this.isMakingRequest.value = true;
-       this.error.value = '';
+       this.error = '';
 
        try {
          console.log(this.id)
@@ -108,15 +109,10 @@ export default defineComponent({
          const data = response.data;
 
          this.linkPerformances = data.linkPerformances;
-
-         console.log(data)
-
+         this.url = data.link.url;
        }
        catch (e) {
-         this.error.value = 'Error occurred while crawling the website.';
-       }
-       finally {
-         this.isMakingRequest.value = false;
+         this.error = 'Error occurred while crawling the website.';
        }
      }
   },

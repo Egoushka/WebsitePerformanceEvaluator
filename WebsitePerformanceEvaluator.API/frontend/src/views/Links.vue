@@ -10,7 +10,7 @@
       <button type="submit" class="btn btn-primary" :disabled="isMakingRequest">Crawl</button>
     </form>
 
-    <div v-if="links.value.length">
+    <div v-if="links.length">
       <table class="table">
         <thead>
         <tr>
@@ -20,7 +20,7 @@
         </tr>
         </thead>
         <tbody>
-        <tr v-for="link in links.value" :key="link.id">
+        <tr v-for="link in links" :key="link.id">
           <td>{{ link.url }}</td>
           <td>{{ link.createdAt }}</td>
           <td>
@@ -88,42 +88,37 @@ export default defineComponent({
   },
   methods: {
     async crawlUrl() {
-      this.isMakingRequest.value = true;
-      this.error.value = '';
+      this.isMakingRequest = true;
+      this.error = '';
       try {
         const body = {
-          url: this.inputUrl.value,
+          url: this.inputUrl,
         };
-        const response = await axios.post(`${this.baseUrl}`, body);
-        const data = response.data;
 
-        console.log(data)
+        await axios.post(`${this.baseUrl}`, body);
 
       } catch (e) {
-        this.error.value = 'Error occurred while crawling the website.';
+        this.error = 'Error occurred while crawling the website.';
       } finally {
-        this.isMakingRequest.value = false;
+        this.isMakingRequest = false;
       }
     },
     async getUrls(page: number = 1, pageSizeNumber: number = 7) {
-      this.isMakingRequest.value = true;
-      this.error.value = '';
+      this.error = '';
       try {
         const response = await axios.get(`${this.baseUrl}/links&page=${page}&pageSize=${pageSizeNumber}`);
         const data = response.data;
 
-        this.links.value = data.links;
+        this.links = data.links;
 
-        this.currentPageIndex.value = data.currentPageIndex;
-        this.pageSize.value = data.pageSize;
-        this.totalPages.value = data.totalPages;
-
-        console.log(data)
+        this.currentPageIndex = data.currentPageIndex;
+        this.pageSize = data.pageSize;
+        this.totalPages = data.totalPages;
 
       } catch (e) {
-        this.error.value = 'Error occurred while crawling the website.';
+        this.error = 'Error occurred while crawling the website.';
       } finally {
-        this.isMakingRequest.value = false;
+        this.isMakingRequest = false;
       }
     }
   }

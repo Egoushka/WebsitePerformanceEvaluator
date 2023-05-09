@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import Links from '@/views/Links.vue'
+import LinkPerformance from '@/views/LinkPerformance.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -12,7 +13,7 @@ const router = createRouter({
     {
       path: '/link/:id',
       name: 'LinkPerformance',
-      component: () => import('@/views/LinkPerformance.vue'),
+      component: LinkPerformance,
       props: true
     },
     {
