@@ -10,7 +10,7 @@
       <button type="submit" class="btn btn-primary" :disabled="isMakingRequest">Crawl</button>
     </form>
 
-    <div v-if="links.length">
+    <div v-if="links.value.length">
       <table class="table">
         <thead>
         <tr>
@@ -20,7 +20,7 @@
         </tr>
         </thead>
         <tbody>
-        <tr v-for="link in links" :key="link.id">
+        <tr v-for="link in links.value" :key="link.id">
           <td>{{ link.url }}</td>
           <td>{{ link.createdAt }}</td>
           <td>
@@ -33,13 +33,13 @@
       <nav aria-label="Page navigation">
         <ul class="pagination justify-content-center">
           <li class="page-item" :class="{ disabled: currentPageIndex === 1 }">
-            <button class="page-link" @click="getUrls(currentPageIndex - 1, pageSize)">&laquo; Previous</button>
+            <button class="page-link" @click="getUrls(currentPageIndex - 1, pageSize.value)">&laquo; Previous</button>
           </li>
           <li class="page-item" v-for="pageIndex in totalPages" :key="pageIndex" :class="{ active: currentPageIndex === pageIndex }">
-            <button class="page-link" @click="getUrls(pageIndex, pageSize)">{{ pageIndex }}</button>
+            <button class="page-link" @click="getUrls(pageIndex, pageSize.value)">{{ pageIndex }}</button>
           </li>
           <li class="page-item" :class="{ disabled: currentPageIndex === totalPages }">
-            <button class="page-link" @click="getUrls(currentPageIndex + 1, pageSize)">Next &raquo;</button>
+            <button class="page-link" @click="getUrls(currentPageIndex + 1, pageSize.value)">Next &raquo;</button>
           </li>
         </ul>
       </nav>
@@ -58,7 +58,7 @@ import type { Link } from '@/models/Link'
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 export default defineComponent({
-  setup() {
+  data(){
     const baseUrl = "https://localhost:7147/api/Crawler";
 
     const inputUrl = ref('');
@@ -71,59 +71,61 @@ export default defineComponent({
 
     const error = ref('');
 
-    const crawlUrl = async () => {
-      isMakingRequest.value = true;
-      error.value = '';
-      try {
-        const body = {
-          url: inputUrl.value,
-        };
-        const response = await axios.post(`${baseUrl}`, body);
-        const data = response.data;
-
-        console.log(data)
-
-      } catch (e) {
-        error.value = 'Error occurred while crawling the website.';
-      } finally {
-        isMakingRequest.value = false;
-      }
-    };
-    const getUrls = async (page:number = 1, pageSizeNumber:number = 7) => {
-      isMakingRequest.value = true;
-      error.value = '';
-      try {
-        const response = await axios.get(`${baseUrl}/links&page=${page}&pageSize=${pageSizeNumber}`);
-        const data = response.data;
-
-        links.value = data.links;
-
-        currentPageIndex.value = data.currentPageIndex;
-        pageSize.value = data.pageSize;
-        totalPages.value = data.totalPages;
-
-        console.log(data)
-
-      } catch (e) {
-        error.value = 'Error occurred while crawling the website.';
-      } finally {
-        isMakingRequest.value = false;
-      }
-    };
-
-    getUrls();
-
     return {
-      links,
+      baseUrl,
       inputUrl,
-      isMakingRequest,
-      error,
-      crawlUrl,
-      getUrls,
+      links,
       currentPageIndex,
       pageSize,
       totalPages,
-    };
+      isMakingRequest,
+      error
+    }
+
   },
+  created() {
+    this.getUrls();
+  },
+  methods: {
+    async crawlUrl() {
+      this.isMakingRequest.value = true;
+      this.error.value = '';
+      try {
+        const body = {
+          url: this.inputUrl.value,
+        };
+        const response = await axios.post(`${this.baseUrl}`, body);
+        const data = response.data;
+
+        console.log(data)
+
+      } catch (e) {
+        this.error.value = 'Error occurred while crawling the website.';
+      } finally {
+        this.isMakingRequest.value = false;
+      }
+    },
+    async getUrls(page: number = 1, pageSizeNumber: number = 7) {
+      this.isMakingRequest.value = true;
+      this.error.value = '';
+      try {
+        const response = await axios.get(`${this.baseUrl}/links&page=${page}&pageSize=${pageSizeNumber}`);
+        const data = response.data;
+
+        this.links.value = data.links;
+
+        this.currentPageIndex.value = data.currentPageIndex;
+        this.pageSize.value = data.pageSize;
+        this.totalPages.value = data.totalPages;
+
+        console.log(data)
+
+      } catch (e) {
+        this.error.value = 'Error occurred while crawling the website.';
+      } finally {
+        this.isMakingRequest.value = false;
+      }
+    }
+  }
 });
 </script>

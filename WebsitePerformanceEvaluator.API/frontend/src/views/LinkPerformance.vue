@@ -19,7 +19,7 @@
         </tr>
         </thead>
         <tbody>
-          <tr v-for="link in linkPerformances" :key="link.url">
+          <tr v-for="link in linkPerformances.value" :key="link.url">
             <td>{{ link.url }}</td>
             <td>{{ link.crawlingLinkSource }}</td>
             <td>{{ link.timeResponseMs }}</td>
@@ -30,7 +30,7 @@
       </table>
     </div>
 
-    <div v-if="linkPerformances.some(link => link.crawlingLinkSource === CrawlingLinkSource.SiteMap)">
+    <div v-if="linkPerformances.value.some(link => link.crawlingLinkSource === CrawlingLinkSource.SiteMap)">
       <h3>URL not found at website</h3>
       <table class="table">
         <thead>
@@ -39,7 +39,7 @@
         </tr>
         </thead>
         <tbody>
-        <tr v-for="link in linkPerformances.filter(link => link.crawlingLinkSource === CrawlingLinkSource.SiteMap)"
+        <tr v-for="link in linkPerformances.value.filter(link => link.crawlingLinkSource === CrawlingLinkSource.SiteMap)"
             :key="link.url">
           <td>{{ link.url }}</td>
         </tr>
@@ -47,7 +47,7 @@
       </table>
     </div>
 
-    <div v-if="linkPerformances.some(link => link.crawlingLinkSource === CrawlingLinkSource.Website)">
+    <div v-if="linkPerformances.value.some(link => link.crawlingLinkSource === CrawlingLinkSource.Website)">
       <h3>URL found at website</h3>
       <table class="table">
         <thead>
@@ -56,7 +56,7 @@
         </tr>
         </thead>
         <tbody>
-        <tr v-for="link in linkPerformances.filter(link => link.crawlingLinkSource === CrawlingLinkSource.Website)"
+        <tr v-for="link in linkPerformances.value.filter(link => link.crawlingLinkSource === CrawlingLinkSource.Website)"
             :key="link.url">
           <td>{{ link.url }}</td>
         </tr>
@@ -79,7 +79,7 @@ export default defineComponent({
     }
   },
   props: ['id'],
-  setup() {
+  data() {
     const baseUrl = "https://localhost:7147/api/Crawler";
     const linkPerformances = ref<LinkPerformance[]>([]);
     const isMakingRequest = ref(false);
@@ -94,12 +94,12 @@ export default defineComponent({
   },
   created() {
     this.getLinkPerformances();
-    console.log(this.linkPerformances)
   },
   methods: {
      async getLinkPerformances() {
-       this.isMakingRequest = true;
-       this.error = '';
+       this.isMakingRequest.value = true;
+       this.error.value = '';
+
        try {
          console.log(this.id)
 
@@ -111,10 +111,12 @@ export default defineComponent({
 
          console.log(data)
 
-       } catch (e) {
-         this.error = 'Error occurred while crawling the website.';
-       } finally {
-         this.isMakingRequest = false;
+       }
+       catch (e) {
+         this.error.value = 'Error occurred while crawling the website.';
+       }
+       finally {
+         this.isMakingRequest.value = false;
        }
      }
   },

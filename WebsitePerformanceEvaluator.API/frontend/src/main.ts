@@ -10,7 +10,6 @@ const app = createApp(App)
 
 app.config.globalProperties.console = console
 
-
 app.use(createPinia())
 app.use(router)
 
