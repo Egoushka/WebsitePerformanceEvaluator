@@ -109,11 +109,12 @@ export default defineComponent({
         const response = await axios.get(`${this.baseUrl}/links&page=${page}&pageSize=${pageSizeNumber}`);
         const data = response.data;
 
-        this.links = data.links;
-
-        this.currentPageIndex = data.currentPageIndex;
-        this.pageSize = data.pageSize;
-        this.totalPages = data.totalPages;
+        Object.assign(this, {
+          links: data.links,
+          currentPageIndex: data.currentPageIndex,
+          pageSize: data.pageSize,
+          totalPages: data.totalPages
+        });
 
       } catch (e) {
         this.error = 'Error occurred while crawling the website.';

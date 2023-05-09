@@ -102,14 +102,14 @@ export default defineComponent({
        this.error = '';
 
        try {
-         console.log(this.id)
-
          const response = await axios.get(`${this.baseUrl}/links/` + `${this.id}/performance`);
 
          const data = response.data;
 
-         this.linkPerformances = data.linkPerformances;
-         this.url = data.link.url;
+         Object.assign(this, {
+            linkPerformances: data.linkPerformances,
+            url: data.url,
+          });
        }
        catch (e) {
          this.error = 'Error occurred while crawling the website.';
