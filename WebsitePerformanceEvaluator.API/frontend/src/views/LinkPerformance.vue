@@ -80,7 +80,7 @@ export default defineComponent({
   },
   props: ['id'],
   data() {
-    const baseUrl = "https://localhost:7147/api/Crawler";
+    const baseUrl = import.meta.env.VITE_APP_BASEURL + '/Crawler';
     const linkPerformances = ref<LinkPerformance[]>([]);
     const isMakingRequest = ref(false);
     const error = ref('');

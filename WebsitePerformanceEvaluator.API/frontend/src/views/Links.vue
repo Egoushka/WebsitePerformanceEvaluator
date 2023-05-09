@@ -59,7 +59,7 @@ import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 export default defineComponent({
   data(){
-    const baseUrl = "https://localhost:7147/api/Crawler";
+    const baseUrl = import.meta.env.VITE_APP_BASEURL + '/Crawler';
 
     const inputUrl = ref('');
 
