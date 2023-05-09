@@ -22,7 +22,7 @@
         <tbody>
         <tr v-for="link in links" :key="link.id">
           <td>{{ link.url }}</td>
-          <td>{{ link.createdAt }}</td>
+          <td>{{ formatDate(link.createdAt)  }}</td>
           <td>
             <router-link :to="{ name: 'LinkPerformance', params: { id: link.id } }">View</router-link>
           </td>
@@ -120,6 +120,9 @@ export default defineComponent({
       } finally {
         this.isMakingRequest = false;
       }
+    },
+    formatDate(date: string) {
+      return new Date(date).toLocaleString()
     }
   }
 });
