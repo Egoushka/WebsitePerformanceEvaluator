@@ -8,7 +8,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\WebsitePerformanceEvaluator.Data\WebsitePerformanceEvaluator.Data.csproj" />
-      <ProjectReference Include="..\WebsitePerformanceEvaluator.MVC.Core\WebsitePerformanceEvaluator.MVC.Core.csproj" />
+      <ProjectReference Include="..\WebsitePerformanceEvaluator.Web.Core\WebsitePerformanceEvaluator.Web.Core.csproj" />
     </ItemGroup>
 
     <ItemGroup>
