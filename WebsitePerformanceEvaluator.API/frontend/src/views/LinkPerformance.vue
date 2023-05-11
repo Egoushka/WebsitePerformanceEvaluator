@@ -98,10 +98,9 @@ export default {
 
         const data = response.data;
 
-        Object.assign(this, {
-          linkPerformances: data.linkPerformances,
-          url: data.url,
-        });
+        this.linkPerformances = data.linkPerformances;
+        this.url = data.url;
+
       } catch (e) {
         this.error = 'Error occurred while crawling the website.';
       }
