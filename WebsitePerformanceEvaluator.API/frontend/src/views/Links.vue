@@ -59,27 +59,15 @@ import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 export default defineComponent({
   data(){
-    const baseUrl = import.meta.env.VITE_APP_BASEURL + '/Crawler';
-
-    const inputUrl = ref('');
-
-    const links = ref<Link[]>([]);
-    const currentPageIndex = ref(0);
-    const pageSize = ref(0);
-    const totalPages = ref(0);
-    const isMakingRequest = ref(false);
-
-    const error = ref('');
-
     return {
-      baseUrl,
-      inputUrl,
-      links,
-      currentPageIndex,
-      pageSize,
-      totalPages,
-      isMakingRequest,
-      error
+      baseUrl : import.meta.env.VITE_APP_BASEURL + '/Crawler',
+      inputUrl : '',
+      links : [],
+      currentPageIndex : 0,
+      pageSize : 0,
+      totalPages : 0,
+      isMakingRequest : false,
+      error : ''
     }
 
   },

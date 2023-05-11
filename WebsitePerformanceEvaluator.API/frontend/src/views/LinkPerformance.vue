@@ -82,16 +82,11 @@ export default defineComponent({
   },
   props: ['id'],
   data() {
-    const baseUrl = import.meta.env.VITE_APP_BASEURL + '/Crawler';
-    const linkPerformances = ref<LinkPerformance[]>([]);
-    const url = ref('');
-    const error = ref('');
-
     return {
-      linkPerformances,
-      baseUrl,
-      url,
-      error,
+      baseUrl : import.meta.env.VITE_APP_BASEURL + '/Crawler',
+      linkPerformances : [] as LinkPerformance[],
+      url : '',
+      error : ''
     };
   },
   created() {
