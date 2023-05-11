@@ -52,32 +52,35 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue';
-import axios from 'axios'
-import type { Link } from '@/models/Link'
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
-export default defineComponent({
-  data(){
-    return {
-      baseUrl : import.meta.env.VITE_APP_BASEURL + '/Crawler',
-      inputUrl : '',
-      links : [],
-      currentPageIndex : 0,
-      pageSize : 0,
-      totalPages : 0,
-      isMakingRequest : false,
-      error : ''
-    }
+import axios from 'axios'
 
+export default {
+  name: 'Links',
+
+  data() {
+    return {
+      baseUrl: import.meta.env.VITE_APP_BASEURL + '/Crawler',
+      inputUrl: '',
+      links: [],
+      currentPageIndex: 0,
+      pageSize: 0,
+      totalPages: 0,
+      isMakingRequest: false,
+      error: ''
+    }
   },
+
   created() {
     this.getUrls();
   },
+
   methods: {
     async crawlUrl() {
       this.isMakingRequest = true;
       this.error = '';
+
       try {
         const body = {
           url: this.inputUrl,
@@ -91,8 +94,10 @@ export default defineComponent({
         this.isMakingRequest = false;
       }
     },
+
     async getUrls(page: number = 1, pageSizeNumber: number = 7) {
       this.error = '';
+
       try {
         const response = await axios.get(`${this.baseUrl}/links&page=${page}&pageSize=${pageSizeNumber}`);
         const data = response.data;
@@ -110,10 +115,11 @@ export default defineComponent({
         this.isMakingRequest = false;
       }
     },
+
     formatDate(date: string) {
       return new Date(date).toLocaleString()
     }
   },
 
-});
+};
 </script>

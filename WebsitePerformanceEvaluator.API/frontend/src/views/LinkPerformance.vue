@@ -25,10 +25,8 @@
             <td>{{ link.url }}</td>
             <td>{{ link.crawlingLinkSource }}</td>
             <td>{{ link.timeResponseMs }}</td>
-
           </tr>
         </tbody>
-
       </table>
     </div>
 
@@ -69,47 +67,50 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue'
 import { LinkPerformance } from '@/models/LinkPerformance'
-import axios from 'axios'
 import { CrawlingLinkSource } from '@/models/CrawlingLinkSource'
+import axios from 'axios'
 
-export default defineComponent({
+export default {
+  name: 'LinkPerformance',
+  props: ['id'],
+
   computed: {
     CrawlingLinkSource() {
       return CrawlingLinkSource
     }
   },
-  props: ['id'],
+
   data() {
     return {
-      baseUrl : import.meta.env.VITE_APP_BASEURL + '/Crawler',
-      linkPerformances : [] as LinkPerformance[],
-      url : '',
-      error : ''
+      baseUrl: import.meta.env.VITE_APP_BASEURL + '/Crawler',
+      linkPerformances: [] as LinkPerformance[],
+      url: '',
+      error: ''
     };
   },
+
   created() {
     this.getLinkPerformances();
   },
+
   methods: {
-     async getLinkPerformances() {
-       this.error = '';
+    async getLinkPerformances() {
+      this.error = '';
 
-       try {
-         const response = await axios.get(`${this.baseUrl}/links/` + `${this.id}/performance`);
+      try {
+        const response = await axios.get(`${this.baseUrl}/links/` + `${this.id}/performance`);
 
-         const data = response.data;
+        const data = response.data;
 
-         Object.assign(this, {
-            linkPerformances: data.linkPerformances,
-            url: data.url,
-          });
-       }
-       catch (e) {
-         this.error = 'Error occurred while crawling the website.';
-       }
-     }
+        Object.assign(this, {
+          linkPerformances: data.linkPerformances,
+          url: data.url,
+        });
+      } catch (e) {
+        this.error = 'Error occurred while crawling the website.';
+      }
+    }
   },
-});
+};
 </script>
