@@ -71,8 +71,8 @@ export default {
       error: ''
     }
   },
-
-  created() {
+  
+  mounted() {
     this.getUrls();
   },
 
