@@ -18,6 +18,7 @@ public class HttpClientService
     public HttpClientService(IHttpClientFactory httpClientFactory, ILogger logger)
     {
         _client = httpClientFactory.CreateClient();
+        _client.Timeout = TimeSpan.FromSeconds(10);
         _logger = logger;
     }
 

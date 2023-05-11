@@ -1,3 +1,4 @@
+using System.Collections.Immutable;
 using WebsitePerformanceEvaluator.Core.Filters;
 using WebsitePerformanceEvaluator.Core.Helpers;
 using WebsitePerformanceEvaluator.Core.Models;
@@ -27,10 +28,14 @@ public class WebsiteCrawler
         var links = new HashSet<LinkPerformance>();
         var visitedLinks = new HashSet<string>();
         var linksToVisit = new Queue<string>(new[] { url });
+        
+        var tasks = new List<Task<IEnumerable<LinkPerformance>>>();
 
-        while (linksToVisit.Count > 0)
+        while (linksToVisit.Count > 0 || tasks.Any())
         {
-            var newLinks = await CrawlQueueAsync(linksToVisit, visitedLinks);
+            tasks.AddRange(CrawlQueueAsync(linksToVisit, visitedLinks));
+            
+            var newLinks = tasks.Where(item => item.IsCompleted).SelectMany(item => item.Result);
             var normalizedLinks = NormalizeLinks(newLinks, url);
 
             var linksWithResponseTime = normalizedLinks.Where(item => item.TimeResponseMs.HasValue);
@@ -48,26 +53,40 @@ public class WebsiteCrawler
         return links;
     }
 
-    private async Task<IEnumerable<LinkPerformance>> CrawlQueueAsync(Queue<string> linksToVisit,
+    private IEnumerable<Task<IEnumerable<LinkPerformance>>> CrawlQueueAsync(Queue<string> linksToVisit,
         ICollection<string> visitedLinks)
     {
         var tasks = new List<Task<IEnumerable<LinkPerformance>>>();
 
+        var semaphoreSlim = new SemaphoreSlim(50);
+
         for (var i = 0; i < linksToVisit.Count; i++)
         {
+            semaphoreSlim.Wait();
+
             var link = linksToVisit.Dequeue();
 
             visitedLinks.Add(link);
 
-            var task = Task<IEnumerable<LinkPerformance>>.Factory
-                .StartNew(() => _htmlParser.GetLinksAsync(link).Result);
+            var task = Task.Run(async () => {
+                var result = Enumerable.Empty<LinkPerformance>();
+                try
+                {
+                    result = await _htmlParser.GetLinksAsync(link);
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                }
+                semaphoreSlim.Release();
+
+                return result;
+            });
 
             tasks.Add(task);
         }
 
-        var result = (await Task.WhenAll(tasks)).SelectMany(item => item);
-
-        return result;
+        return tasks;
     }
 
     private IEnumerable<LinkPerformance> NormalizeLinks(IEnumerable<LinkPerformance> links, string url)

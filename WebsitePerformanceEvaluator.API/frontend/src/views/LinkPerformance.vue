@@ -75,14 +75,9 @@ export default {
   name: 'LinkPerformance',
   props: ['id'],
 
-  computed: {
-    CrawlingLinkSource() {
-      return CrawlingLinkSource
-    }
-  },
-
   data() {
     return {
+      CrawlingLinkSource,
       baseUrl: import.meta.env.VITE_APP_BASEURL + '/Crawler',
       linkPerformances: [] as LinkPerformance[],
       url: '',
