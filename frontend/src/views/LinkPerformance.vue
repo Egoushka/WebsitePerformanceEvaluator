@@ -6,9 +6,7 @@
     </div>
 
     <div class="link-url">
-
       <h3>{{ url }}</h3>
-
     </div>
 
     <div>
