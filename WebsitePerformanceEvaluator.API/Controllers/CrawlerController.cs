@@ -1,5 +1,7 @@
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using WebsitePerformanceEvaluator.API.Extensions;
+using WebsitePerformanceEvaluator.API.Requests;
 using WebsitePerformanceEvaluator.Web.Core.Services;
 using WebsitePerformanceEvaluator.Web.Core.ViewModels;
 
@@ -53,14 +55,13 @@ public class CrawlerController : Controller
     /// <summary>
     /// Crawl website and get links performances from it.
     /// </summary>
-    /// <param name="url">The link url.</param>
     /// <returns>Link with list of link performances.</returns>
-    [HttpPost("{url}")]
+    [HttpPost]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(CrawlLinkViewModel))]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ValidationProblemDetails))]
-    public async Task<IActionResult> CrawlAndRetrieveLink(string url)
+    public async Task<IActionResult> CrawlAndRetrieveLink([FromBody] CrawlAndRetrieveLinkRequest request)
     {
-        var result = await _linkService.CrawlUrlAsync(url);
+        var result = await _linkService.CrawlUrlAsync(request.Url);
         
         return result.ToOkResult();
     }

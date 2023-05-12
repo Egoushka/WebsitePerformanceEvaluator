@@ -38,7 +38,7 @@ public class HtmlParser
         {
             return new List<LinkPerformance>();
         }
-        
+
         var linkNodes = doc.DocumentNode.SelectNodes("//a[@href]");
 
         if (linkNodes != null)
