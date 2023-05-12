@@ -6,7 +6,8 @@ public class LinkValidator
     {
         var doesNotContainAnchor = !link.Contains('#');
         var doesNotContainAttributes = !link.Contains('?');
+        var doesNotFileLink = !link.EndsWith(".pdf") || !link.EndsWith(".jpg") || !link.EndsWith(".png");
 
-        return doesNotContainAnchor && doesNotContainAttributes;
+        return doesNotContainAnchor && doesNotContainAttributes && doesNotFileLink;
     }
 }
