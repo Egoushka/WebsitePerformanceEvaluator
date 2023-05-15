@@ -29,13 +29,10 @@ public class WebsiteCrawler
         var visitedLinks = new HashSet<string>();
         var linksToVisit = new Queue<string>(new[] { url });
         
-        var tasks = new List<Task<IEnumerable<LinkPerformance>>>();
-
-        while (linksToVisit.Count > 0 || tasks.Any())
+        while (linksToVisit.Count > 0)
         {
-            tasks.AddRange(CrawlQueueAsync(linksToVisit, visitedLinks));
-            
-            var newLinks = tasks.Where(item => item.IsCompleted).SelectMany(item => item.Result);
+            var newLinks = await CrawlQueueAsync(linksToVisit, visitedLinks);
+
             var normalizedLinks = NormalizeLinks(newLinks, url);
 
             var linksWithResponseTime = normalizedLinks.Where(item => item.TimeResponseMs.HasValue);
@@ -53,7 +50,7 @@ public class WebsiteCrawler
         return links;
     }
 
-    private IEnumerable<Task<IEnumerable<LinkPerformance>>> CrawlQueueAsync(Queue<string> linksToVisit,
+    private async Task<IEnumerable<LinkPerformance>> CrawlQueueAsync(Queue<string> linksToVisit,
         ICollection<string> visitedLinks)
     {
         var tasks = new List<Task<IEnumerable<LinkPerformance>>>();
@@ -82,11 +79,12 @@ public class WebsiteCrawler
 
                 return result;
             });
-
+            
             tasks.Add(task);
         }
-
-        return tasks;
+        var result = (await Task.WhenAll(tasks)).SelectMany(item => item);
+        
+        return result;
     }
 
     private IEnumerable<LinkPerformance> NormalizeLinks(IEnumerable<LinkPerformance> links, string url)
