@@ -2,7 +2,7 @@ using System.Diagnostics;
 using System.Text;
 using HtmlAgilityPack;
 using Microsoft.Extensions.Logging;
-using WebsitePerformanceEvaluator.Core.Models;
+using WebsitePerformanceEvaluator.Domain.Models;
 
 namespace WebsitePerformanceEvaluator.Core.Service;
 

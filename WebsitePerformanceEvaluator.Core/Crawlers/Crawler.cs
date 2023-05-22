@@ -1,5 +1,5 @@
-using WebsitePerformanceEvaluator.Core.Models;
-using WebsitePerformanceEvaluator.Core.Models.Enums;
+using WebsitePerformanceEvaluator.Domain.Enums;
+using WebsitePerformanceEvaluator.Domain.Models;
 
 namespace WebsitePerformanceEvaluator.Core.Crawlers;
 

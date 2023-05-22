@@ -1,7 +1,7 @@
 using HtmlAgilityPack;
-using WebsitePerformanceEvaluator.Core.Models;
-using WebsitePerformanceEvaluator.Core.Models.Enums;
 using WebsitePerformanceEvaluator.Core.Service;
+using WebsitePerformanceEvaluator.Domain.Enums;
+using WebsitePerformanceEvaluator.Domain.Models;
 
 namespace WebsitePerformanceEvaluator.Core.Parsers;
 

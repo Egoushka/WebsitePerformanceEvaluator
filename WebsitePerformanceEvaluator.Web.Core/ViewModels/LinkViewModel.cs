@@ -1,4 +1,4 @@
-using WebsitePerformanceEvaluator.Data.Models;
+using WebsitePerformanceEvaluator.Domain.Models;
 
 namespace WebsitePerformanceEvaluator.Web.Core.ViewModels;
 

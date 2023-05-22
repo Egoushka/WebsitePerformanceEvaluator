@@ -2,8 +2,8 @@ using Moq;
 using WebsitePerformanceEvaluator.Console.Helpers;
 using WebsitePerformanceEvaluator.Console.Services;
 using WebsitePerformanceEvaluator.Core.Crawlers;
-using WebsitePerformanceEvaluator.Core.Models;
-using WebsitePerformanceEvaluator.Core.Models.Enums;
+using WebsitePerformanceEvaluator.Domain.Enums;
+using WebsitePerformanceEvaluator.Domain.Models;
 using Xunit;
 
 namespace WebsitePerformanceEvaluator.Console.Tests;

@@ -1,5 +1,5 @@
-using WebsitePerformanceEvaluator.Core.Models;
 using WebsitePerformanceEvaluator.Data;
+using WebsitePerformanceEvaluator.Domain.Models;
 
 namespace WebsitePerformanceEvaluator.Console.Services;
 
@@ -13,16 +13,16 @@ public class LinkService
 
     public async Task SaveLinksToDatabaseAsync(IEnumerable<LinkPerformance> links, string url)
     {
-        var link = new Data.Models.Link
+        var link = new Link
         {
             Url = url,
         };
 
-        var linksData = links.Select(x => new WebsitePerformanceEvaluator.Data.Models.LinkPerformance
+        var linksData = links.Select(x => new LinkPerformance
         {
             Url = x.Url,
             TimeResponseMs = x.TimeResponseMs,
-            CrawlingLinkSource = (Data.Models.Enums.CrawlingLinkSource)x.CrawlingLinkSource,
+            CrawlingLinkSource = x.CrawlingLinkSource,
             Link = link,
         });
         

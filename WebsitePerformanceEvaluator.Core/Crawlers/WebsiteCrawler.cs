@@ -1,8 +1,7 @@
-using System.Collections.Immutable;
 using WebsitePerformanceEvaluator.Core.Filters;
 using WebsitePerformanceEvaluator.Core.Helpers;
-using WebsitePerformanceEvaluator.Core.Models;
 using WebsitePerformanceEvaluator.Core.Parsers;
+using WebsitePerformanceEvaluator.Domain.Models;
 
 namespace WebsitePerformanceEvaluator.Core.Crawlers;
 
@@ -89,13 +88,21 @@ public class WebsiteCrawler
 
     private IEnumerable<LinkPerformance> NormalizeLinks(IEnumerable<LinkPerformance> links, string url)
     {
-        links = links.Where(link => !string.IsNullOrEmpty(link.Url));
+        try
+        {
+            links = links.Where(link => !string.IsNullOrEmpty(link.Url));
 
-        links = _linkHelper.RemoveLastSlashFromLinks(links);
+            links = _linkHelper.RemoveLastSlashFromLinks(links);
 
-        links = _linkHelper.AddBaseUrl(links, url);
+            links = _linkHelper.AddBaseUrl(links, url);
 
-        links = _linkFilter.FilterLinks(links, url);
+            links = _linkFilter.FilterLinks(links, url);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+        }
+ 
 
         return links;
     }

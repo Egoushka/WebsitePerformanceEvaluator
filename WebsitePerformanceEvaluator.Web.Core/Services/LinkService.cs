@@ -3,11 +3,9 @@ using LanguageExt.Common;
 using Microsoft.EntityFrameworkCore;
 using WebsitePerformanceEvaluator.Core.Crawlers;
 using WebsitePerformanceEvaluator.Data;
-using WebsitePerformanceEvaluator.Data.Models;
-using WebsitePerformanceEvaluator.Data.Models.Enums;
+using WebsitePerformanceEvaluator.Domain.Models;
 using WebsitePerformanceEvaluator.Web.Core.Validators;
 using WebsitePerformanceEvaluator.Web.Core.ViewModels;
-using LinkPerformance = WebsitePerformanceEvaluator.Core.Models.LinkPerformance;
 
 namespace WebsitePerformanceEvaluator.Web.Core.Services;
 
@@ -73,11 +71,11 @@ public class LinkService
             Url = url,
         };
 
-        var linksData = links.Select(x => new Data.Models.LinkPerformance
+        var linksData = links.Select(x => new LinkPerformance
         {
             Url = x.Url,
             TimeResponseMs = x.TimeResponseMs,
-            CrawlingLinkSource = (CrawlingLinkSource)x.CrawlingLinkSource,
+            CrawlingLinkSource = x.CrawlingLinkSource,
             Link = link,
         });
 

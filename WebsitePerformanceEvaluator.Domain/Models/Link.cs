@@ -1,4 +1,4 @@
-namespace WebsitePerformanceEvaluator.Data.Models;
+namespace WebsitePerformanceEvaluator.Domain.Models;
 
 public class Link
 {

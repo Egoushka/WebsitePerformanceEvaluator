@@ -1,4 +1,3 @@
-using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using WebsitePerformanceEvaluator.API.Extensions;
 using WebsitePerformanceEvaluator.API.Requests;
