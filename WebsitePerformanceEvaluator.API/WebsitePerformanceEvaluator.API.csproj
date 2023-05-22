@@ -13,8 +13,7 @@
     <ItemGroup>
         <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
     </ItemGroup>
-
     <ItemGroup>
-      <ProjectReference Include="..\WebsitePerformanceEvaluator.Web.Core\WebsitePerformanceEvaluator.Web.Core.csproj" />
+      <ProjectReference Include="..\WebsitePerformanceEvaluator.InfrastructureIoC\WebsitePerformanceEvaluator.InfrastructureIoC.csproj" />
     </ItemGroup>
 </Project>

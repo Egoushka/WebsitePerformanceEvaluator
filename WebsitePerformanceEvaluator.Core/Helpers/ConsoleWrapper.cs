@@ -1,4 +1,4 @@
-namespace WebsitePerformanceEvaluator.Console;
+namespace WebsitePerformanceEvaluator.Core.Helpers;
 
 public class ConsoleWrapper
 {

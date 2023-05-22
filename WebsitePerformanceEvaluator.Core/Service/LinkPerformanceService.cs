@@ -1,15 +1,14 @@
 using LanguageExt.Common;
 using Microsoft.EntityFrameworkCore;
-using WebsitePerformanceEvaluator.Data;
-using WebsitePerformanceEvaluator.Web.Core.ViewModels;
+using WebsitePerformanceEvaluator.Domain.ViewModels;
 
-namespace WebsitePerformanceEvaluator.Web.Core.Services;
+namespace WebsitePerformanceEvaluator.Core.Service;
 
 public class LinkPerformanceService
 {
-    private readonly WebsitePerformanceEvaluatorDatabaseContext _context;
+    private readonly DatabaseContext _context;
 
-    public LinkPerformanceService(WebsitePerformanceEvaluatorDatabaseContext context)
+    public LinkPerformanceService(DatabaseContext context)
     {
         _context = context;
     }

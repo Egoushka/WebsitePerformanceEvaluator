@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using WebsitePerformanceEvaluator.Core;
-using WebsitePerformanceEvaluator.Data;
+using Microsoft.Extensions.Logging;
+using WebsitePerformanceEvaluator.InfrastructureIoC;
 
 namespace WebsitePerformanceEvaluator.Console;
 
@@ -29,9 +29,12 @@ internal static class Program
     {
         var services = new ServiceCollection();
         
+        
         services.ConfigureConsoleServices();
         services.ConfigureCoreServices();
         services.ConfigureDataServices(configuration);
+        
+        services.AddTransient<TaskRunner>();
 
         return services;
     }

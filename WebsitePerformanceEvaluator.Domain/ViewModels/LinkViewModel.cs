@@ -1,6 +1,6 @@
 using WebsitePerformanceEvaluator.Domain.Models;
 
-namespace WebsitePerformanceEvaluator.Web.Core.ViewModels;
+namespace WebsitePerformanceEvaluator.Domain.ViewModels;
 
 public class LinkViewModel
 {

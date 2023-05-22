@@ -2,20 +2,19 @@ using System.ComponentModel.DataAnnotations;
 using LanguageExt.Common;
 using Microsoft.EntityFrameworkCore;
 using WebsitePerformanceEvaluator.Core.Crawlers;
-using WebsitePerformanceEvaluator.Data;
+using WebsitePerformanceEvaluator.Core.Validators;
 using WebsitePerformanceEvaluator.Domain.Models;
-using WebsitePerformanceEvaluator.Web.Core.Validators;
-using WebsitePerformanceEvaluator.Web.Core.ViewModels;
+using WebsitePerformanceEvaluator.Domain.ViewModels;
 
-namespace WebsitePerformanceEvaluator.Web.Core.Services;
+namespace WebsitePerformanceEvaluator.Core.Service;
 
 public class LinkService
 {
     private readonly Crawler _crawler;
-    private readonly UrlValidator _urlValidator;
-    private readonly WebsitePerformanceEvaluatorDatabaseContext _context;
+    private readonly LinkValidator _urlValidator;
+    private readonly DatabaseContext _context;
     
-    public LinkService(WebsitePerformanceEvaluatorDatabaseContext context, Crawler crawler, UrlValidator urlValidator)
+    public LinkService(DatabaseContext context, Crawler crawler, LinkValidator urlValidator)
     {
         _context = context;
         _crawler = crawler;
@@ -44,7 +43,7 @@ public class LinkService
 
     public async Task<Result<CrawlLinkViewModel>> CrawlUrlAsync(string url)
     {
-        var isLinkValid = _urlValidator.Validate(url);
+        var isLinkValid = _urlValidator.IsValidLink(url);
 
         if (!isLinkValid)
         {
@@ -64,7 +63,7 @@ public class LinkService
         };
     }
 
-    private async Task SaveLinksToDatabaseAsync(IEnumerable<LinkPerformance> links, string url)
+    public async Task SaveLinksToDatabaseAsync(IEnumerable<LinkPerformance> links, string url)
     {
         var link = new Link
         {

@@ -20,6 +20,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\WebsitePerformanceEvaluator.Console\WebsitePerformanceEvaluator.Console.csproj" />
+      <ProjectReference Include="..\WebsitePerformanceEvaluator.Core\WebsitePerformanceEvaluator.Core.csproj" />
     </ItemGroup>
 
 </Project>
