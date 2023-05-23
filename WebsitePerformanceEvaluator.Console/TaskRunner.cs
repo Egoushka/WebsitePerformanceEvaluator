@@ -1,5 +1,5 @@
 using System.Diagnostics;
-using WebsitePerformanceEvaluator.Core.Interfaces;
+using WebsitePerformanceEvaluator.Core.Interfaces.Crawlers;
 using WebsitePerformanceEvaluator.Core.Interfaces.Services;
 using WebsitePerformanceEvaluator.Core.Models.Enums;
 using WebsitePerformanceEvalutor.Console.Core.Helpers;

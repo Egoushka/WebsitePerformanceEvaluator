@@ -1,4 +1,5 @@
 using WebsitePerformanceEvaluator.Core.Interfaces.Helpers;
+using WebsitePerformanceEvaluator.Core.Interfaces.Services;
 using WebsitePerformanceEvaluator.Core.Models;
 using WebsitePerformanceEvaluator.Crawler.Services;
 
@@ -6,13 +7,13 @@ namespace WebsitePerformanceEvaluator.Crawler.Helpers;
 
 public class LinkHelper : ILinkHelper
 {
-    private readonly HttpClientService _clientService;
+    private readonly IHttpClientService _clientService;
 
     public LinkHelper()
     {
     }
 
-    public LinkHelper(HttpClientService httpClientService)
+    public LinkHelper(IHttpClientService httpClientService)
     {
         _clientService = httpClientService;
     }

@@ -1,6 +1,5 @@
 using Moq;
 using WebsitePerformanceEvaluator.Core.Interfaces.FIlters;
-using WebsitePerformanceEvaluator.Core.Interfaces.Validators;
 using WebsitePerformanceEvaluator.Core.Models;
 using WebsitePerformanceEvaluator.Crawler.Filters;
 using WebsitePerformanceEvaluator.Crawler.Validators;

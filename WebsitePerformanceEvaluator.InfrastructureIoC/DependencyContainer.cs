@@ -3,6 +3,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using WebsitePerformanceEvaluator.Core;
+using WebsitePerformanceEvaluator.Crawler;
 using WebsitePerformanceEvaluator.Data;
 using WebsitePerformanceEvalutor.Console.Core.Helpers;
 
@@ -33,6 +34,7 @@ public static class DependencyContainer
     public static IServiceCollection ConfigureCoreServices(this IServiceCollection services)
     {
         services.AddCoreServices();
+        services.AddCrawlerServices();
 
         return services;
     }

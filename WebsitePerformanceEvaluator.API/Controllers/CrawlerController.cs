@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using WebsitePerformanceEvaluator.API.Extensions;
 using WebsitePerformanceEvaluator.API.Requests;
-using WebsitePerformanceEvaluator.Core.Service;
+using WebsitePerformanceEvaluator.Core.Interfaces.Services;
 using WebsitePerformanceEvaluator.Core.ViewModels;
 
 namespace WebsitePerformanceEvaluator.API.Controllers;
@@ -10,10 +10,10 @@ namespace WebsitePerformanceEvaluator.API.Controllers;
 [ApiController]
 public class CrawlerController : Controller
 {
-    private readonly LinkService _linkService;
-    private readonly LinkPerformanceService _linkPerformanceService;
+    private readonly ILinkService _linkService;
+    private readonly ILinkPerformanceService _linkPerformanceService;
     
-    public CrawlerController(LinkService linkService, LinkPerformanceService linkPerformanceService)
+    public CrawlerController(ILinkService linkService, ILinkPerformanceService linkPerformanceService)
     {
         _linkService = linkService;
         _linkPerformanceService = linkPerformanceService;

@@ -1,7 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using LanguageExt.Common;
 using Microsoft.EntityFrameworkCore;
-using WebsitePerformanceEvaluator.Core.Interfaces;
+using WebsitePerformanceEvaluator.Core.Interfaces.Crawlers;
 using WebsitePerformanceEvaluator.Core.Interfaces.Services;
 using WebsitePerformanceEvaluator.Core.Interfaces.Validators;
 using WebsitePerformanceEvaluator.Core.Models;
@@ -13,11 +13,11 @@ namespace WebsitePerformanceEvaluator.Core.Service;
 
 public class LinkService : ILinkService
 {
-    private readonly ICrawler _crawler;
+    private readonly ICombinedCrawler _crawler;
     private readonly ILinkValidator _urlValidator;
     private readonly WebsitePerformanceEvaluatorDatabaseContext _context;
     
-    public LinkService(WebsitePerformanceEvaluatorDatabaseContext context, ICrawler crawler, ILinkValidator urlValidator)
+    public LinkService(WebsitePerformanceEvaluatorDatabaseContext context, ICombinedCrawler crawler, ILinkValidator urlValidator)
     {
         _context = context;
         _crawler = crawler;

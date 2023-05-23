@@ -1,6 +1,10 @@
 using System.Xml;
 using Microsoft.Extensions.Logging;
-using WebsitePerformanceEvaluator.Core.Interfaces;
+using WebsitePerformanceEvaluator.Core.Interfaces.Crawlers;
+using WebsitePerformanceEvaluator.Core.Interfaces.FIlters;
+using WebsitePerformanceEvaluator.Core.Interfaces.Helpers;
+using WebsitePerformanceEvaluator.Core.Interfaces.Parsers;
+using WebsitePerformanceEvaluator.Core.Interfaces.Services;
 using WebsitePerformanceEvaluator.Core.Models;
 using WebsitePerformanceEvaluator.Crawler.Filters;
 using WebsitePerformanceEvaluator.Crawler.Helpers;
@@ -9,20 +13,20 @@ using WebsitePerformanceEvaluator.Crawler.Services;
 
 namespace WebsitePerformanceEvaluator.Crawler.Crawlers;
 
-public class SitemapCrawler : ICrawler
+public class SitemapCrawler : ICrawler, ISitemapCrawler
 {
-    private readonly HttpClientService _clientService;
-    private readonly LinkFilter _filter;
-    private readonly LinkHelper _linkHelper;
+    private readonly IHttpClientService _clientService;
+    private readonly ILinkFilter _filter;
+    private readonly ILinkHelper _linkHelper;
     private readonly ILogger _logger;
-    private readonly XmlParser _parser;
+    private readonly IXmlParser _parser;
 
     public SitemapCrawler()
     {
     }
 
-    public SitemapCrawler(ILogger logger, HttpClientService httpClientService, XmlParser xmlParser,
-        LinkFilter linkFilter, LinkHelper linkHelper)
+    public SitemapCrawler(ILogger logger, IHttpClientService httpClientService, IXmlParser xmlParser,
+        ILinkFilter linkFilter, ILinkHelper linkHelper)
     {
         _logger = logger;
         _clientService = httpClientService;

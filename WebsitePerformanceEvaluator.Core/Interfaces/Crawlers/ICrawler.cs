@@ -1,6 +1,6 @@
 using WebsitePerformanceEvaluator.Core.Models;
 
-namespace WebsitePerformanceEvaluator.Core.Interfaces;
+namespace WebsitePerformanceEvaluator.Core.Interfaces.Crawlers;
 
 public interface ICrawler
 {
