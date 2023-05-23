@@ -1,16 +1,18 @@
 using Microsoft.EntityFrameworkCore;
-using WebsitePerformanceEvaluator.Core;
 using WebsitePerformanceEvaluator.Data.Configurations;
+using WebsitePerformanceEvaluator.Domain.Models;
 
 namespace WebsitePerformanceEvaluator.Data;
 
-public class WebsitePerformanceEvaluatorDatabaseContext : DatabaseContext
+public class WebsitePerformanceEvaluatorDatabaseContext : DbContext
 {
     public WebsitePerformanceEvaluatorDatabaseContext(
         DbContextOptions<WebsitePerformanceEvaluatorDatabaseContext> options) : base(options)
     {
     }
     
+    public DbSet<LinkPerformance> LinkPerformances { get; set; }
+    public DbSet<Link> Links { get; set; }
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);

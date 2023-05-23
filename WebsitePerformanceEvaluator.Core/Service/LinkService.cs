@@ -1,20 +1,21 @@
 using System.ComponentModel.DataAnnotations;
 using LanguageExt.Common;
 using Microsoft.EntityFrameworkCore;
-using WebsitePerformanceEvaluator.Core.Crawlers;
-using WebsitePerformanceEvaluator.Core.Validators;
+using WebsitePerformanceEvaluator.Core.ViewModels;
+using WebsitePerformanceEvaluator.Crawler.Validators;
+using WebsitePerformanceEvaluator.Data;
+using WebsitePerformanceEvaluator.Domain.Enums;
 using WebsitePerformanceEvaluator.Domain.Models;
-using WebsitePerformanceEvaluator.Domain.ViewModels;
 
 namespace WebsitePerformanceEvaluator.Core.Service;
 
 public class LinkService
 {
-    private readonly Crawler _crawler;
+    private readonly Crawler.Crawlers.Crawler _crawler;
     private readonly LinkValidator _urlValidator;
-    private readonly DatabaseContext _context;
+    private readonly WebsitePerformanceEvaluatorDatabaseContext _context;
     
-    public LinkService(DatabaseContext context, Crawler crawler, LinkValidator urlValidator)
+    public LinkService(WebsitePerformanceEvaluatorDatabaseContext context, Crawler.Crawlers.Crawler crawler, LinkValidator urlValidator)
     {
         _context = context;
         _crawler = crawler;
@@ -52,7 +53,14 @@ public class LinkService
             return new Result<CrawlLinkViewModel>(validationException);
         }
 
-        var links = await _crawler.CrawlWebsiteAndSitemapAsync(url);
+        var links =
+            (await _crawler.CrawlWebsiteAndSitemapAsync(url))
+            .Select(x => new LinkPerformance
+            {
+                Url = x.Url,
+                TimeResponseMs = x.TimeResponseMs,
+                CrawlingLinkSource = (CrawlingLinkSource)x.CrawlingLinkSource,
+            });
 
         await SaveLinksToDatabaseAsync(links, url);
 

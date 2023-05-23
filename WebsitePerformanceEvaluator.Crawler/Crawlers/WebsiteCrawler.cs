@@ -1,9 +1,9 @@
-using WebsitePerformanceEvaluator.Core.Filters;
-using WebsitePerformanceEvaluator.Core.Helpers;
-using WebsitePerformanceEvaluator.Core.Parsers;
-using WebsitePerformanceEvaluator.Domain.Models;
+using WebsitePerformanceEvaluator.Crawler.Filters;
+using WebsitePerformanceEvaluator.Crawler.Helpers;
+using WebsitePerformanceEvaluator.Crawler.Models;
+using WebsitePerformanceEvaluator.Crawler.Parsers;
 
-namespace WebsitePerformanceEvaluator.Core.Crawlers;
+namespace WebsitePerformanceEvaluator.Crawler.Crawlers;
 
 public class WebsiteCrawler
 {

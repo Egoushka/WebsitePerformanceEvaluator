@@ -1,7 +1,7 @@
-using WebsitePerformanceEvaluator.Domain.Enums;
-using WebsitePerformanceEvaluator.Domain.Models;
+using WebsitePerformanceEvaluator.Crawler.Models;
+using WebsitePerformanceEvaluator.Crawler.Models.Enums;
 
-namespace WebsitePerformanceEvaluator.Core.Crawlers;
+namespace WebsitePerformanceEvaluator.Crawler.Crawlers;
 
 public class Crawler
 {

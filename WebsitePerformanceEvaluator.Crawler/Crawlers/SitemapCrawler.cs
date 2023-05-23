@@ -1,12 +1,12 @@
 using System.Xml;
 using Microsoft.Extensions.Logging;
-using WebsitePerformanceEvaluator.Core.Filters;
-using WebsitePerformanceEvaluator.Core.Helpers;
-using WebsitePerformanceEvaluator.Core.Parsers;
-using WebsitePerformanceEvaluator.Core.Service;
-using WebsitePerformanceEvaluator.Domain.Models;
+using WebsitePerformanceEvaluator.Crawler.Filters;
+using WebsitePerformanceEvaluator.Crawler.Helpers;
+using WebsitePerformanceEvaluator.Crawler.Models;
+using WebsitePerformanceEvaluator.Crawler.Parsers;
+using WebsitePerformanceEvaluator.Crawler.Services;
 
-namespace WebsitePerformanceEvaluator.Core.Crawlers;
+namespace WebsitePerformanceEvaluator.Crawler.Crawlers;
 
 public class SitemapCrawler
 {

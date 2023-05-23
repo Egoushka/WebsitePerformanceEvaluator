@@ -1,7 +1,7 @@
-using WebsitePerformanceEvaluator.Core.Validators;
-using WebsitePerformanceEvaluator.Domain.Models;
+using WebsitePerformanceEvaluator.Crawler.Models;
+using WebsitePerformanceEvaluator.Crawler.Validators;
 
-namespace WebsitePerformanceEvaluator.Core.Filters;
+namespace WebsitePerformanceEvaluator.Crawler.Filters;
 
 public class LinkFilter
 {

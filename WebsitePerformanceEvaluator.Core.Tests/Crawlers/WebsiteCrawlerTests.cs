@@ -1,10 +1,10 @@
 using Moq;
-using WebsitePerformanceEvaluator.Core.Crawlers;
-using WebsitePerformanceEvaluator.Core.Filters;
-using WebsitePerformanceEvaluator.Core.Helpers;
-using WebsitePerformanceEvaluator.Core.Parsers;
-using WebsitePerformanceEvaluator.Domain.Enums;
-using WebsitePerformanceEvaluator.Domain.Models;
+using WebsitePerformanceEvaluator.Crawler.Crawlers;
+using WebsitePerformanceEvaluator.Crawler.Filters;
+using WebsitePerformanceEvaluator.Crawler.Helpers;
+using WebsitePerformanceEvaluator.Crawler.Models;
+using WebsitePerformanceEvaluator.Crawler.Models.Enums;
+using WebsitePerformanceEvaluator.Crawler.Parsers;
 using Xunit;
 
 namespace WebsitePerformanceEvaluator.Core.Tests.Crawlers;

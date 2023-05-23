@@ -1,7 +1,7 @@
-using WebsitePerformanceEvaluator.Core.Service;
-using WebsitePerformanceEvaluator.Domain.Models;
+using WebsitePerformanceEvaluator.Crawler.Models;
+using WebsitePerformanceEvaluator.Crawler.Services;
 
-namespace WebsitePerformanceEvaluator.Core.Helpers;
+namespace WebsitePerformanceEvaluator.Crawler.Helpers;
 
 public class LinkHelper
 {

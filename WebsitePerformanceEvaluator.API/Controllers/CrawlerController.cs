@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using WebsitePerformanceEvaluator.API.Extensions;
 using WebsitePerformanceEvaluator.API.Requests;
 using WebsitePerformanceEvaluator.Core.Service;
-using WebsitePerformanceEvaluator.Domain.ViewModels;
+using WebsitePerformanceEvaluator.Core.ViewModels;
 
 namespace WebsitePerformanceEvaluator.API.Controllers;
 

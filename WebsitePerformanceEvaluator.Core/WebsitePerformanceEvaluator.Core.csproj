@@ -18,7 +18,8 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\WebsitePerformanceEvaluator.Domain\WebsitePerformanceEvaluator.Domain.csproj" />
+      <ProjectReference Include="..\WebsitePerformanceEvaluator.Crawler\WebsitePerformanceEvaluator.Crawler.csproj" />
+      <ProjectReference Include="..\WebsitePerformanceEvaluator.Data\WebsitePerformanceEvaluator.Data.csproj" />
     </ItemGroup>
 
 </Project>

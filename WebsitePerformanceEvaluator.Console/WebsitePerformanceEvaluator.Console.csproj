@@ -22,5 +22,6 @@
 
     <ItemGroup>
       <ProjectReference Include="..\WebsitePerformanceEvaluator.InfrastructureIoC\WebsitePerformanceEvaluator.InfrastructureIoC.csproj" />
+      <ProjectReference Include="..\WebsitePerformanceEvalutor.Console.Core\WebsitePerformanceEvalutor.Console.Core.csproj" />
     </ItemGroup>
 </Project>

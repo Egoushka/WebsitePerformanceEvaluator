@@ -1,14 +1,14 @@
 using Moq;
-using WebsitePerformanceEvaluator.Core.Crawlers;
-using WebsitePerformanceEvaluator.Domain.Enums;
-using WebsitePerformanceEvaluator.Domain.Models;
+using WebsitePerformanceEvaluator.Crawler.Crawlers;
+using WebsitePerformanceEvaluator.Crawler.Models;
+using WebsitePerformanceEvaluator.Crawler.Models.Enums;
 using Xunit;
 
 namespace WebsitePerformanceEvaluator.Core.Tests.Crawlers;
 
 public class CrawlerTests
 {
-    private readonly Crawler _crawler;
+    private readonly Crawler.Crawlers.Crawler _crawler;
     private readonly Mock<SitemapCrawler> _sitemapCrawlerMock;
     private readonly Mock<WebsiteCrawler> _websiteCrawlerMock;
 
@@ -16,7 +16,7 @@ public class CrawlerTests
     {
         _websiteCrawlerMock = new Mock<WebsiteCrawler>();
         _sitemapCrawlerMock = new Mock<SitemapCrawler>(null, null, null, null, null);
-        _crawler = new Crawler(_websiteCrawlerMock.Object, _sitemapCrawlerMock.Object);
+        _crawler = new Crawler.Crawlers.Crawler(_websiteCrawlerMock.Object, _sitemapCrawlerMock.Object);
     }
 
     [Fact]

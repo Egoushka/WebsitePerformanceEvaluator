@@ -1,8 +1,8 @@
 using System.Xml;
-using WebsitePerformanceEvaluator.Domain.Enums;
-using WebsitePerformanceEvaluator.Domain.Models;
+using WebsitePerformanceEvaluator.Crawler.Models;
+using WebsitePerformanceEvaluator.Crawler.Models.Enums;
 
-namespace WebsitePerformanceEvaluator.Core.Parsers;
+namespace WebsitePerformanceEvaluator.Crawler.Parsers;
 
 public class XmlParser
 {

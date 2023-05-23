@@ -1,4 +1,4 @@
-namespace WebsitePerformanceEvaluator.Core.Validators;
+namespace WebsitePerformanceEvaluator.Crawler.Validators;
 
 public class LinkValidator
 {

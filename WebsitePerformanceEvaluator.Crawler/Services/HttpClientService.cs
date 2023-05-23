@@ -2,9 +2,9 @@ using System.Diagnostics;
 using System.Text;
 using HtmlAgilityPack;
 using Microsoft.Extensions.Logging;
-using WebsitePerformanceEvaluator.Domain.Models;
+using WebsitePerformanceEvaluator.Crawler.Models;
 
-namespace WebsitePerformanceEvaluator.Core.Service;
+namespace WebsitePerformanceEvaluator.Crawler.Services;
 
 public class HttpClientService
 {
