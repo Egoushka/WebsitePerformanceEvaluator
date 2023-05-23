@@ -1,19 +1,13 @@
-using WebsitePerformanceEvaluator.Core.Interfaces.FIlters;
-using WebsitePerformanceEvaluator.Core.Interfaces.Validators;
 using WebsitePerformanceEvaluator.Core.Models;
 using WebsitePerformanceEvaluator.Crawler.Validators;
 
 namespace WebsitePerformanceEvaluator.Crawler.Filters;
 
-public class LinkFilter : ILinkFilter
+public class LinkFilter
 {
-    private readonly ILinkValidator _validator;
+    private readonly LinkValidator _validator;
 
-    public LinkFilter()
-    {
-    }
-
-    public LinkFilter(ILinkValidator validator)
+    public LinkFilter(LinkValidator validator)
     {
         _validator = validator;
     }

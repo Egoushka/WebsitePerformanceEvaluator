@@ -1,5 +1,4 @@
 using System.Diagnostics;
-using WebsitePerformanceEvaluator.Core.Interfaces.Crawlers;
 using WebsitePerformanceEvaluator.Core.Interfaces.Services;
 using WebsitePerformanceEvaluator.Core.Models.Enums;
 using WebsitePerformanceEvalutor.Console.Core.Helpers;
@@ -11,13 +10,11 @@ public class TaskRunner
 {
 	private readonly ConsoleHelper _consoleHelper;
 	private readonly ConsoleWrapper _consoleWrapper;
-	private readonly ICrawler _crawler;
 	private readonly ILinkService _linkService;
 
 
-	public TaskRunner(ICrawler crawler, ConsoleWrapper consoleWrapper, ConsoleHelper consoleHelper, ILinkService linkService)
+	public TaskRunner(ConsoleWrapper consoleWrapper, ConsoleHelper consoleHelper, ILinkService linkService)
 	{
-		_crawler = crawler;
 		_consoleWrapper = consoleWrapper;
 		_consoleHelper = consoleHelper;
 		_linkService = linkService;
@@ -32,7 +29,13 @@ public class TaskRunner
 
 		watch.Start();
 
-		var links = await _crawler.FindLinksAsync(url);
+		var links = (await _linkService.CrawlUrlAsync(url))
+			.Match<IEnumerable<LinkPerformance>>(
+				links => links.Urls,
+				exception => {
+					_consoleWrapper.WriteLine(exception.Message);
+					return Enumerable.Empty<LinkPerformance>();
+				});
 
 		await _linkService.SaveLinksToDatabaseAsync(links, url);
 

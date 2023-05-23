@@ -1,7 +1,3 @@
-using WebsitePerformanceEvaluator.Core.Interfaces.Crawlers;
-using WebsitePerformanceEvaluator.Core.Interfaces.FIlters;
-using WebsitePerformanceEvaluator.Core.Interfaces.Helpers;
-using WebsitePerformanceEvaluator.Core.Interfaces.Parsers;
 using WebsitePerformanceEvaluator.Core.Models;
 using WebsitePerformanceEvaluator.Crawler.Filters;
 using WebsitePerformanceEvaluator.Crawler.Helpers;
@@ -9,17 +5,13 @@ using WebsitePerformanceEvaluator.Crawler.Parsers;
 
 namespace WebsitePerformanceEvaluator.Crawler.Crawlers;
 
-public class WebsiteCrawler : ICrawler, IWebsiteCrawler
+public class WebsiteCrawler
 {
-    private readonly IHtmlParser _htmlParser;
-    private readonly ILinkFilter _linkFilter;
-    private readonly ILinkHelper _linkHelper;
+    private readonly HtmlParser _htmlParser;
+    private readonly LinkFilter _linkFilter;
+    private readonly LinkHelper _linkHelper;
 
-    public WebsiteCrawler()
-    {
-    }
-
-    public WebsiteCrawler(IHtmlParser htmlParser, ILinkFilter linkFilter, ILinkHelper linkHelper)
+    public WebsiteCrawler(HtmlParser htmlParser, LinkFilter linkFilter, LinkHelper linkHelper)
     {
         _htmlParser = htmlParser;
         _linkFilter = linkFilter;

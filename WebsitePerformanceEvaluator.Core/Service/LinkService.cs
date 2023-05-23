@@ -13,11 +13,11 @@ namespace WebsitePerformanceEvaluator.Core.Service;
 
 public class LinkService : ILinkService
 {
-    private readonly ICombinedCrawler _crawler;
+    private readonly ICrawler _crawler;
     private readonly ILinkValidator _urlValidator;
     private readonly WebsitePerformanceEvaluatorDatabaseContext _context;
     
-    public LinkService(WebsitePerformanceEvaluatorDatabaseContext context, ICombinedCrawler crawler, ILinkValidator urlValidator)
+    public LinkService(WebsitePerformanceEvaluatorDatabaseContext context, ICrawler crawler, ILinkValidator urlValidator)
     {
         _context = context;
         _crawler = crawler;

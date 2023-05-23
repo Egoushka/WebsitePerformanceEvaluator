@@ -1,21 +1,15 @@
 using HtmlAgilityPack;
-using WebsitePerformanceEvaluator.Core.Interfaces.Parsers;
-using WebsitePerformanceEvaluator.Core.Interfaces.Services;
 using WebsitePerformanceEvaluator.Core.Models;
 using WebsitePerformanceEvaluator.Core.Models.Enums;
 using WebsitePerformanceEvaluator.Crawler.Services;
 
 namespace WebsitePerformanceEvaluator.Crawler.Parsers;
 
-public class HtmlParser : IHtmlParser
+public class HtmlParser
 {
-    private readonly IHttpClientService _clientService;
+    private readonly HttpClientService _clientService;
 
-    public HtmlParser()
-    {
-    }
-
-    public HtmlParser(IHttpClientService httpClientService)
+    public HtmlParser(HttpClientService httpClientService)
     {
         _clientService = httpClientService;
     }

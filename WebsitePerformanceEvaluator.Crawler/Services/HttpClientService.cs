@@ -2,19 +2,14 @@ using System.Diagnostics;
 using System.Text;
 using HtmlAgilityPack;
 using Microsoft.Extensions.Logging;
-using WebsitePerformanceEvaluator.Core.Interfaces.Services;
 using WebsitePerformanceEvaluator.Core.Models;
 
 namespace WebsitePerformanceEvaluator.Crawler.Services;
 
-public class HttpClientService : IHttpClientService
+public class HttpClientService
 {
     private readonly HttpClient _client;
     private readonly ILogger _logger;
-
-    public HttpClientService()
-    {
-    }
 
     public HttpClientService(IHttpClientFactory httpClientFactory, ILogger logger)
     {

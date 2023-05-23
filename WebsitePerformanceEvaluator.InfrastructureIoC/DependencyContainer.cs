@@ -35,7 +35,7 @@ public static class DependencyContainer
     {
         services.AddCoreServices();
         services.AddCrawlerServices();
-
+        
         return services;
     }
     public static IServiceCollection ConfigureConsoleServices(this IServiceCollection services)
