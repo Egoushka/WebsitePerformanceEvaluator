@@ -20,7 +20,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebsitePerformanceEvaluator
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebsitePerformanceEvaluator.Crawler", "WebsitePerformanceEvaluator.Crawler\WebsitePerformanceEvaluator.Crawler.csproj", "{ACF78EAC-7D65-4EBB-9028-224DDC9ECF7D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebsitePerformanceEvalutor.Console.Core", "WebsitePerformanceEvalutor.Console.Core\WebsitePerformanceEvalutor.Console.Core.csproj", "{813A503B-5A85-40A0-B966-34C99E64FF42}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebsitePerformanceEvaluator.Console.Core", "WebsitePerformanceEvaluator.Console.Core\WebsitePerformanceEvaluator.Console.Core.csproj", "{813A503B-5A85-40A0-B966-34C99E64FF42}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

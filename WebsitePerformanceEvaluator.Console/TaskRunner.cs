@@ -1,7 +1,7 @@
 using System.Diagnostics;
 using WebsitePerformanceEvaluator.Core.Interfaces.Services;
 using WebsitePerformanceEvaluator.Core.Models.Enums;
-using WebsitePerformanceEvalutor.Console.Core.Helpers;
+using WebsitePerformanceEvaluator.Console.Core.Helpers;
 using LinkPerformance=WebsitePerformanceEvaluator.Core.Models.LinkPerformance;
 
 namespace WebsitePerformanceEvaluator.Console;
@@ -50,7 +50,7 @@ public class TaskRunner
 		_consoleWrapper.WriteLine($"Time elapsed: {watch.ElapsedMilliseconds / 1000} s");
 	}
 
-	private void PrintLinksInCrawlingNotInSitemap(IEnumerable<Core.Models.LinkPerformance> linkPerformances)
+	private void PrintLinksInCrawlingNotInSitemap(IEnumerable<LinkPerformance> linkPerformances)
 	{
 		var linksInCrawlingNotInSitemap = linkPerformances
 			.Where(x => x.CrawlingLinkSource == CrawlingLinkSource.Website)
@@ -74,7 +74,7 @@ public class TaskRunner
 		_consoleWrapper.WriteLine();
 	}
 
-	private void PrintLinksInSitemapNotInCrawling(IEnumerable<Core.Models.LinkPerformance> linkPerformances)
+	private void PrintLinksInSitemapNotInCrawling(IEnumerable<LinkPerformance> linkPerformances)
 	{
 		var linksInSitemapNotInCrawling = linkPerformances
 			.Where(link => link.CrawlingLinkSource == CrawlingLinkSource.Sitemap)
@@ -98,7 +98,7 @@ public class TaskRunner
 		_consoleWrapper.WriteLine();
 	}
 
-	private void PrintLinksWithTimeResponse(IEnumerable<Core.Models.LinkPerformance> linkPerformances)
+	private void PrintLinksWithTimeResponse(IEnumerable<LinkPerformance> linkPerformances)
 	{
 		var rowsList = linkPerformances
 			.OrderBy(item => item.TimeResponseMs)

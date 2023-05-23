@@ -2,10 +2,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using WebsitePerformanceEvaluator.Core;
 using WebsitePerformanceEvaluator.Crawler;
 using WebsitePerformanceEvaluator.Data;
-using WebsitePerformanceEvalutor.Console.Core.Helpers;
 
 namespace WebsitePerformanceEvaluator.InfrastructureIoC;
 
@@ -33,7 +31,7 @@ public static class DependencyContainer
     }
     public static IServiceCollection ConfigureCoreServices(this IServiceCollection services)
     {
-        services.AddCoreServices();
+        Core.DependencyInjection.AddCoreServices(services);
         services.AddCrawlerServices();
         
         return services;
@@ -41,8 +39,6 @@ public static class DependencyContainer
     public static IServiceCollection ConfigureConsoleServices(this IServiceCollection services)
     {
         services.AddHttpClient();
-        services.AddTransient<ConsoleWrapper>();
-        services.AddTransient<ConsoleHelper>();
         services.AddLogging(builder => builder.AddSimpleConsole(options => {
             options.IncludeScopes = true;
             options.SingleLine = true;

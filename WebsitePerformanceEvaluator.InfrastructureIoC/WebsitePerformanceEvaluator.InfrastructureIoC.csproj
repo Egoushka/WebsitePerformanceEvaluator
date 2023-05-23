@@ -12,10 +12,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\WebsitePerformanceEvaluator.Core\WebsitePerformanceEvaluator.Core.csproj" />
       <ProjectReference Include="..\WebsitePerformanceEvaluator.Crawler\WebsitePerformanceEvaluator.Crawler.csproj" />
-      <ProjectReference Include="..\WebsitePerformanceEvaluator.Data\WebsitePerformanceEvaluator.Data.csproj" />
-      <ProjectReference Include="..\WebsitePerformanceEvalutor.Console.Core\WebsitePerformanceEvalutor.Console.Core.csproj" />
     </ItemGroup>
 
 </Project>
