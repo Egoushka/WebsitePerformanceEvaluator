@@ -1,6 +1,6 @@
 using Moq;
+using WebsitePerformanceEvaluator.Core.Models;
 using WebsitePerformanceEvaluator.Crawler.Helpers;
-using WebsitePerformanceEvaluator.Crawler.Models;
 using WebsitePerformanceEvaluator.Crawler.Services;
 using Xunit;
 

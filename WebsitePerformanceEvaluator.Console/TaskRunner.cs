@@ -1,8 +1,9 @@
 using System.Diagnostics;
-using WebsitePerformanceEvaluator.Core.Service;
-using WebsitePerformanceEvaluator.Domain.Enums;
-using WebsitePerformanceEvaluator.Domain.Models;
+using WebsitePerformanceEvaluator.Core.Interfaces;
+using WebsitePerformanceEvaluator.Core.Interfaces.Services;
+using WebsitePerformanceEvaluator.Core.Models.Enums;
 using WebsitePerformanceEvalutor.Console.Core.Helpers;
+using LinkPerformance=WebsitePerformanceEvaluator.Core.Models.LinkPerformance;
 
 namespace WebsitePerformanceEvaluator.Console;
 
@@ -10,13 +11,13 @@ public class TaskRunner
 {
 	private readonly ConsoleHelper _consoleHelper;
 	private readonly ConsoleWrapper _consoleWrapper;
-	private readonly Crawler.Crawlers.CombinedCrawler _combinedCrawler;
-	private readonly LinkService _linkService;
+	private readonly ICrawler _crawler;
+	private readonly ILinkService _linkService;
 
 
-	public TaskRunner(Crawler.Crawlers.CombinedCrawler combinedCrawler, ConsoleWrapper consoleWrapper, ConsoleHelper consoleHelper, LinkService linkService)
+	public TaskRunner(ICrawler crawler, ConsoleWrapper consoleWrapper, ConsoleHelper consoleHelper, ILinkService linkService)
 	{
-		_combinedCrawler = combinedCrawler;
+		_crawler = crawler;
 		_consoleWrapper = consoleWrapper;
 		_consoleHelper = consoleHelper;
 		_linkService = linkService;
@@ -31,13 +32,7 @@ public class TaskRunner
 
 		watch.Start();
 
-		var links = (await _combinedCrawler.CrawlWebsiteAndSitemapAsync(url))
-			.Select(x => new LinkPerformance
-			{
-				Url = x.Url,
-				TimeResponseMs = x.TimeResponseMs,
-				CrawlingLinkSource = (CrawlingLinkSource)x.CrawlingLinkSource,
-			});
+		var links = await _crawler.FindLinksAsync(url);
 
 		await _linkService.SaveLinksToDatabaseAsync(links, url);
 
@@ -52,7 +47,7 @@ public class TaskRunner
 		_consoleWrapper.WriteLine($"Time elapsed: {watch.ElapsedMilliseconds / 1000} s");
 	}
 
-	private void PrintLinksInCrawlingNotInSitemap(IEnumerable<LinkPerformance> linkPerformances)
+	private void PrintLinksInCrawlingNotInSitemap(IEnumerable<Core.Models.LinkPerformance> linkPerformances)
 	{
 		var linksInCrawlingNotInSitemap = linkPerformances
 			.Where(x => x.CrawlingLinkSource == CrawlingLinkSource.Website)
@@ -76,7 +71,7 @@ public class TaskRunner
 		_consoleWrapper.WriteLine();
 	}
 
-	private void PrintLinksInSitemapNotInCrawling(IEnumerable<LinkPerformance> linkPerformances)
+	private void PrintLinksInSitemapNotInCrawling(IEnumerable<Core.Models.LinkPerformance> linkPerformances)
 	{
 		var linksInSitemapNotInCrawling = linkPerformances
 			.Where(link => link.CrawlingLinkSource == CrawlingLinkSource.Sitemap)
@@ -100,7 +95,7 @@ public class TaskRunner
 		_consoleWrapper.WriteLine();
 	}
 
-	private void PrintLinksWithTimeResponse(IEnumerable<LinkPerformance> linkPerformances)
+	private void PrintLinksWithTimeResponse(IEnumerable<Core.Models.LinkPerformance> linkPerformances)
 	{
 		var rowsList = linkPerformances
 			.OrderBy(item => item.TimeResponseMs)

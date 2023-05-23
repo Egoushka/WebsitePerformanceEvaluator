@@ -1,5 +1,6 @@
 
 using WebsitePerformanceEvaluator.Domain.Models;
+using LinkPerformance=WebsitePerformanceEvaluator.Core.Models.LinkPerformance;
 
 namespace WebsitePerformanceEvaluator.Core.ViewModels;
 

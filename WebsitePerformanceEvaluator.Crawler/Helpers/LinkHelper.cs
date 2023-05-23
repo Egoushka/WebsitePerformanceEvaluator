@@ -1,9 +1,10 @@
-using WebsitePerformanceEvaluator.Crawler.Models;
+using WebsitePerformanceEvaluator.Core.Interfaces.Helpers;
+using WebsitePerformanceEvaluator.Core.Models;
 using WebsitePerformanceEvaluator.Crawler.Services;
 
 namespace WebsitePerformanceEvaluator.Crawler.Helpers;
 
-public class LinkHelper
+public class LinkHelper : ILinkHelper
 {
     private readonly HttpClientService _clientService;
 

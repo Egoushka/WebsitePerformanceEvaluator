@@ -1,25 +1,26 @@
 using System.ComponentModel.DataAnnotations;
 using LanguageExt.Common;
 using Microsoft.EntityFrameworkCore;
+using WebsitePerformanceEvaluator.Core.Interfaces;
+using WebsitePerformanceEvaluator.Core.Interfaces.Services;
+using WebsitePerformanceEvaluator.Core.Interfaces.Validators;
+using WebsitePerformanceEvaluator.Core.Models;
 using WebsitePerformanceEvaluator.Core.ViewModels;
-using WebsitePerformanceEvaluator.Crawler.Validators;
-using WebsitePerformanceEvaluator.Crawler.Crawlers;
 using WebsitePerformanceEvaluator.Data;
 using WebsitePerformanceEvaluator.Domain.Enums;
-using WebsitePerformanceEvaluator.Domain.Models;
 
 namespace WebsitePerformanceEvaluator.Core.Service;
 
-public class LinkService
+public class LinkService : ILinkService
 {
-    private readonly CombinedCrawler _combinedCrawler;
-    private readonly LinkValidator _urlValidator;
+    private readonly ICrawler _crawler;
+    private readonly ILinkValidator _urlValidator;
     private readonly WebsitePerformanceEvaluatorDatabaseContext _context;
     
-    public LinkService(WebsitePerformanceEvaluatorDatabaseContext context, Crawler.Crawlers.CombinedCrawler combinedCrawler, LinkValidator urlValidator)
+    public LinkService(WebsitePerformanceEvaluatorDatabaseContext context, ICrawler crawler, ILinkValidator urlValidator)
     {
         _context = context;
-        _combinedCrawler = combinedCrawler;
+        _crawler = crawler;
         _urlValidator = urlValidator;
     }
 
@@ -54,14 +55,7 @@ public class LinkService
             return new Result<CrawlLinkViewModel>(validationException);
         }
 
-        var links =
-            (await _combinedCrawler.CrawlWebsiteAndSitemapAsync(url))
-            .Select(x => new LinkPerformance
-            {
-                Url = x.Url,
-                TimeResponseMs = x.TimeResponseMs,
-                CrawlingLinkSource = (CrawlingLinkSource)x.CrawlingLinkSource,
-            });
+        var links = await _crawler.FindLinksAsync(url);
 
         await SaveLinksToDatabaseAsync(links, url);
 
@@ -71,19 +65,18 @@ public class LinkService
             Urls = links,
         };
     }
-
     public async Task SaveLinksToDatabaseAsync(IEnumerable<LinkPerformance> links, string url)
     {
-        var link = new Link
+        var link = new Domain.Models.Link
         {
             Url = url,
         };
 
-        var linksData = links.Select(x => new LinkPerformance
+        var linksData = links.Select(x => new Domain.Models.LinkPerformance
         {
             Url = x.Url,
             TimeResponseMs = x.TimeResponseMs,
-            CrawlingLinkSource = x.CrawlingLinkSource,
+            CrawlingLinkSource = (CrawlingLinkSource)x.CrawlingLinkSource,
             Link = link,
         });
 

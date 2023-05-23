@@ -1,9 +1,10 @@
-using WebsitePerformanceEvaluator.Crawler.Models;
-using WebsitePerformanceEvaluator.Crawler.Models.Enums;
+using WebsitePerformanceEvaluator.Core.Interfaces;
+using WebsitePerformanceEvaluator.Core.Models;
+using WebsitePerformanceEvaluator.Core.Models.Enums;
 
 namespace WebsitePerformanceEvaluator.Crawler.Crawlers;
 
-public class CombinedCrawler
+public class CombinedCrawler : ICrawler
 {
     private readonly SitemapCrawler _sitemapCrawler;
     private readonly WebsiteCrawler _websiteCrawler;
@@ -14,7 +15,7 @@ public class CombinedCrawler
         _sitemapCrawler = sitemapCrawler;
     }
 
-    public virtual async Task<IEnumerable<LinkPerformance>> CrawlWebsiteAndSitemapAsync(string url)
+    public virtual async Task<IEnumerable<LinkPerformance>> FindLinksAsync(string url)
     {
         var crawlingTask = Task.Run(() => _websiteCrawler.FindLinksAsync(url));
         var sitemapTask = Task.Run(() => _sitemapCrawler.FindLinksAsync(url));

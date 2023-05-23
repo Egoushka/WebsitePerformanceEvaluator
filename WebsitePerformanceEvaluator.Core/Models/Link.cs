@@ -1,4 +1,4 @@
-namespace WebsitePerformanceEvaluator.Crawler.Models;
+namespace WebsitePerformanceEvaluator.Core.Models;
 
 public class Link
 {

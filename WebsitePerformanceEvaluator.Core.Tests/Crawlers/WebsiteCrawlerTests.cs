@@ -1,9 +1,9 @@
 using Moq;
+using WebsitePerformanceEvaluator.Core.Models;
+using WebsitePerformanceEvaluator.Core.Models.Enums;
 using WebsitePerformanceEvaluator.Crawler.Crawlers;
 using WebsitePerformanceEvaluator.Crawler.Filters;
 using WebsitePerformanceEvaluator.Crawler.Helpers;
-using WebsitePerformanceEvaluator.Crawler.Models;
-using WebsitePerformanceEvaluator.Crawler.Models.Enums;
 using WebsitePerformanceEvaluator.Crawler.Parsers;
 using Xunit;
 

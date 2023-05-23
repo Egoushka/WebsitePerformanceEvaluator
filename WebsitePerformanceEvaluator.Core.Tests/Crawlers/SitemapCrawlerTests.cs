@@ -1,11 +1,11 @@
 using System.Xml;
 using Microsoft.Extensions.Logging;
 using Moq;
+using WebsitePerformanceEvaluator.Core.Models;
 using WebsitePerformanceEvaluator.Core.Service;
 using WebsitePerformanceEvaluator.Crawler.Crawlers;
 using WebsitePerformanceEvaluator.Crawler.Filters;
 using WebsitePerformanceEvaluator.Crawler.Helpers;
-using WebsitePerformanceEvaluator.Crawler.Models;
 using WebsitePerformanceEvaluator.Crawler.Parsers;
 using WebsitePerformanceEvaluator.Crawler.Services;
 using Xunit;

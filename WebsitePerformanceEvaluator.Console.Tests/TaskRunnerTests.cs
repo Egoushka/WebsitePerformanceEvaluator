@@ -1,7 +1,8 @@
 using Moq;
+using WebsitePerformanceEvaluator.Core.Interfaces;
+using WebsitePerformanceEvaluator.Core.Models;
+using WebsitePerformanceEvaluator.Core.Models.Enums;
 using WebsitePerformanceEvaluator.Core.Service;
-using WebsitePerformanceEvaluator.Crawler.Models;
-using WebsitePerformanceEvaluator.Crawler.Models.Enums;
 using WebsitePerformanceEvalutor.Console.Core.Helpers;
 using Xunit;
 
@@ -9,7 +10,7 @@ namespace WebsitePerformanceEvaluator.Console.Tests;
 
 public class TaskRunnerTests
 {
-    private readonly Mock<Crawler.Crawlers.CombinedCrawler> _crawlerMock;
+    private readonly Mock<ICrawler> _crawlerMock;
     private readonly Mock<ConsoleWrapper> _consoleWrapperMock;
     private readonly Mock<ConsoleHelper> _consoleHelperMock;
     private readonly Mock<LinkService> _linkServiceMock;
@@ -18,7 +19,7 @@ public class TaskRunnerTests
 
     public TaskRunnerTests()
     {
-        _crawlerMock = new Mock<Crawler.Crawlers.CombinedCrawler>(null, null);
+        _crawlerMock = new Mock<ICrawler>(null, null);
         _consoleWrapperMock = new Mock<ConsoleWrapper>();
         _consoleHelperMock = new Mock<ConsoleHelper>();
         _linkServiceMock = new Mock<LinkService>(null, null);
@@ -198,7 +199,7 @@ public class TaskRunnerTests
     private void SetupMocks(string url, IEnumerable<LinkPerformance> expectedLinkPerformances)
     {
         _crawlerMock
-            .Setup(x => x.CrawlWebsiteAndSitemapAsync(url))
+            .Setup(x => x.FindLinksAsync(url))
             .ReturnsAsync(expectedLinkPerformances);
         
         _consoleWrapperMock

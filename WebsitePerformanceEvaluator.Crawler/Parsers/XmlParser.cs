@@ -1,10 +1,11 @@
 using System.Xml;
-using WebsitePerformanceEvaluator.Crawler.Models;
-using WebsitePerformanceEvaluator.Crawler.Models.Enums;
+using WebsitePerformanceEvaluator.Core.Interfaces.Parsers;
+using WebsitePerformanceEvaluator.Core.Models;
+using WebsitePerformanceEvaluator.Core.Models.Enums;
 
 namespace WebsitePerformanceEvaluator.Crawler.Parsers;
 
-public class XmlParser
+public class XmlParser : IXmlParser
 {
     public virtual IEnumerable<LinkPerformance> GetLinks(XmlNodeList xmlList)
     {

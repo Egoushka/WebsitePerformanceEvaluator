@@ -1,11 +1,12 @@
 using HtmlAgilityPack;
-using WebsitePerformanceEvaluator.Crawler.Models;
-using WebsitePerformanceEvaluator.Crawler.Models.Enums;
+using WebsitePerformanceEvaluator.Core.Interfaces.Parsers;
+using WebsitePerformanceEvaluator.Core.Models;
+using WebsitePerformanceEvaluator.Core.Models.Enums;
 using WebsitePerformanceEvaluator.Crawler.Services;
 
 namespace WebsitePerformanceEvaluator.Crawler.Parsers;
 
-public class HtmlParser
+public class HtmlParser : IHtmlParser
 {
     private readonly HttpClientService _clientService;
 

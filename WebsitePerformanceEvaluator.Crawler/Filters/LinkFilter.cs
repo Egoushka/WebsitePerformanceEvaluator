@@ -1,9 +1,10 @@
-using WebsitePerformanceEvaluator.Crawler.Models;
+using WebsitePerformanceEvaluator.Core.Interfaces.FIlters;
+using WebsitePerformanceEvaluator.Core.Models;
 using WebsitePerformanceEvaluator.Crawler.Validators;
 
 namespace WebsitePerformanceEvaluator.Crawler.Filters;
 
-public class LinkFilter
+public class LinkFilter : ILinkFilter
 {
     private readonly LinkValidator _validator;
 
@@ -16,7 +17,7 @@ public class LinkFilter
         _validator = validator;
     }
 
-    public virtual IEnumerable<LinkPerformance> FilterLinks(IEnumerable<LinkPerformance> links, string baseUrl)
+    public IEnumerable<LinkPerformance> FilterLinks(IEnumerable<LinkPerformance> links, string baseUrl)
     {
         links = links.Distinct();
         links = RemoveInvalidLinks(links);

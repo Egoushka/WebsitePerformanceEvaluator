@@ -1,6 +1,8 @@
 using Moq;
+using WebsitePerformanceEvaluator.Core.Interfaces.FIlters;
+using WebsitePerformanceEvaluator.Core.Interfaces.Validators;
+using WebsitePerformanceEvaluator.Core.Models;
 using WebsitePerformanceEvaluator.Crawler.Filters;
-using WebsitePerformanceEvaluator.Crawler.Models;
 using WebsitePerformanceEvaluator.Crawler.Validators;
 using Xunit;
 
@@ -8,7 +10,7 @@ namespace WebsitePerformanceEvaluator.Core.Tests.Filters;
 
 public class LinkFilterTests
 {
-    private readonly LinkFilter _linkFilter;
+    private readonly ILinkFilter _linkFilter;
     private readonly Mock<LinkValidator> _validatorMock;
 
     public LinkFilterTests()

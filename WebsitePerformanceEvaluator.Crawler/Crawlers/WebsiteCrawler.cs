@@ -1,11 +1,12 @@
+using WebsitePerformanceEvaluator.Core.Interfaces;
+using WebsitePerformanceEvaluator.Core.Models;
 using WebsitePerformanceEvaluator.Crawler.Filters;
 using WebsitePerformanceEvaluator.Crawler.Helpers;
-using WebsitePerformanceEvaluator.Crawler.Models;
 using WebsitePerformanceEvaluator.Crawler.Parsers;
 
 namespace WebsitePerformanceEvaluator.Crawler.Crawlers;
 
-public class WebsiteCrawler
+public class WebsiteCrawler : ICrawler
 {
     private readonly HtmlParser _htmlParser;
     private readonly LinkFilter _linkFilter;

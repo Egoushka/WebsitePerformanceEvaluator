@@ -1,6 +1,6 @@
-using WebsitePerformanceEvaluator.Crawler.Models.Enums;
+using WebsitePerformanceEvaluator.Core.Models.Enums;
 
-namespace WebsitePerformanceEvaluator.Crawler.Models;
+namespace WebsitePerformanceEvaluator.Core.Models;
 
 public class LinkPerformance
 {

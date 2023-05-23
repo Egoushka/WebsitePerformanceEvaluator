@@ -1,14 +1,15 @@
 using System.Xml;
 using Microsoft.Extensions.Logging;
+using WebsitePerformanceEvaluator.Core.Interfaces;
+using WebsitePerformanceEvaluator.Core.Models;
 using WebsitePerformanceEvaluator.Crawler.Filters;
 using WebsitePerformanceEvaluator.Crawler.Helpers;
-using WebsitePerformanceEvaluator.Crawler.Models;
 using WebsitePerformanceEvaluator.Crawler.Parsers;
 using WebsitePerformanceEvaluator.Crawler.Services;
 
 namespace WebsitePerformanceEvaluator.Crawler.Crawlers;
 
-public class SitemapCrawler
+public class SitemapCrawler : ICrawler
 {
     private readonly HttpClientService _clientService;
     private readonly LinkFilter _filter;

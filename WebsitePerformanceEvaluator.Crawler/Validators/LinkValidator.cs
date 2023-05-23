@@ -1,6 +1,8 @@
+using WebsitePerformanceEvaluator.Core.Interfaces.Validators;
+
 namespace WebsitePerformanceEvaluator.Crawler.Validators;
 
-public class LinkValidator
+public class LinkValidator : ILinkValidator
 {
     public virtual bool IsValidLink(string link)
     {
