@@ -9,7 +9,7 @@ namespace WebsitePerformanceEvaluator.Console.Tests;
 
 public class TaskRunnerTests
 {
-    private readonly Mock<Crawler.Crawlers.Crawler> _crawlerMock;
+    private readonly Mock<Crawler.Crawlers.CombinedCrawler> _crawlerMock;
     private readonly Mock<ConsoleWrapper> _consoleWrapperMock;
     private readonly Mock<ConsoleHelper> _consoleHelperMock;
     private readonly Mock<LinkService> _linkServiceMock;
@@ -18,7 +18,7 @@ public class TaskRunnerTests
 
     public TaskRunnerTests()
     {
-        _crawlerMock = new Mock<Crawler.Crawlers.Crawler>(null, null);
+        _crawlerMock = new Mock<Crawler.Crawlers.CombinedCrawler>(null, null);
         _consoleWrapperMock = new Mock<ConsoleWrapper>();
         _consoleHelperMock = new Mock<ConsoleHelper>();
         _linkServiceMock = new Mock<LinkService>(null, null);

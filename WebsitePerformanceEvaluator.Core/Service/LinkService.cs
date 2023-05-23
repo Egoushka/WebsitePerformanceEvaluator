@@ -3,6 +3,7 @@ using LanguageExt.Common;
 using Microsoft.EntityFrameworkCore;
 using WebsitePerformanceEvaluator.Core.ViewModels;
 using WebsitePerformanceEvaluator.Crawler.Validators;
+using WebsitePerformanceEvaluator.Crawler.Crawlers;
 using WebsitePerformanceEvaluator.Data;
 using WebsitePerformanceEvaluator.Domain.Enums;
 using WebsitePerformanceEvaluator.Domain.Models;
@@ -11,14 +12,14 @@ namespace WebsitePerformanceEvaluator.Core.Service;
 
 public class LinkService
 {
-    private readonly Crawler.Crawlers.Crawler _crawler;
+    private readonly CombinedCrawler _combinedCrawler;
     private readonly LinkValidator _urlValidator;
     private readonly WebsitePerformanceEvaluatorDatabaseContext _context;
     
-    public LinkService(WebsitePerformanceEvaluatorDatabaseContext context, Crawler.Crawlers.Crawler crawler, LinkValidator urlValidator)
+    public LinkService(WebsitePerformanceEvaluatorDatabaseContext context, Crawler.Crawlers.CombinedCrawler combinedCrawler, LinkValidator urlValidator)
     {
         _context = context;
-        _crawler = crawler;
+        _combinedCrawler = combinedCrawler;
         _urlValidator = urlValidator;
     }
 
@@ -54,7 +55,7 @@ public class LinkService
         }
 
         var links =
-            (await _crawler.CrawlWebsiteAndSitemapAsync(url))
+            (await _combinedCrawler.CrawlWebsiteAndSitemapAsync(url))
             .Select(x => new LinkPerformance
             {
                 Url = x.Url,

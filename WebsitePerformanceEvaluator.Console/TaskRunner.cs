@@ -10,13 +10,13 @@ public class TaskRunner
 {
 	private readonly ConsoleHelper _consoleHelper;
 	private readonly ConsoleWrapper _consoleWrapper;
-	private readonly Crawler.Crawlers.Crawler _crawler;
+	private readonly Crawler.Crawlers.CombinedCrawler _combinedCrawler;
 	private readonly LinkService _linkService;
 
 
-	public TaskRunner(Crawler.Crawlers.Crawler crawler, ConsoleWrapper consoleWrapper, ConsoleHelper consoleHelper, LinkService linkService)
+	public TaskRunner(Crawler.Crawlers.CombinedCrawler combinedCrawler, ConsoleWrapper consoleWrapper, ConsoleHelper consoleHelper, LinkService linkService)
 	{
-		_crawler = crawler;
+		_combinedCrawler = combinedCrawler;
 		_consoleWrapper = consoleWrapper;
 		_consoleHelper = consoleHelper;
 		_linkService = linkService;
@@ -31,7 +31,7 @@ public class TaskRunner
 
 		watch.Start();
 
-		var links = (await _crawler.CrawlWebsiteAndSitemapAsync(url))
+		var links = (await _combinedCrawler.CrawlWebsiteAndSitemapAsync(url))
 			.Select(x => new LinkPerformance
 			{
 				Url = x.Url,

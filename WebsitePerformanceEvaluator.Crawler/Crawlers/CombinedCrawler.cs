@@ -3,12 +3,12 @@ using WebsitePerformanceEvaluator.Crawler.Models.Enums;
 
 namespace WebsitePerformanceEvaluator.Crawler.Crawlers;
 
-public class Crawler
+public class CombinedCrawler
 {
     private readonly SitemapCrawler _sitemapCrawler;
     private readonly WebsiteCrawler _websiteCrawler;
 
-    public Crawler(WebsiteCrawler websiteCrawler, SitemapCrawler sitemapCrawler)
+    public CombinedCrawler(WebsiteCrawler websiteCrawler, SitemapCrawler sitemapCrawler)
     {
         _websiteCrawler = websiteCrawler;
         _sitemapCrawler = sitemapCrawler;

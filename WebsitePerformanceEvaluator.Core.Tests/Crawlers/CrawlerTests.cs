@@ -8,7 +8,7 @@ namespace WebsitePerformanceEvaluator.Core.Tests.Crawlers;
 
 public class CrawlerTests
 {
-    private readonly Crawler.Crawlers.Crawler _crawler;
+    private readonly Crawler.Crawlers.CombinedCrawler _combinedCrawler;
     private readonly Mock<SitemapCrawler> _sitemapCrawlerMock;
     private readonly Mock<WebsiteCrawler> _websiteCrawlerMock;
 
@@ -16,7 +16,7 @@ public class CrawlerTests
     {
         _websiteCrawlerMock = new Mock<WebsiteCrawler>();
         _sitemapCrawlerMock = new Mock<SitemapCrawler>(null, null, null, null, null);
-        _crawler = new Crawler.Crawlers.Crawler(_websiteCrawlerMock.Object, _sitemapCrawlerMock.Object);
+        _combinedCrawler = new Crawler.Crawlers.CombinedCrawler(_websiteCrawlerMock.Object, _sitemapCrawlerMock.Object);
     }
 
     [Fact]
@@ -33,7 +33,7 @@ public class CrawlerTests
             .ReturnsAsync(expectedLinks);
 
         // Act
-        var result = await _crawler.CrawlWebsiteAndSitemapAsync(url);
+        var result = await _combinedCrawler.CrawlWebsiteAndSitemapAsync(url);
 
         // Assert
         Assert.Equal(expectedLinks.Count(), result.Count());
@@ -54,7 +54,7 @@ public class CrawlerTests
             .ReturnsAsync(Enumerable.Empty<LinkPerformance>());
 
         // Act
-        var result = await _crawler.CrawlWebsiteAndSitemapAsync(url);
+        var result = await _combinedCrawler.CrawlWebsiteAndSitemapAsync(url);
 
         // Assert
         Assert.All(result, x => Assert.Equal(CrawlingLinkSource.Website, x.CrawlingLinkSource));
@@ -74,7 +74,7 @@ public class CrawlerTests
             .ReturnsAsync(expectedLinks);
 
         // Act
-        var result = await _crawler.CrawlWebsiteAndSitemapAsync(url);
+        var result = await _combinedCrawler.CrawlWebsiteAndSitemapAsync(url);
 
         // Assert
         Assert.All(result, x => Assert.Equal(CrawlingLinkSource.Sitemap, x.CrawlingLinkSource));

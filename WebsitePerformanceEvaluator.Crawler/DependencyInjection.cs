@@ -12,7 +12,7 @@ public static class DependencyInjection
 {
     public static IServiceCollection AddCrawlerServices(this IServiceCollection services)
     {
-        services.AddTransient<Crawlers.Crawler>();
+        services.AddTransient<Crawlers.CombinedCrawler>();
         services.AddTransient<WebsiteCrawler>();
         services.AddTransient<SitemapCrawler>();
         services.AddTransient<HttpClientService>();
