@@ -1,14 +1,14 @@
 using Microsoft.AspNetCore.Mvc;
-using WebsitePerformanceEvaluator.Web.Core.Services;
+using WebsitePerformanceEvaluator.Core.Interfaces.Services;
 using WebsitePerformanceEvaluator.MVC.Extensions;
 
 namespace WebsitePerformanceEvaluator.MVC.Controllers;
 
 public class LinkController : Controller
 {
-    private readonly LinkService _linkService;
+    private readonly ILinkService _linkService;
 
-    public LinkController(LinkService linkService, ILogger logger)
+    public LinkController(ILinkService linkService, ILogger logger)
     {
         _linkService = linkService;
     }

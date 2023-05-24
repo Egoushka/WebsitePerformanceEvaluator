@@ -1,15 +1,11 @@
-using WebsitePerformanceEvaluator.Core;
-using WebsitePerformanceEvaluator.Data;
-using WebsitePerformanceEvaluator.MVC;
-using WebsitePerformanceEvaluator.Web.Core;
+using WebsitePerformanceEvaluator.InfrastructureIoC;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
-builder.Services.ConfigureMVCServices();
-builder.Services.ConfigureWebCoreServices();
+builder.Services.ConfigureWebServices();
 builder.Services.ConfigureDataServices(builder.Configuration);
 builder.Services.ConfigureCoreServices();
 

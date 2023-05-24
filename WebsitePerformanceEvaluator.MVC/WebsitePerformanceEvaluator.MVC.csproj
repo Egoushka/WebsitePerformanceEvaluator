@@ -8,10 +8,6 @@
 
     <PropertyGroup Condition=" '$(RunConfiguration)' == 'https' " />
     <PropertyGroup Condition=" '$(RunConfiguration)' == 'http' " />
-    <ItemGroup>
-      <ProjectReference Include="..\WebsitePerformanceEvaluator.Data\WebsitePerformanceEvaluator.Data.csproj" />
-      <ProjectReference Include="..\WebsitePerformanceEvaluator.Web.Core\WebsitePerformanceEvaluator.Web.Core.csproj" />
-    </ItemGroup>
 
     <ItemGroup>
       <PackageReference Include="Microsoft.AspNet.Mvc" Version="5.3.0-preview1" />
@@ -20,6 +16,10 @@
 
     <ItemGroup>
       <_ContentIncludedByDefault Remove="Views\Error\Index.cshtml" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\WebsitePerformanceEvaluator.InfrastructureIoC\WebsitePerformanceEvaluator.InfrastructureIoC.csproj" />
     </ItemGroup>
 
 </Project>
