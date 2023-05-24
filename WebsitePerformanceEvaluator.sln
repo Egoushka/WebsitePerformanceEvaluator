@@ -2,13 +2,13 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebsitePerformanceEvaluator.Console", "WebsitePerformanceEvaluator.Console\WebsitePerformanceEvaluator.Console.csproj", "{0981E4D7-85E2-468B-B864-202C86EDB946}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebsitePerformanceEvaluator.Core", "WebsitePerformanceEvaluator.Core\WebsitePerformanceEvaluator.Core.csproj", "{80A1C8E3-DC43-452B-9FF2-34DF8EF319E1}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebsitePerformanceEvaluator.Application", "WebsitePerformanceEvaluator.Application\WebsitePerformanceEvaluator.Application.csproj", "{80A1C8E3-DC43-452B-9FF2-34DF8EF319E1}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebsitePerformanceEvaluator.Core.Tests", "WebsitePerformanceEvaluator.Core.Tests\WebsitePerformanceEvaluator.Core.Tests.csproj", "{612A3B69-4872-4A83-8C0A-46B382BC1136}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebsitePerformanceEvaluator.Console.Tests", "WebsitePerformanceEvaluator.Console.Tests\WebsitePerformanceEvaluator.Console.Tests.csproj", "{61C299E2-212E-421A-8604-9CE4FA4743BB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebsitePerformanceEvaluator.Data", "WebsitePerformanceEvaluator.Data\WebsitePerformanceEvaluator.Data.csproj", "{98EB0FE6-DDBD-45A1-95AE-129FBF0DA005}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebsitePerformanceEvaluator.Persistence", "WebsitePerformanceEvaluator.Persistence\WebsitePerformanceEvaluator.Persistence.csproj", "{98EB0FE6-DDBD-45A1-95AE-129FBF0DA005}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebsitePerformanceEvaluator.MVC", "WebsitePerformanceEvaluator.MVC\WebsitePerformanceEvaluator.MVC.csproj", "{492617A0-84C7-44ED-A1C6-45EF335694BB}"
 EndProject

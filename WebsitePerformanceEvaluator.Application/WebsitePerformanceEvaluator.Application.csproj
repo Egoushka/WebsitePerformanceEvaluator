@@ -4,6 +4,7 @@
         <TargetFramework>net7.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
+        <RootNamespace>WebsitePerformanceEvaluator.Core</RootNamespace>
     </PropertyGroup>
 
     <ItemGroup>
@@ -18,7 +19,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\WebsitePerformanceEvaluator.Data\WebsitePerformanceEvaluator.Data.csproj" />
+      <ProjectReference Include="..\WebsitePerformanceEvaluator.Persistence\WebsitePerformanceEvaluator.Persistence.csproj" />
     </ItemGroup>
 
 </Project>

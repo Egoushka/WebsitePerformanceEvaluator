@@ -11,8 +11,7 @@ public class TaskRunner
 	private readonly ConsoleHelper _consoleHelper;
 	private readonly ConsoleWrapper _consoleWrapper;
 	private readonly ILinkService _linkService;
-
-
+	
 	public TaskRunner(ConsoleWrapper consoleWrapper, ConsoleHelper consoleHelper, ILinkService linkService)
 	{
 		_consoleWrapper = consoleWrapper;

@@ -12,7 +12,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\WebsitePerformanceEvaluator.Core\WebsitePerformanceEvaluator.Core.csproj" />
+      <ProjectReference Include="..\WebsitePerformanceEvaluator.Application\WebsitePerformanceEvaluator.Application.csproj" />
     </ItemGroup>
 
 </Project>
