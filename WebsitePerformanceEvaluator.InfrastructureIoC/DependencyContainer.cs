@@ -31,8 +31,9 @@ public static class DependencyContainer
     }
     public static IServiceCollection ConfigureCoreServices(this IServiceCollection services)
     {
-        Core.DependencyInjection.AddCoreServices(services);
         services.AddCrawlerServices();
+
+        Core.DependencyInjection.AddCoreServices(services);
         
         return services;
     }
