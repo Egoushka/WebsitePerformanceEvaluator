@@ -10,14 +10,4 @@ public class LinkPerformance
     public CrawlingLinkSource CrawlingLinkSource { get; set; }
     public virtual Link Link { get; set; }
     public int LinkId { get; set; }
-    
-    public override int GetHashCode()
-    {
-        return Url.GetHashCode();
-    }
-
-    public override bool Equals(object? obj)
-    {
-        return obj is LinkPerformance link && link.Url == Url;
-    }
 }

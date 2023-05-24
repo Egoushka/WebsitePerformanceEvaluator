@@ -1,6 +1,6 @@
 using Microsoft.Extensions.DependencyInjection;
 using WebsitePerformanceEvaluator.Core.Interfaces.Services;
-using WebsitePerformanceEvaluator.Core.Service;
+using WebsitePerformanceEvaluator.Core.Services;
 
 namespace WebsitePerformanceEvaluator.Core;
 

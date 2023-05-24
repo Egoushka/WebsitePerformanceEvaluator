@@ -9,7 +9,7 @@ using WebsitePerformanceEvaluator.Core.ViewModels;
 using WebsitePerformanceEvaluator.Data;
 using WebsitePerformanceEvaluator.Domain.Enums;
 
-namespace WebsitePerformanceEvaluator.Core.Service;
+namespace WebsitePerformanceEvaluator.Core.Services;
 
 public class LinkService : ILinkService
 {

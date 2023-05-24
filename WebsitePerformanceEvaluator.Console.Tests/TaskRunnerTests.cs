@@ -2,7 +2,7 @@ using Moq;
 using WebsitePerformanceEvaluator.Console.Core.Helpers;
 using WebsitePerformanceEvaluator.Core.Models;
 using WebsitePerformanceEvaluator.Core.Models.Enums;
-using WebsitePerformanceEvaluator.Core.Service;
+using WebsitePerformanceEvaluator.Core.Services;
 using WebsitePerformanceEvaluator.Crawler.Crawlers;
 using Xunit;
 

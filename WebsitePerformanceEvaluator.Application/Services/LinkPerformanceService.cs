@@ -4,7 +4,7 @@ using WebsitePerformanceEvaluator.Core.Interfaces.Services;
 using WebsitePerformanceEvaluator.Core.ViewModels;
 using WebsitePerformanceEvaluator.Data;
 
-namespace WebsitePerformanceEvaluator.Core.Service;
+namespace WebsitePerformanceEvaluator.Core.Services;
 
 public class LinkPerformanceService : ILinkPerformanceService
 {
@@ -19,7 +19,6 @@ public class LinkPerformanceService : ILinkPerformanceService
     {
         var link = await _context.Links
             .FirstOrDefaultAsync(item => item.Id == linkId);
-        
         
         var linkPerformances = await _context.LinkPerformances
             .Where(item => item.LinkId == linkId)
