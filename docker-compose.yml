@@ -5,8 +5,8 @@
       context: .
       dockerfile: WebsitePerformanceEvaluator.API/Dockerfile
     ports:
-       - 8000:5000
-       - 8001:80
+       - 7147:5000
+       - 5066:80
     networks: 
       - "learndb_net"
 
@@ -31,7 +31,7 @@
         dockerfile: frontend/Dockerfile
       ports:
         - 4200:80
-        
+
 volumes:
     mssql-azuresql-edge-data:
     sqlpad-volume:
