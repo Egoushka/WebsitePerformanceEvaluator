@@ -1,0 +1,41 @@
+﻿services:
+  api:
+    image: websiteperformanceevaluator.api
+    build:
+      context: .
+      dockerfile: WebsitePerformanceEvaluator.API/Dockerfile
+    ports:
+       - 7147:5000
+       - 5066:80
+    networks: 
+      - "learndb_net"
+
+  database:
+    image: mcr.microsoft.com/azure-sql-edge
+    cap_add: [ 'SYS_PTRACE' ]
+    environment:
+      - "ACCEPT_EULA=1"
+      - "MSSQL_SA_PASSWORD=MyPass@word"
+    ports:
+      - "1433:1433"
+    hostname: mssql
+    volumes:
+      - "mssql-azuresql-edge-data:/var/opt/mssql"
+    networks: 
+      - "learndb_net"
+
+  frontend:
+      image: websiteperformanceevaluator.frontend
+      build:
+        context: .
+        dockerfile: frontend/Dockerfile
+      ports:
+        - 4200:80
+
+volumes:
+    mssql-azuresql-edge-data:
+    sqlpad-volume:
+
+networks:
+  learndb_net:
+    driver: bridge

@@ -1,14 +1,14 @@
 using Microsoft.AspNetCore.Mvc;
-using WebsitePerformanceEvaluator.Web.Core.Services;
+using WebsitePerformanceEvaluator.Core.Interfaces.Services;
 using WebsitePerformanceEvaluator.MVC.Extensions;
 
 namespace WebsitePerformanceEvaluator.MVC.Controllers;
 
 public class LinkPerformanceController : Controller
 {
-    private readonly LinkPerformanceService _linkPerformanceService;
+    private readonly ILinkPerformanceService _linkPerformanceService;
 
-    public LinkPerformanceController(LinkPerformanceService linkPerformanceService)
+    public LinkPerformanceController(ILinkPerformanceService linkPerformanceService)
     {
         _linkPerformanceService = linkPerformanceService;
     }

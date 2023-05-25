@@ -6,6 +6,7 @@
         <ImplicitUsings>enable</ImplicitUsings>
         <IsPackable>true</IsPackable>
         <UseIISExpress>true</UseIISExpress>
+        <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     </PropertyGroup>
 
     <PropertyGroup Condition=" '$(RunConfiguration)' == 'https' " />
@@ -13,9 +14,12 @@
     <ItemGroup>
         <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
     </ItemGroup>
-
     <ItemGroup>
-      <ProjectReference Include="..\WebsitePerformanceEvaluator.Core\WebsitePerformanceEvaluator.Core.csproj" />
-      <ProjectReference Include="..\WebsitePerformanceEvaluator.Web.Core\WebsitePerformanceEvaluator.Web.Core.csproj" />
+      <ProjectReference Include="..\WebsitePerformanceEvaluator.InfrastructureIoC\WebsitePerformanceEvaluator.InfrastructureIoC.csproj" />
+    </ItemGroup>
+    <ItemGroup>
+      <Content Include="..\.dockerignore">
+        <Link>.dockerignore</Link>
+      </Content>
     </ItemGroup>
 </Project>

@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net7.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <PackageReference Include="HtmlAgilityPack" Version="1.11.46" />
+      <PackageReference Include="Microsoft.Extensions.Http" Version="8.0.0-preview.1.23110.8" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\WebsitePerformanceEvaluator.Application\WebsitePerformanceEvaluator.Application.csproj" />
+    </ItemGroup>
+
+</Project>

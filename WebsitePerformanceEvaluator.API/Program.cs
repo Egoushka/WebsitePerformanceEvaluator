@@ -1,8 +1,5 @@
 using System.Text.Json.Serialization;
-using WebsitePerformanceEvaluator.API;
-using WebsitePerformanceEvaluator.Core;
-using WebsitePerformanceEvaluator.Data;
-using WebsitePerformanceEvaluator.Web.Core;
+using WebsitePerformanceEvaluator.InfrastructureIoC;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,6 +11,9 @@ builder.Services.AddCors(options =>
         builder.WithOrigins("http://localhost:5173")
             .AllowAnyHeader()
             .AllowAnyMethod();
+        builder.WithOrigins("http://localhost:4200")
+            .AllowAnyHeader()
+            .AllowAnyMethod();
     });
 });
 
@@ -23,10 +23,9 @@ builder.Services
         options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles; 
     });
 
-builder.Services.ConfigureAPIServices();
 builder.Services.ConfigureDataServices(builder.Configuration);
+builder.Services.ConfigureWebServices();
 builder.Services.ConfigureCoreServices();
-builder.Services.ConfigureWebCoreServices();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();

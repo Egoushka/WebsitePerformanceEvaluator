@@ -1,9 +1,8 @@
 using System.Diagnostics;
-using WebsitePerformanceEvaluator.Console.Helpers;
-using WebsitePerformanceEvaluator.Console.Services;
-using WebsitePerformanceEvaluator.Core.Crawlers;
-using WebsitePerformanceEvaluator.Core.Models;
+using WebsitePerformanceEvaluator.Core.Interfaces.Services;
 using WebsitePerformanceEvaluator.Core.Models.Enums;
+using WebsitePerformanceEvaluator.Console.Core.Helpers;
+using LinkPerformance=WebsitePerformanceEvaluator.Core.Models.LinkPerformance;
 
 namespace WebsitePerformanceEvaluator.Console;
 
@@ -11,13 +10,10 @@ public class TaskRunner
 {
 	private readonly ConsoleHelper _consoleHelper;
 	private readonly ConsoleWrapper _consoleWrapper;
-	private readonly Crawler _crawler;
-	private readonly LinkService _linkService;
-
-
-	public TaskRunner(Crawler crawler, ConsoleWrapper consoleWrapper, ConsoleHelper consoleHelper, LinkService linkService)
+	private readonly ILinkService _linkService;
+	
+	public TaskRunner(ConsoleWrapper consoleWrapper, ConsoleHelper consoleHelper, ILinkService linkService)
 	{
-		_crawler = crawler;
 		_consoleWrapper = consoleWrapper;
 		_consoleHelper = consoleHelper;
 		_linkService = linkService;
@@ -32,7 +28,13 @@ public class TaskRunner
 
 		watch.Start();
 
-		var links = await _crawler.CrawlWebsiteAndSitemapAsync(url);
+		var links = (await _linkService.CrawlUrlAsync(url))
+			.Match<IEnumerable<LinkPerformance>>(
+				links => links.Urls,
+				exception => {
+					_consoleWrapper.WriteLine(exception.Message);
+					return Enumerable.Empty<LinkPerformance>();
+				});
 
 		await _linkService.SaveLinksToDatabaseAsync(links, url);
 

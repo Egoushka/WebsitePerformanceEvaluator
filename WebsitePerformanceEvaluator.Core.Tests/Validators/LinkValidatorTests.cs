@@ -1,4 +1,4 @@
-using WebsitePerformanceEvaluator.Core.Validators;
+using WebsitePerformanceEvaluator.Crawler.Validators;
 using Xunit;
 
 namespace WebsitePerformanceEvaluator.Core.Tests.Validators;
